@@ -1,28 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Box, AppBar, Toolbar, Typography, Button, Menu, MenuItem, IconButton, Drawer, Divider } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useRecoilState } from 'recoil';
 import { userState } from './appState';
 import { navlinks, userlinks } from './utils/constants';
 import CloudLogo from './assets/logo.png';
-import LoadingSpinner from './helpers/LoadingSpinner';
 
 const Navbar = () => {
   const isSmallScreen = useMediaQuery('(max-width:950px)');
   const [user, setUser] = useRecoilState(userState);
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [links, setLinks] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       const permittedLinks = user.isAdmin ? navlinks : userlinks;
       setLinks(permittedLinks);
-      setIsLoading(false);
     }
   }, [user]);
 
@@ -46,6 +44,7 @@ const Navbar = () => {
     setUser(null);
     localStorage.removeItem('CloudRoundsToken');
     handleClose();
+    navigate('/login');
   };
 
   const navlink = (label, endpoint, index) => (
