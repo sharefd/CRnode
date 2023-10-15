@@ -4,12 +4,16 @@ import Home from './Home';
 import axios from 'axios';
 import NewArticle from './articles/NewArticle';
 import ArticleList from './articles/ArticleList';
-import AuthForm from './accounts/AuthForm';
+import AuthForm from './auth/AuthForm';
 import { userState } from './appState';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
+import { useEffect } from 'react';
+import RequestsList from './requests/RequestsList';
+import NewRequest from './requests/NewRequest';
+import OlderArticles from './articles/past/OlderArticles';
 
 function App() {
-  const user = useRecoilValue(userState);
+  const [user, setUser] = useRecoilState(userState);
 
   axios.interceptors.request.use(
     config => {
@@ -24,6 +28,25 @@ function App() {
     }
   );
 
+  useEffect(() => {
+    const token = localStorage.getItem('CloudRoundsToken');
+    if (token) {
+      axios
+        .get('http://localhost:3001/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then(response => {
+          setUser(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+          localStorage.removeItem('CloudRoundsToken');
+        });
+    }
+  }, []);
+
   return (
     <Router>
       <Navbar user={user} />
@@ -31,10 +54,10 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/articles' element={<ArticleList />} />
         <Route path='/articles/new' element={<NewArticle />} />
-        <Route path='/manage-requests' element={<NewArticle />} />
-        <Route path='/rounds-catalog' element={<NewArticle />} />
+        <Route path='/older-articles' element={<OlderArticles />} />
+        <Route path='/requests' element={<RequestsList />} />
         <Route path='/login' element={<AuthForm />} />
-
+        <Route path='/requests/new' element={<NewRequest />} />
         {/* other routes */}
       </Routes>
     </Router>

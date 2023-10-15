@@ -1,24 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import CalendarCell from './CalendarCell';
+import { monthNames } from '../../utils/constants';
+import { formatDate } from '../../utils/dates';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+  const [selected, setSelected] = useState(false);
 
   const changeMonth = offset => {
     const newDate = new Date(date);
@@ -32,7 +21,7 @@ const ArticleCalendar = ({ articles }) => {
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const filteredArticles = articles.filter(article => {
-    const articleDate = new Date(article.made_on);
+    const articleDate = new Date(formatDate(article));
     return articleDate.getMonth() === month && articleDate.getFullYear() === year;
   });
 
@@ -51,11 +40,13 @@ const ArticleCalendar = ({ articles }) => {
         } else {
           const cellDate = new Date(year, month, day);
           const eventsOnThisDay = filteredArticles.filter(article => {
-            const articleDate = new Date(article.made_on);
+            const articleDate = new Date(formatDate(article));
             return articleDate.toDateString() === cellDate.toDateString();
           });
 
-          cells.push(<CalendarCell key={j} day={day} events={eventsOnThisDay} />);
+          cells.push(
+            <CalendarCell key={j} day={day} events={eventsOnThisDay} selected={selected} setSelected={setSelected} />
+          );
           day++;
         }
       }

@@ -1,5 +1,9 @@
 * {
-  font-family: 'Lato', 'Inter', sans-serif;
+  font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
+}
+
+p.MuiTypography-root {
+  font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }
 
 #calendar-container {
@@ -36,8 +40,8 @@
 
 #calendar-body td {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   text-align: center;
   vertical-align: middle;
   font-weight: bold;
@@ -107,13 +111,13 @@
 .modal-title {
   font-size: 26px;
   margin-bottom: 10px;
-  color: #004085; /* Blue */
+  color: #004085;
   font-weight: bold;
 }
 
 .modal-purpose {
   grid-column: span 2;
-  color: #383d41; /* Gray */
+  color: #383d41;
   font-style: italic;
 }
 
@@ -161,4 +165,83 @@
     width: 50px;
     height: 50px;
   }
+}
+
+/* TIME PICKER - NewArticle */
+.MuiMultiSectionDigitalClock-root::-webkit-scrollbar {
+  width: 5px;
+  /* display: none; */
+}
+
+.MuiMultiSectionDigitalClock-root::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.MuiMultiSectionDigitalClock-root::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.MuiMultiSectionDigitalClock-root {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Article List Show Details Button */
+.additional-details {
+  display: none;
+}
+
+p:hover .additional-details {
+  display: inline;
+}
+
+.status-button {
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.deny {
+  background-color: indianred;
+  color: white;
+}
+
+.approve {
+  background-color: #28a745;
+  color: white;
+  margin-right: 5px;
+}
+
+.reset {
+  background-color: goldenrod;
+  color: white;
+  margin-left: 5px;
+}
+
+span.request-status {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 6px;
+  color: #fff;
+  padding: 2px 5px;
+}
+
+span.request-status.pending {
+  background-color: goldenrod;
+  border-color: goldenrod;
+}
+
+span.request-status.approved {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+span.request-status.denied {
+  background-color: indianred;
+  border-color: indianred;
 }

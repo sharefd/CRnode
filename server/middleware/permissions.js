@@ -1,6 +1,14 @@
+var { expressjwt: jwt } = require('express-jwt');
+
+const jwtMiddleware = jwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ['HS256'],
+  userProperty: 'auth'
+});
+
 const checkPermissions = requiredPermission => {
   return (req, res, next) => {
-    const user = req.user;
+    const user = req.auth;
 
     if (user.isAdmin) {
       return next();
@@ -14,4 +22,4 @@ const checkPermissions = requiredPermission => {
   };
 };
 
-module.exports = checkPermissions;
+module.exports = { jwtMiddleware, checkPermissions };

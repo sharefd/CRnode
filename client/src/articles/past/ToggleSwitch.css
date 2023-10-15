@@ -1,0 +1,84 @@
+td .toggle-attending {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin-left: 5px;
+}
+
+.toggle-attending {
+  position: relative;
+  font-family: 'MierB', 'Inter', 'Lato', sans-serif;
+}
+
+.toggle-attending *,
+.toggle-attending *:before,
+.toggle-attending *:after {
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.toggle-attending input[type='checkbox'] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.toggle-attending .toggle-label {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.toggle-attending label .toggle-attending__switch {
+  width: 60px;
+  height: 30px;
+  position: relative;
+  background: #808080;
+  transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
+  border-radius: 15px;
+}
+
+.svg-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-attending label .toggle-attending__switch:after {
+  content: '';
+  width: 28px;
+  height: 26px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: white;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  box-shadow: 6px 0px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0, 1, 0.5, 1);
+}
+
+.toggle-attending input[type='checkbox']:checked ~ label .toggle-attending__switch:after {
+  box-shadow: -6px 0px 5px rgba(0, 0, 0, 0.2);
+  left: 28px;
+  width: 28px;
+}
+
+.toggle-attending input[type='checkbox']:checked ~ label .toggle-attending__switch {
+  background-color: #62f35a;
+}
+
+.toggle-attending .icon-holder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 26px;
+  z-index: 2;
+  transition: left 0.3s cubic-bezier(0, 1, 0.5, 1);
+}

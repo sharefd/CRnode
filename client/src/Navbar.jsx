@@ -1,27 +1,33 @@
-import { useState } from 'react';
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Menu,
-  MenuItem,
-  IconButton,
-  Drawer,
-  List,
-  ListItem
-} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, AppBar, Toolbar, Typography, Button, Menu, MenuItem, IconButton, Drawer, Divider } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
-
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useRecoilState } from 'recoil';
+import { userState } from './appState';
+import { navlinks, userlinks } from './utils/constants';
+import CloudLogo from './assets/logo.png';
+import LoadingSpinner from './helpers/LoadingSpinner';
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
+  const isSmallScreen = useMediaQuery('(max-width:950px)');
+  const [user, setUser] = useRecoilState(userState);
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [navlinks, setNavlinks] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      const permittedLinks = user.isAdmin ? navlinks : userlinks;
+      setNavlinks(permittedLinks);
+      setIsLoading(false);
+    }
+  }, [user]);
 
   const handleClick = event => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
@@ -36,72 +42,96 @@ const Navbar = ({ user }) => {
     setDrawerOpen(open);
   };
 
-  const list = () => (
-    <Box sx={{ width: 250 }} role='presentation' onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
-      <List>
-        {navlink('Create Article', '/articles/new')}
-        {navlink('Manage Requests', '/manage-requests')}
-        {navlink('My Rounds', '/my-rounds')}
-        {navlink('Past Rounds', '/past-rounds')}
-        {navlink('Rounds Catalog', '/rounds-catalog')}
-        <ListItem onClick={handleClick}>
-          <Typography>{user && user.username}</Typography>
-          <ArrowDropDown />
-        </ListItem>
-        <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Change Password</MenuItem>
-          <MenuItem onClick={handleClose}>Log Out</MenuItem>
-        </Menu>
-      </List>
-    </Box>
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('CloudRoundsToken');
+    handleClose();
+  };
+
+  const navlink = (label, endpoint, index) => (
+    <Link key={index} to={endpoint} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Box sx={{ py: '10px', mx: 1, borderRadius: '5px', '&:hover': { color: '#eaeaec' } }}>
+        <Typography sx={{ ml: '3px' }}>{label}</Typography>
+      </Box>
+    </Link>
   );
 
-  const navlink = (label, endpoint) => (
-    <Typography variant='button' sx={{ mr: 2 }}>
-      <Link to={endpoint} style={{ textDecoration: 'none', color: 'inherit' }}>
-        {label}
-      </Link>
-    </Typography>
+  const list = () => (
+    <Box
+      sx={{
+        width: 250,
+        padding: '1rem .5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}
+      role='presentation'
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}>
+      <div>{navlinks.map((link, index) => navlink(link.label, link.endpoint, index))}</div>
+      <Divider sx={{ borderWidth: '3px', backgroundColor: '#7793b1', mx: 1 }} />
+      <Box
+        sx={{
+          borderTop: '1px solid #ccc',
+          paddingTop: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          mx: 1
+        }}>
+        <Typography sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{user && user.username}</Typography>
+        <IconButton onClick={null} sx={{ fontSize: '15px', marginBottom: '0.5rem', borderRadius: '5px' }}>
+          Change Password
+        </IconButton>
+        <IconButton onClick={handleLogout} sx={{ fontSize: '15px', borderRadius: '5px' }}>
+          Log Out
+        </IconButton>
+      </Box>
+    </Box>
   );
 
   return (
     <AppBar position='static' sx={{ backgroundColor: '#7393B3' }}>
       <Toolbar>
-        {user && (
-          <>
-            <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-
-            <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
-              {list()}
-            </Drawer>
-          </>
-        )}
-        <Typography variant='h6' sx={{ flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }} direction='row'>
           <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
-            CloudRounds
+            <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }} direction='row'>
+              <img src={CloudLogo} width='40' />
+              <p style={{ fontSize: '20px', marginLeft: '8px' }}>CloudRounds</p>
+            </Box>
           </Link>
-        </Typography>
-        {user ? (
+        </Box>
+        {user && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.3, justifyContent: 'space-between' }}>
-            {navlink('Create Article', '/articles/new')}
-            {navlink('Manage Requests', '/manage-requests')}
-            {navlink('My Rounds', '/articles')}
-            {navlink('Past Rounds', '/past-rounds')}
-            {navlink('Rounds Catalog', '/rounds-catalog')}
+            {navlinks.map((link, index) => navlink(link.label, link.endpoint, index))}
             <Box id='user' sx={{ mt: 0.1 }}>
-              <IconButton color='primary' onClick={handleClick} sx={{ color: '#eaeaec', textTransform: 'none' }}>
+              <IconButton
+                color='primary'
+                onClick={handleClick}
+                sx={{ ml: 1, color: '#eaeaec', textTransform: 'none', '&:hover': { color: '#fff' } }}>
                 <Typography>{user.username}</Typography>
                 <ArrowDropDown />
               </IconButton>
               <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 <MenuItem onClick={handleClose}>Change Password</MenuItem>
-                <MenuItem onClick={handleClose}>Log Out</MenuItem>
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
               </Menu>
             </Box>
           </Box>
         ) : (
+          user && (
+            <>
+              <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+
+              <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
+                {list()}
+              </Drawer>
+            </>
+          )
+        )}
+        {!user && (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.3, justifyContent: 'space-between' }}>
             <Link to='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color='inherit'>Login</Button>

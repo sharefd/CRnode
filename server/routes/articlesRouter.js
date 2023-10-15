@@ -1,7 +1,7 @@
 const express = require('express');
 const Article = require('../models/Article');
 const router = express.Router();
-const checkPermissions = require('../middleware/checkPermissions');
+const { checkPermissions, jwtMiddleware } = require('../middleware/permissions');
 
 router.get('/', async (req, res) => {
   try {
@@ -14,10 +14,15 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/new', checkPermissions('create_article'), async (req, res) => {
-  const newArticle = new Article(req.body);
-  await newArticle.save();
-  res.json(newArticle);
+router.post('/new', jwtMiddleware, checkPermissions('create_article'), async (req, res) => {
+  try {
+    const newArticle = new Article(req.body);
+    await newArticle.save();
+    res.json(newArticle);
+  } catch (err) {
+    console.error('Error creating article:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 router.put('/:id', checkPermissions('update_article'), async (req, res) => {

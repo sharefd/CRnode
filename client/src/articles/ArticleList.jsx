@@ -1,152 +1,168 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Card,
-  CardHeader,
-  Box,
-  CardContent,
-  CardActions,
-  Button,
-  Grid,
-  Typography,
-  ToggleButton,
-  ToggleButtonGroup
-} from '@mui/material';
-import ArticleCalendar from './ArticleCalendar';
+import { Card, Box, CardContent, CardActions, Button, Grid, Typography, Divider } from '@mui/material';
+import ArticleCalendar from './calendar/ArticleCalendar';
+import { compareDates, formatDate } from '../utils/dates';
+import { ArticleFilters } from './ArticleFilters';
+import { PURPOSE_CHOICES, PURPOSE_MAPPINGS } from '../utils/constants';
+import './ArticleList.css';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { articlesState, userState } from '../appState';
+import LoadingSpinner from '../helpers/LoadingSpinner';
 
 const ArticleList = () => {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useRecoilState(articlesState);
+  const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
-  const [currentTime, setCurrentTime] = useState('');
+  const [isUserLoaded, setIsUserLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/articles')
-      .then(response => {
-        const sortedArticles = response.data.sort((a, b) => {
-          const dateA = new Date(a.made_on);
-          const dateB = new Date(b.made_on);
+    if (user) {
+      setIsUserLoaded(true);
+    }
+  }, [user]);
 
-          if (dateA < dateB) return -1;
-          if (dateA > dateB) return 1;
+  useEffect(() => {
+    if (articles.length > 0) return;
+    if (isUserLoaded) {
+      setIsLoading(true);
+      axios
+        .get('http://localhost:3001/api/articles')
+        .then(response => {
+          let permittedArticles;
+          if (user.isAdmin) {
+            permittedArticles = response.data;
+          } else {
+            permittedArticles = response.data.filter(article => user.permissions.includes(article.purpose));
+          }
 
-          const timeA = a.time ? a.time.split(':').join('') : '';
-          const timeB = b.time ? b.time.split(':').join('') : '';
+          const sortedArticles = permittedArticles.sort((a, b) => {
+            return compareDates(a, b);
+          });
 
-          return timeA.localeCompare(timeB);
+          setArticles(sortedArticles);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error('There was an error fetching articles:', error);
+          setIsLoading(false);
         });
-        setArticles(sortedArticles);
-      })
-      .catch(error => {
-        console.error('There was an error fetching articles:', error);
-      });
+    }
+  }, [isUserLoaded]);
 
-    const interval = setInterval(() => {
-      const now = new Date();
-      const formattedTime = now.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-      });
-      setCurrentTime(formattedTime);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handlePurposeChange = event => {
-    const value = event.target.value;
-
-    if (value === 'Show All') {
+  const handlePurposeChange = newPurposes => {
+    if (newPurposes.includes('Show All')) {
       setSelectedPurposes(['Show All']);
     } else {
-      setSelectedPurposes(prev => prev.filter(item => item !== 'Show All').concat(value));
+      setSelectedPurposes(newPurposes);
     }
   };
 
+  const toggleDetails = articleId => {
+    setShowDetails(prevState => ({
+      ...prevState,
+      [articleId]: !prevState[articleId]
+    }));
+  };
+
+  const filteredArticles = selectedPurposes.includes('Show All')
+    ? articles
+    : articles.filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]));
+
   return (
     <div>
-      <Box display='flex' alignItems='center' sx={{ my: 2, ml: 2 }}>
-        <Typography variant='body2' id='current-time' sx={{ alignSelf: 'flex-start', px: 2 }}>
-          {currentTime}
-        </Typography>
-        <ToggleButtonGroup
-          value={selectedPurposes}
-          onChange={handlePurposeChange}
-          aria-label='purpose'
-          size='small'
-          sx={{ ml: 4 }}>
-          <ToggleButton value='Show All' aria-label='Show All'>
-            Show All
-          </ToggleButton>
-          <ToggleButton value='Uoft OM Half-day' aria-label='Uoft OM Half-day'>
-            Uoft OM Half-day
-          </ToggleButton>
-          <ToggleButton value='UofT Aerospace' aria-label='UofT Aerospace'>
-            UofT Aerospace
-          </ToggleButton>
-          <ToggleButton value='UofT Im AHD' aria-label='UofT Im AHD'>
-            UofT Im AHD
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
-      <Box px={2}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
-            {articles.map((article, index) => {
-              const date = new Date(article.made_on);
-              const formattedDate = new Intl.DateTimeFormat('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-              }).format(date);
-              const formattedTime = date.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-              });
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Box px={2}>
+          <ArticleFilters selectedPurposes={selectedPurposes} handlePurposeChange={handlePurposeChange} />
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={7}>
+              {filteredArticles.map((article, index) => {
+                const formattedDate = formatDate(article);
 
-              return (
-                <Card key={index} style={{ marginBottom: '20px' }}>
-                  <CardContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={3}>
-                        <Typography variant='body2' color='textSecondary'>
-                          {formattedDate}
-                        </Typography>
-                        <Typography variant='caption' color='textSecondary'>
-                          {formattedTime}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>
-                          <Typography variant='h7' sx={{ fontWeight: '700' }}>
-                            {article.title}
+                return (
+                  <Card key={index} style={{ marginBottom: '20px' }}>
+                    <CardContent>
+                      <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                          <Typography variant='body2' color='textSecondary'>
+                            {formattedDate}
                           </Typography>
-                        </Box>
-                        <CardActions>
-                          <Button variant='contained' color='primary'>
-                            {article.purpose}
-                          </Button>
-                          <Button variant='outlined' color='primary' href={article.event_link} target='_blank'>
-                            Join Meeting
-                          </Button>
-                          {/* Add your third button here */}
-                        </CardActions>
-                        <Typography variant='caption' color='textSecondary' style={{ float: 'right' }}>
-                          Created by {article.organizer.username}
-                        </Typography>
+                          <Typography variant='caption' color='textSecondary'>
+                            {article.time}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>
+                            <Typography variant='h7' sx={{ fontWeight: '700' }}>
+                              {article.title}
+                            </Typography>
+                          </Box>
+                          <CardActions sx={{ my: 1 }}>
+                            <Button
+                              variant='contained'
+                              color='primary'
+                              sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
+                              size='small'>
+                              {PURPOSE_CHOICES[article.purpose]}
+                            </Button>
+                            <Button
+                              variant='outlined'
+                              color='primary'
+                              href={article.event_link}
+                              target='_blank'
+                              size='small'
+                              sx={{ mx: 1, textTransform: 'none' }}>
+                              Join Meeting
+                            </Button>
+                            <Button
+                              variant='outlined'
+                              onClick={() => toggleDetails(article._id)}
+                              size='small'
+                              sx={{
+                                textTransform: 'none',
+                                my: 0.5,
+                                mx: 1,
+                                color: 'gray',
+                                borderColor: 'gray',
+                                '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+                              }}>
+                              More Details
+                            </Button>
+                          </CardActions>
+                          <Box
+                            sx={{
+                              display: showDetails[article._id] ? 'flex' : 'none',
+                              alignItems: 'center',
+                              mx: 2,
+                              my: 1,
+                              fontSize: '0.9rem'
+                            }}>
+                            <span>Meeting ID: {article.meeting_id || 'None'}</span>
+                            <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
+                            <span>Passcode: {article.passcode || 'None'}</span>
+                          </Box>
+
+                          <Typography variant='caption' color='textSecondary' style={{ float: 'right' }}>
+                            Created by {article.organizer.username}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <ArticleCalendar articles={articles} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={5}>
-            <ArticleCalendar articles={articles} />
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </div>
   );
 };

@@ -1,0 +1,58 @@
+.card-margin {
+  margin-bottom: 20px;
+}
+
+.box-background {
+  background-color: #f1f8ff;
+  padding: 0.5rem;
+}
+
+.button-spacing {
+  margin-right: 1px;
+  margin-top: 0.5px;
+  margin-bottom: 0.5px;
+  padding: 0.5px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.button-outline {
+  margin-top: 0.5px;
+  margin-bottom: 0.5px;
+  padding: 0.5px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.button-additional-details {
+  margin-top: 0.5px;
+  margin-bottom: 0.5px;
+  padding: 0.5px;
+  padding-left: 1px;
+  padding-right: 1px;
+  color: gray;
+  border-color: gray;
+}
+
+.button-additional-details:hover {
+  background-color: #ececec;
+  border-color: gray;
+}
+
+.details-box {
+  display: block;
+  margin-inline: 2;
+}
+
+.details-box-hidden {
+  display: none;
+  margin-inline: 2;
+}
+
+.float-right {
+  float: right;
+}
+
+.span-margin {
+  margin-right: 12px;
+}

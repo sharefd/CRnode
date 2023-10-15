@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { TextField, Button, Typography, Paper, Grid, MenuItem } from '@mui/material';
-import dayjs from 'dayjs';
+import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-
-const PURPOSE_CHOICES = {
-  OM1: 'OM Half-day',
-  UOFTAMR: 'UofT Aerospace Rounds',
-  MACIMAHD1: 'McMaster IM PGY-1 AHD',
-  MACIMAHD2: 'McMaster IM PGY-2 AHD',
-  MACIMAHD3: 'McMaster IM PGY-3 AHD'
-};
+import { useRecoilValue } from 'recoil';
+import { userState } from '../appState';
+import { PURPOSE_CHOICES } from '../utils/constants';
 
 const NewArticle = () => {
   const navigate = useNavigate();
+  const currentUser = useRecoilValue(userState);
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -25,10 +21,17 @@ const NewArticle = () => {
     purpose: ''
   });
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    const formattedTime = article.time.format('hh:mm A'); // Output will be like "02:30 PM"
+    const payload = {
+      ...article,
+      time: formattedTime,
+      organizer: currentUser?._id || ''
+    };
+    console.log(payload, currentUser);
     axios
-      .post('http://localhost:3001/api/articles/new', article)
+      .post('http://localhost:3001/api/articles/new', payload)
       .then(response => {
         console.log('Article created:', response.data);
         navigate('/articles');
@@ -40,12 +43,24 @@ const NewArticle = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Paper elevation={3} sx={{ padding: 4, width: '60%', margin: '0 auto', mt: 8 }}>
+      <Paper elevation={3} sx={{ width: '50%', margin: '0 auto', mt: 8 }}>
+        <Grid item xs={12}>
+          <Typography
+            variant='h5'
+            align='center'
+            sx={{
+              backgroundColor: '#84a9ce',
+              color: '#fff',
+              borderTopRightRadius: '5px',
+              borderTopLeftRadius: '5px',
+              padding: '1rem',
+              mb: 2
+            }}>
+            Create Article
+          </Typography>
+        </Grid>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant='h5'>Create Article</Typography>
-            </Grid>
+          <Grid container spacing={3} sx={{ padding: 4 }}>
             <Grid item xs={12}>
               <TextField
                 label='Title'
@@ -78,7 +93,8 @@ const NewArticle = () => {
                 onChange={newValue => {
                   setArticle({ ...article, time: dayjs(newValue) });
                 }}
-                renderInput={params => <TextField {...params} />}
+                slotProps={{ textField: { variant: 'outlined' } }}
+                sx={{ overflow: 'hidden' }}
               />
             </Grid>
             <Grid item xs={12}>
