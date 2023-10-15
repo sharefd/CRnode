@@ -129,7 +129,7 @@ const OlderArticles = () => {
       {!isUserLoaded || isLoading ? (
         <LoadingSpinner />
       ) : (
-        <Grid container justifyContent='center'>
+        <Grid container justifyContent='center' sx={{ mt: 4 }}>
           <Grid item xs={12} md={10}>
             <Card>
               <CardHeader title='Older Articles' style={{ backgroundColor: '#3f51b5', color: 'white' }} />
