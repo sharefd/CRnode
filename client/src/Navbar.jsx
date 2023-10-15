@@ -16,12 +16,12 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [navlinks, setNavlinks] = useState([]);
+  const [links, setLinks] = useState([]);
 
   useEffect(() => {
     if (user) {
       const permittedLinks = user.isAdmin ? navlinks : userlinks;
-      setNavlinks(permittedLinks);
+      setLinks(permittedLinks);
       setIsLoading(false);
     }
   }, [user]);
@@ -68,7 +68,7 @@ const Navbar = () => {
       role='presentation'
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}>
-      <div>{navlinks.map((link, index) => navlink(link.label, link.endpoint, index))}</div>
+      <div>{links.map((link, index) => navlink(link.label, link.endpoint, index))}</div>
       <Divider sx={{ borderWidth: '3px', backgroundColor: '#7793b1', mx: 1 }} />
       <Box
         sx={{
@@ -103,7 +103,7 @@ const Navbar = () => {
         </Box>
         {user && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.3, justifyContent: 'space-between' }}>
-            {navlinks.map((link, index) => navlink(link.label, link.endpoint, index))}
+            {links.map((link, index) => navlink(link.label, link.endpoint, index))}
             <Box id='user' sx={{ mt: 0.1 }}>
               <IconButton
                 color='primary'
