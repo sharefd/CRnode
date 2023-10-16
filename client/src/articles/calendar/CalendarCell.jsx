@@ -34,7 +34,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
     position: 'absolute',
     top: 22,
     right: day > 9 ? 15 : 19.5,
-    opacity: selected === day ? 1 : 0.6
+//    opacity: selected === day ? 1 : 0.6
   };
 
   const cellStyle = {
