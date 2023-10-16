@@ -9,6 +9,16 @@ import './ArticleList.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { articlesState, userState } from '../appState';
 import LoadingSpinner from '../helpers/LoadingSpinner';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+
+
+const purposeIcons = {
+  'OM1': <ConstructionIcon />,
+  'UOFTAMR': < RocketLaunchIcon />,
+  // Add other purpose choices and their icons here
+};
+
 
 const ArticleList = () => {
   const [articles, setArticles] = useRecoilState(articlesState);
@@ -85,7 +95,12 @@ const ArticleList = () => {
                 const formattedDate = formatDate(article);
 
                 return (
-                  <Card key={index} style={{ marginBottom: '20px' }}>
+                  <Card key={index} variant="outlined" elevation={5} 
+                      
+                      sx={{ marginBottom: '20px' 
+                          
+                          }}>
+
                     <CardContent>
                       <Grid container spacing={2}>
                         <Grid item xs={3}>
@@ -104,14 +119,18 @@ const ArticleList = () => {
                           </Box>
                           <CardActions sx={{ my: 1 }}>
                             <Button
-                              variant='contained'
+                              variant='outlined'
                               color='primary'
                               sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
                               size='small'>
+                                
+                              {purposeIcons[article.purpose]} {/* Render the icon */}
+
                               {PURPOSE_CHOICES[article.purpose]}
+                                
                             </Button>
                             <Button
-                              variant='outlined'
+                              variant='contained'
                               color='primary'
                               href={article.event_link}
                               target='_blank'

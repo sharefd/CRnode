@@ -32,7 +32,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
 
   const badgeStyle = {
     position: 'absolute',
-    top: 22,
+    top: 15,
     right: day > 9 ? 15 : 19.5,
 //    opacity: selected === day ? 1 : 0.6
   };
@@ -58,7 +58,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
             backgroundColor: selected === day ? eventColors[2] : 'transparent',
             borderRadius: '5px',
             p: '3px',
-            border: day === today ? '2px solid blue' : 'none',
+            border: day === today ? '2px solid black' : 'none',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
