@@ -78,9 +78,20 @@ const ArticleList = () => {
     }));
   };
 
-  const filteredArticles = selectedPurposes.includes('Show All')
-    ? articles
-    : articles.filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]));
+    const currentDate = new Date();
+    const eightHoursAgo = new Date(currentDate);
+    eightHoursAgo.setHours(eightHoursAgo.getHours() - 12);
+
+
+
+    const filteredArticles = selectedPurposes.includes('Show All')
+      ? articles.filter((article) => new Date(article.made_on) >= eightHoursAgo && currentDate)
+      : articles.filter(
+          (article) =>
+            selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]) &&
+            new Date(article.made_on) >= currentDate
+        );
+
 
   return (
     <div>
