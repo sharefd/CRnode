@@ -18,7 +18,10 @@ const NewArticle = () => {
     event_link: '',
     made_on: '',
     time: dayjs('2022-04-17T15:30'),
-    purpose: ''
+    purpose: '',
+    meeting_id: '',
+    passcode: '',
+    speaker: '',
   });
 
   const handleSubmit = async e => {
@@ -61,7 +64,7 @@ const NewArticle = () => {
         </Grid>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} sx={{ padding: 4 }}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label='Title'
                 fullWidth
@@ -69,7 +72,7 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, title: e.target.value })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label='Event Link'
                 fullWidth
@@ -77,7 +80,7 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, event_link: e.target.value })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <Typography variant='body1'>Made On</Typography>
               <TextField
                 type='date'
@@ -86,7 +89,7 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, made_on: e.target.value })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <Typography variant='body1'>Time</Typography>
               <TimePicker
                 value={article.time}
@@ -111,16 +114,57 @@ const NewArticle = () => {
                 ))}
               </TextField>
             </Grid>
+              
+              
+             <Grid item xs={4}>
+                    <TextField
+        label="Meeting ID"
+        fullWidth
+        value={article.meeting_id}
+        onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
+                      />
+                    </Grid>
+
+                         
+         <Grid item xs={4}>
+      <TextField
+        label="Passcode"
+        fullWidth
+        value={article.passcode}
+        onChange={e => setArticle({ ...article, passcode: e.target.value })}
+      />
+    </Grid>
+    <Grid item xs={4}>
+      <TextField
+        label="Speaker"
+        fullWidth
+        value={article.speaker}
+        onChange={e => setArticle({ ...article, speaker: e.target.value })}
+      />
+    </Grid>
+              
+              
+
             <Grid item xs={12}>
               <Button type='submit' variant='contained' color='primary'>
                 Create Article
               </Button>
             </Grid>
           </Grid>
+            
+             <Grid container spacing={3} sx={{ padding: 4 }}>
+               
+                 
+                 </Grid>
+            
+            
+            
         </form>
       </Paper>
     </LocalizationProvider>
   );
 };
+
+        
 
 export default NewArticle;

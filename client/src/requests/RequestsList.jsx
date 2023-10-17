@@ -58,10 +58,10 @@ const RequestsList = () => {
       <TableContainer>
         <Typography
           variant='h5'
-          align='center'
+          align='left'
           sx={{
-            backgroundColor: '#4e142b',
-            color: '#fff',
+            backgroundColor: 'white',
+            color: 'black',
             borderTopRightRadius: '5px',
             borderTopLeftRadius: '5px',
             padding: '1rem',

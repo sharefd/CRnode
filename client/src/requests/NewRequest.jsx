@@ -87,7 +87,7 @@ const NewRequest = () => {
             </Button>
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Button variant='outlined' color='secondary'>
+            <Button variant='outlined' color='primary'>
               View Submitted Requests
             </Button>
           </Grid>

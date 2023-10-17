@@ -8,7 +8,10 @@ const articleSchema = new mongoose.Schema({
   purpose: { type: String, required: true, enum: ['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'] },
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   meeting_id: { type: String },
-  passcode: { type: String }
+  passcode: { type: String },
+  speaker: {type: String },    
 });
 
 module.exports = mongoose.model('Article', articleSchema);
+
+
