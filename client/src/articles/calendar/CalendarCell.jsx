@@ -55,15 +55,16 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
         <Box
           sx={{
             display: 'flex',
-            backgroundColor: selected === day ? eventColors[2] : 'transparent',
+            backgroundColor: day === today ? '#318CE7' : 'transparent', // Change the background color here
             borderRadius: '5px',
             p: '3px',
-            border: day === today ? '2px solid black' : 'none',
+            border: day === today ? '2px ridge black' : 'none',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
           <Badge badgeContent={events.length} color='primary' sx={badgeStyle} />
-          <Typography sx={{ fontSize: '16px', fontWeight: '700' }}>{day}</Typography>
+          <Typography sx={{ fontSize: '16px', fontWeight: '700', color: day === today ? 'white' : 'inherit' // Change the text color here
+ }}>{day}</Typography>
         </Box>
       </TableCell>
 

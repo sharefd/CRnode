@@ -100,13 +100,16 @@ const ArticleList = () => {
       ) : (
         <Box px={2}>
           <ArticleFilters selectedPurposes={selectedPurposes} handlePurposeChange={handlePurposeChange} />
+                  
+                  
           <Grid container spacing={3}>
+              
             <Grid item xs={12} md={7}>
               {filteredArticles.map((article, index) => {
                 const formattedDate = formatDate(article);
 
                 return (
-                  <Card key={index} variant="outlined" elevation={5} 
+                  <Card key={index} variant="outlined" elevation={1} 
                       
                       sx={{ marginBottom: '20px' 
                           
@@ -159,6 +162,7 @@ const ArticleList = () => {
                                 mx: 1,
                                 color: 'gray',
                                 borderColor: 'gray',
+                          
                                 '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
                               }}>
                               More Details
