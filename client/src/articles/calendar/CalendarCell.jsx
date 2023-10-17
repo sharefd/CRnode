@@ -34,7 +34,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
     position: 'absolute',
     top: 15,
     right: day > 9 ? 15 : 19.5,
-//    opacity: selected === day ? 1 : 0.6
+//    opacity: selected === day ? 1 : 0.8
   };
 
   const cellStyle = {
@@ -47,6 +47,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
   };
 
   const article = events[currentEventIndex] || {};
+    
   const formattedDate = article.made_on?.split('T')[0];
 
   return (
@@ -62,15 +63,22 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
+            
           <Badge badgeContent={events.length} color='primary' sx={badgeStyle} />
+            
           <Typography sx={{ fontSize: '16px', fontWeight: '700', color: day === today ? 'white' : 'inherit' // Change the text color here
+                           
  }}>{day}</Typography>
+            
         </Box>
       </TableCell>
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className='modal-title'>{article.title}</DialogTitle>
         <DialogContent>
+            
+            
+            
           <Box className='modal-info'>
             <p className='modal-purpose'>
               Purpose: <span>{article.purpose || 'None'}</span>
@@ -88,9 +96,19 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
+                
+                
+                
               <ChevronLeft />
             </IconButton>
             <IconButton onClick={handleNextEvent} disabled={currentEventIndex === events.length - 1}>
+                 {/* Add a badge to show event number out of the total events */}
+          {events.length > 1 && (
+            <Typography sx={{ fontSize: '14px', fontWeight: '900', color: 'black'}}>
+              {`${currentEventIndex + 1}/${events.length}`}
+            </Typography>
+          )}
+                
               <ChevronRight />
             </IconButton>
           </Box>

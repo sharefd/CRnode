@@ -80,7 +80,7 @@ const ArticleList = () => {
 
     const currentDate = new Date();
     const eightHoursAgo = new Date(currentDate);
-    eightHoursAgo.setHours(eightHoursAgo.getHours() - 12);
+    eightHoursAgo.setHours(eightHoursAgo.getHours() - 24);
 
 
 
@@ -162,7 +162,6 @@ const ArticleList = () => {
                                 mx: 1,
                                 color: 'gray',
                                 borderColor: 'gray',
-                          
                                 '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
                               }}>
                               More Details
