@@ -14,6 +14,11 @@ const ArticleCalendar = ({ articles }) => {
     newDate.setMonth(newDate.getMonth() + offset);
     setDate(newDate);
   };
+    
+    const goToToday = () => {
+    setDate(new Date()); // Set the date to the current date
+    setSelected(false); // Clear the selected date
+  };
 
   const month = date.getMonth();
   const year = date.getFullYear();
@@ -59,10 +64,20 @@ const ArticleCalendar = ({ articles }) => {
 
   return (
     <div id='calendar-container'>
+          
+        
+          <Button id="today-button" onClick={goToToday}>
+          Today
+        </Button>
+          
       <div id='calendar-header'>
         <Button id='prev-month' onClick={() => changeMonth(-1)}>
           <ChevronLeft />
+            
+            
         </Button>
+        
+          
         <span id='current-month-year'>{`${monthNames[month]} ${year}`}</span>
         <Button id='next-month' onClick={() => changeMonth(1)}>
           <ChevronRight />
