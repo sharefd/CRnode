@@ -33,6 +33,13 @@ const NewArticle = () => {
       organizer: currentUser?._id || ''
     };
     console.log(payload, currentUser);
+        
+     if (!payload.title) {
+    console.error('Title is required');
+    return;
+  }
+        
+        
     axios
       .post('http://localhost:3001/api/articles/new', payload)
       .then(response => {
@@ -62,26 +69,32 @@ const NewArticle = () => {
             Create Article
           </Typography>
         </Grid>
+          
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} sx={{ padding: 4 }}>
             <Grid item xs={6}>
+                
               <TextField
                 label='Title'
+                required  
                 fullWidth
                 value={article.title}
                 onChange={e => setArticle({ ...article, title: e.target.value })}
               />
+                
+                
             </Grid>
             <Grid item xs={6}>
               <TextField
                 label='Event Link'
+                  required 
                 fullWidth
                 value={article.event_link}
                 onChange={e => setArticle({ ...article, event_link: e.target.value })}
               />
             </Grid>
             <Grid item xs={4}>
-              <Typography variant='body1'>Made On</Typography>
+              <Typography variant='body1'>Date: </Typography>
               <TextField
                 type='date'
                 fullWidth
@@ -90,7 +103,7 @@ const NewArticle = () => {
               />
             </Grid>
             <Grid item xs={4}>
-              <Typography variant='body1'>Time</Typography>
+              <Typography variant='body1'>Time:</Typography>
               <TimePicker
                 value={article.time}
                 onChange={newValue => {
