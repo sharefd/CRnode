@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { TableCell, Badge, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { eventColors } from '../../utils/constants';
 import './Modal.css';
-import { formatDate } from '../../utils/dates';
 
 const CalendarCell = ({ day, events, selected, setSelected }) => {
   const [open, setOpen] = useState(false);
@@ -48,8 +46,6 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
 
   const article = events[currentEventIndex] || {};
 
-  const formattedDate = article.dateString?.split('T')[0];
-
   return (
     <>
       <TableCell style={cellStyle} onClick={handleCellClick}>
@@ -91,7 +87,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
             </p>
             <p className='id-pass'>Meeting ID: {article.meeting_id || 'None'}</p>
             <p className='id-pass'>Passcode: {article.passcode || 'None'}</p>
-            <p className='date-time'>Date: {formattedDate}</p>
+            <p className='date-time'>Date: {article.dateString}</p>
             <p className='date-time'>Time: {article.time}</p>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

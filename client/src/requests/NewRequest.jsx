@@ -22,7 +22,7 @@ const NewRequest = () => {
       .post('http://localhost:3001/api/requests/new', data)
       .then(response => {
         console.log('Request created:', response.data);
-        navigate('/requests');
+        navigate('/requests/submitted');
       })
       .catch(error => {
         console.error('There was an error creating the request:', error);
@@ -75,8 +75,8 @@ const NewRequest = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-            multiline
-             rows={4} 
+              multiline
+              rows={4}
               label='Message (optional)'
               variant='outlined'
               value={message}
