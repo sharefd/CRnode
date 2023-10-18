@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import RequestsList from './requests/RequestsList';
 import NewRequest from './requests/NewRequest';
 import OlderArticles from './articles/past/OlderArticles';
+import SubmittedRequests from './requests/SubmittedRequests';
 
 function App() {
   const [user, setUser] = useRecoilState(userState);
@@ -58,7 +59,7 @@ function App() {
         <Route path='/requests' element={<RequestsList />} />
         <Route path='/login' element={<AuthForm />} />
         <Route path='/requests/new' element={<NewRequest />} />
-        {/* other routes */}
+        <Route path='/requests/submitted' element={<SubmittedRequests />} />
       </Routes>
     </Router>
   );
