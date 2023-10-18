@@ -79,9 +79,16 @@ const ArticleList = () => {
   const eightHoursAgo = new Date(currentDate);
   eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
 
+  const isArticleAfterCurrentDate = article => {
+    const articleDate = new Date(article.dateString);
+    return articleDate >= eightHoursAgo;
+  };
+
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? articles
-    : articles.filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]));
+    ? articles.filter(isArticleAfterCurrentDate)
+    : articles
+        .filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]))
+        .filter(isArticleAfterCurrentDate);
 
   return (
     <div>
