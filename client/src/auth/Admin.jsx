@@ -66,13 +66,12 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // if (passwordEntered) {
-    axios.get('http://localhost:3001/api/users').then(response => {
-      setUsers(response.data);
-    });
-    // }
-  }, []);
-  // }, [passwordEntered]);
+    if (passwordEntered) {
+      axios.get('http://localhost:3001/api/users').then(response => {
+        setUsers(response.data);
+      });
+    }
+  }, [passwordEntered]);
 
   const onPasswordSubmit = password => {
     if (password === 'admin') {
@@ -84,8 +83,7 @@ const Admin = () => {
 
   return (
     <Container>
-      {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
-      <UserList users={users} />
+      {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />}
     </Container>
   );
 };

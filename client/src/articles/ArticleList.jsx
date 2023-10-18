@@ -41,13 +41,10 @@ const ArticleList = () => {
         .get('http://localhost:3001/api/articles')
         .then(response => {
           let permittedArticles;
-          if (user.isAdmin) {
-            permittedArticles = response.data;
-          } else {
-            permittedArticles = response.data.filter(article => {
-              return user.permissions.some(permission => permission.purpose === article.purpose && permission.canRead);
-            });
-          }
+          permittedArticles = response.data;
+          permittedArticles = response.data.filter(article => {
+            return user.permissions.some(permission => permission.purpose === article.purpose && permission.canRead);
+          });
 
           const sortedArticles = permittedArticles.sort((a, b) => {
             return compareDates(a, b);
