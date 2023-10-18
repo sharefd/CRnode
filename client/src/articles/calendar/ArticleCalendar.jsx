@@ -3,7 +3,6 @@ import { Button, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/m
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import CalendarCell from './CalendarCell';
 import { monthNames } from '../../utils/constants';
-import { formatDate } from '../../utils/dates';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
@@ -14,8 +13,8 @@ const ArticleCalendar = ({ articles }) => {
     newDate.setMonth(newDate.getMonth() + offset);
     setDate(newDate);
   };
-    
-    const goToToday = () => {
+
+  const goToToday = () => {
     setDate(new Date()); // Set the date to the current date
     setSelected(false); // Clear the selected date
   };
@@ -26,7 +25,7 @@ const ArticleCalendar = ({ articles }) => {
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const filteredArticles = articles.filter(article => {
-    const articleDate = new Date(formatDate(article));
+    const articleDate = new Date(`${article.dateString}T12:00:00`);
     return articleDate.getMonth() === month && articleDate.getFullYear() === year;
   });
 
@@ -45,7 +44,7 @@ const ArticleCalendar = ({ articles }) => {
         } else {
           const cellDate = new Date(year, month, day);
           const eventsOnThisDay = filteredArticles.filter(article => {
-            const articleDate = new Date(formatDate(article));
+            const articleDate = new Date(`${article.dateString}T12:00:00`);
             return articleDate.toDateString() === cellDate.toDateString();
           });
 
@@ -64,20 +63,15 @@ const ArticleCalendar = ({ articles }) => {
 
   return (
     <div id='calendar-container'>
-          
-        
-          <Button id="today-button" onClick={goToToday}>
-         TODAY
-        </Button>
-          
+      <Button id='today-button' onClick={goToToday}>
+        TODAY
+      </Button>
+
       <div id='calendar-header'>
         <Button id='prev-month' onClick={() => changeMonth(-1)}>
           <ChevronLeft />
-            
-            
         </Button>
-        
-          
+
         <span id='current-month-year'>{`${monthNames[month]} ${year}`}</span>
         <Button id='next-month' onClick={() => changeMonth(1)}>
           <ChevronRight />
