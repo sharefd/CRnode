@@ -44,7 +44,9 @@ const ArticleList = () => {
           if (user.isAdmin) {
             permittedArticles = response.data;
           } else {
-            permittedArticles = response.data.filter(article => user.permissions.includes(article.purpose));
+            permittedArticles = response.data.filter(article => {
+              return user.permissions.some(permission => permission.purpose === article.purpose && permission.canRead);
+            });
           }
 
           const sortedArticles = permittedArticles.sort((a, b) => {

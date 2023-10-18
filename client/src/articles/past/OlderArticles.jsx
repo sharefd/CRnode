@@ -146,54 +146,56 @@ const OlderArticles = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                        
-                        
                       {articles
-                            .filter((article) => user.permissions.includes(article.purpose)) // Filter articles based on user's permissions
+                        .filter(article => {
+                          const userPermissionsForArticle = user.permissions.find(p => p.purpose === article.purpose);
+                          return userPermissionsForArticle && userPermissionsForArticle.canRead;
+                        })
 
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((article, index) => (
-                        <TableRow key={index}>
-                                     <TableCell>{article.purpose}</TableCell>
-                                
-                          <TableCell
-                            style={{
-                              maxWidth: '200px',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis'
-                            }}>
-                            {article.title}
-                          </TableCell>
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((article, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{article.purpose}</TableCell>
 
-                          <TableCell>{formatDate(article)}</TableCell>
-                                
-                          <TableCell>
-                            <Checkbox
-                              id={`attended-${article._id}`}
-                              name={`attended-${article._id}`}
-                              checked={user && user.attended.includes(article._id)}
-                              onChange={e => handleToggleAttending(article._id, e.target.checked)}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {(() => {
-                              const feedback = getFeedback(article._id);
-                              return feedback ? (
-                                <div style={{ fontSize: '12px' }}>
-                                  <span>{feedback}</span>
-                                  <IconButton onClick={() => handleOpen(article, feedback)}>
-                                    <Edit />
+                            <TableCell
+                              style={{
+                                maxWidth: '200px',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                              }}>
+                              {article.title}
+                            </TableCell>
+
+                            <TableCell>{formatDate(article)}</TableCell>
+
+                            <TableCell>
+                              <Checkbox
+                                id={`attended-${article._id}`}
+                                name={`attended-${article._id}`}
+                                checked={user && user.attended.includes(article._id)}
+                                onChange={e => handleToggleAttending(article._id, e.target.checked)}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {(() => {
+                                const feedback = getFeedback(article._id);
+                                return feedback ? (
+                                  <div style={{ fontSize: '12px' }}>
+                                    <span>{feedback}</span>
+                                    <IconButton onClick={() => handleOpen(article, feedback)}>
+                                      <Edit />
+                                    </IconButton>
+                                  </div>
+                                ) : (
+                                  <IconButton onClick={() => handleOpen(article, '')} sx={{ fontSize: '12px' }}>
+                                    <AddCircle sx={{ fontSize: '16px' }} />
                                   </IconButton>
-                                </div>
-                              ) : (
-                                <IconButton onClick={() => handleOpen(article, '')} sx={{ fontSize: '12px' }}>
-                                  <AddCircle sx={{ fontSize: '16px' }} />
-                                </IconButton>
-                              );
-                            })()}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                                );
+                              })()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>

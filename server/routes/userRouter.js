@@ -5,6 +5,47 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtMiddleware } = require('../middleware/permissions');
 
+router.get('/', jwtMiddleware, async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decoded.isAdmin) {
+      return res.status(403).send('Access forbidden: Only admins can access this endpoint');
+    }
+
+    const users = await User.find().select('-password');
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.put('/edit-permissions/:userId', jwtMiddleware, async (req, res) => {
+  const { userId } = req.params;
+  const { permissions } = req.body;
+
+  if (!Array.isArray(permissions)) {
+    return res.status(400).send('Permissions should be an array of objects');
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    user.permissions = permissions;
+
+    await user.save();
+
+    res.status(200).send({ message: 'Permissions updated successfully', permissions: user.permissions });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 router.get('/me', jwtMiddleware, async (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];

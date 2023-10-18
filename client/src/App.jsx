@@ -12,6 +12,7 @@ import RequestsList from './requests/RequestsList';
 import NewRequest from './requests/NewRequest';
 import OlderArticles from './articles/past/OlderArticles';
 import SubmittedRequests from './requests/SubmittedRequests';
+import Admin from './auth/Admin';
 
 function App() {
   const [user, setUser] = useRecoilState(userState);
@@ -53,6 +54,7 @@ function App() {
       <Navbar user={user} />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/admin' element={<Admin />} />
         <Route path='/articles' element={<ArticleList />} />
         <Route path='/articles/new' element={<NewArticle />} />
         <Route path='/older-articles' element={<OlderArticles />} />
