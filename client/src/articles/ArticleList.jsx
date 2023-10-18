@@ -11,6 +11,8 @@ import { articlesState, userState } from '../appState';
 import LoadingSpinner from '../helpers/LoadingSpinner';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import EditArticleModal from './EditArticleModal';
+import EditIcon from '@mui/icons-material/Edit';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -20,6 +22,7 @@ const purposeIcons = {
 
 const ArticleList = () => {
   const [articles, setArticles] = useRecoilState(articlesState);
+  const [selectedArticle, setSelectedArticle] = useState(null); // for editing
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
@@ -32,6 +35,38 @@ const ArticleList = () => {
       setIsUserLoaded(true);
     }
   }, [user]);
+
+  const handleSave = async editedArticle => {
+    try {
+      const response = await axios.put(`http://localhost:3001/api/articles/${editedArticle._id}`, editedArticle);
+      const updatedArticle = response.data;
+
+      const updatedArticles = articles.map(article => (article._id === updatedArticle._id ? updatedArticle : article));
+      setArticles(updatedArticles);
+
+      setSelectedArticle(null);
+    } catch (error) {
+      console.error('Error updating article:', error);
+    }
+  };
+
+  const handleDelete = async articleId => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this article?');
+    if (!isConfirmed) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:3001/api/articles/${articleId}`);
+
+      const remainingArticles = articles.filter(article => article._id !== articleId);
+      setArticles(remainingArticles);
+
+      setSelectedArticle(null);
+    } catch (error) {
+      console.error('Error deleting article:', error);
+    }
+  };
 
   useEffect(() => {
     if (articles.length > 0) return;
@@ -151,6 +186,10 @@ const ArticleList = () => {
                               }}>
                               More Details
                             </Button>
+                            {/* EDIT BUTTON FOR ARTICLES */}
+                            {article.organizer._id === user._id && (
+                              <Button startIcon={<EditIcon />} onClick={() => handleEdit(article)} />
+                            )}
                           </CardActions>
                           <Box
                             sx={{
@@ -181,6 +220,13 @@ const ArticleList = () => {
           </Grid>
         </Box>
       )}
+      <EditArticleModal
+        open={!!selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+        article={selectedArticle}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };

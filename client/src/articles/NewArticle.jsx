@@ -55,7 +55,6 @@ const NewArticle = () => {
       });
   };
 
-
   if (!currentUser) {
     return <LoadingSpinner />;
   } else {

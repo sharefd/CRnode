@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/new', jwtMiddleware, checkPermissions('create_article'), async (req, res) => {
+router.post('/new', jwtMiddleware, async (req, res) => {
   try {
     const newArticle = new Article(req.body);
     await newArticle.save();
@@ -25,15 +25,18 @@ router.post('/new', jwtMiddleware, checkPermissions('create_article'), async (re
   }
 });
 
-router.put('/:id', checkPermissions('update_article'), async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   const article = await Article.findById(req.params.id);
-  article.title = req.body.title;
-  article.body = req.body.body;
+
+  for (let key in req.body) {
+    article[key] = req.body[key];
+  }
+
   await article.save();
   res.json(article);
 });
 
-router.delete('/:id', checkPermissions('delete_article'), async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   const article = await Article.findById(req.params.id);
   await article.remove();
   res.json({ message: 'Article deleted' });
