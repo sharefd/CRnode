@@ -18,7 +18,7 @@ const AuthForm = () => {
     university: '',
     password: '',
     passwordConfirmation: '',
-    isAdmin: true
+    isAdmin: false
   });
 
   const UNIVERSITY_CHOICES = [
