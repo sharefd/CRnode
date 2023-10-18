@@ -6,14 +6,6 @@ export const PURPOSE_CHOICES = {
   MACIMAHD3: 'McMaster IM PGY-3 AHD'
 };
 
-export const PURPOSE_MAPPINGS = {
-  OM1: 'Uoft OM Half-day',
-  UOFTAMR: 'UofT Aerospace',
-  MACIMAHD1: 'McM Im AHD',
-  MACIMAHD2: 'McM Im AHD',
-  MACIMAHD3: 'McM Im AHD'
-};
-
 export const YEAR_OF_STUDY_CHOICES = [
   'PGY1',
   'PGY2',
