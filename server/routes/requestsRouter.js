@@ -81,7 +81,18 @@ router.put('/:id/status', async (req, res) => {
     if (status === 'Approved') {
       const user = await User.findById(request.user._id);
       if (user) {
-        user.permissions.push(request.purpose);
+        const existingPermission = user.permissions.find(p => p.purpose === request.purpose);
+
+        if (existingPermission) {
+          existingPermission.canRead = true;
+        } else {
+          user.permissions.push({
+            purpose: request.purpose,
+            canRead: true,
+            canWrite: false
+          });
+        }
+
         await user.save();
       }
     }
