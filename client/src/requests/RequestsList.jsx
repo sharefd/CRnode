@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../appState';
+import LoadingSpinner from '../helpers/LoadingSpinner';
+import AccessDenied from '../auth/AccessDenied';
 
 const RequestsList = () => {
   const [requests, setRequests] = useState([]);
@@ -52,6 +54,14 @@ const RequestsList = () => {
         console.error('There was an error updating the request:', error);
       });
   };
+
+  if (!user) {
+    return <LoadingSpinner />;
+  } else {
+    if (!user.isAdmin) {
+      return <AccessDenied />;
+    }
+  }
 
   return (
     <Paper sx={{ width: '80%', margin: '0 auto', mt: 5 }}>

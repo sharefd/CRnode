@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../appState';
 import { PURPOSE_CHOICES } from '../utils/constants';
+import LoadingSpinner from '../helpers/LoadingSpinner';
+import AccessDenied from '../auth/AccessDenied';
 
 const NewArticle = () => {
   const navigate = useNavigate();
@@ -50,6 +52,14 @@ const NewArticle = () => {
         console.error('There was an error creating the article:', error);
       });
   };
+
+  if (!user) {
+    return <LoadingSpinner />;
+  } else {
+    if (!user.isAdmin) {
+      return <AccessDenied />;
+    }
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
