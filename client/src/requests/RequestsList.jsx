@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../appState';
-import LoadingSpinner from '../helpers/LoadingSpinner';
+import LinearProgress from '@mui/material/LinearProgress';
 import AccessDenied from '../auth/AccessDenied';
 
 const RequestsList = () => {
@@ -75,7 +75,7 @@ const RequestsList = () => {
   };
 
   if (!user) {
-    return <LoadingSpinner />;
+    return <LinearProgress />;
   } else if (!user.isAdmin) {
     return <AccessDenied />;
   }
@@ -122,7 +122,7 @@ const RequestsList = () => {
                       
                       <span className='status-button'>
                       {request.isApproving ? (
-                        <LoadingSpinner />
+                        <LinearProgress />
                       ) : (
                         <>
                           <span className='status-button approve' onClick={() => updateStatus(request._id, 'Approved')}>
