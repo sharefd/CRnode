@@ -138,6 +138,7 @@ const OlderArticles = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
+                        <TableCell> Purpose </TableCell>
                         <TableCell onClick={() => sortTable(0)}>Article Title</TableCell>
                         <TableCell onClick={() => sortTable(1)}>Date</TableCell>
                         <TableCell>Attended</TableCell>
@@ -145,8 +146,15 @@ const OlderArticles = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {articles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((article, index) => (
+                        
+                        
+                      {articles
+                            .filter((article) => user.permissions.includes(article.purpose)) // Filter articles based on user's permissions
+
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((article, index) => (
                         <TableRow key={index}>
+                                     <TableCell>{article.purpose}</TableCell>
+                                
                           <TableCell
                             style={{
                               maxWidth: '200px',
@@ -158,6 +166,7 @@ const OlderArticles = () => {
                           </TableCell>
 
                           <TableCell>{formatDate(article)}</TableCell>
+                                
                           <TableCell>
                             <Checkbox
                               id={`attended-${article._id}`}

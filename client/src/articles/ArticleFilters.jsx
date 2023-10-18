@@ -30,12 +30,14 @@ export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
   };
 
   return (
-    <Box display='flex' alignItems='center' sx={{ my: 2, ml: 2 }}>
-      <Grid item xs={12} md={7}>
+    <Box display='flex' alignItems='center' sx={{ my: 2, ml: 8 }}>
+      <Grid item xs={12} md={12}>
         <Typography variant='caption' id='current-time' sx={{ px: 2, color: 'gray' }}>
           {currentTime}
         </Typography>
         <ToggleButtonGroup
+            color="primary"
+
           value={selectedPurposes}
           onChange={handleToggle}
           aria-label='purpose'

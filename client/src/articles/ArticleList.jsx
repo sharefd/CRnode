@@ -9,12 +9,11 @@ import './ArticleList.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { articlesState, userState } from '../appState';
 import LoadingSpinner from '../helpers/LoadingSpinner';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import EngineeringIcon from '@mui/icons-material/Engineering';import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 
 const purposeIcons = {
-  'OM1': <ConstructionIcon />,
+  'OM1': <EngineeringIcon />,
   'UOFTAMR': < RocketLaunchIcon />,
   // Add other purpose choices and their icons here
 };
@@ -190,7 +189,7 @@ const ArticleList = () => {
                 );
               })}
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={6} md={5}>
               <ArticleCalendar articles={articles} />
             </Grid>
           </Grid>
