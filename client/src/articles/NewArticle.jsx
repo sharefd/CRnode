@@ -11,6 +11,7 @@ import { articlesState, userState } from '../appState';
 import { PURPOSE_CHOICES } from '../utils/constants';
 import LoadingSpinner from '../helpers/LoadingSpinner';
 import AccessDenied from '../auth/AccessDenied';
+import { compareDates } from '../utils/dates';
 
 const NewArticle = () => {
   const navigate = useNavigate();
@@ -47,7 +48,11 @@ const NewArticle = () => {
       .post('http://localhost:3001/api/articles/new', payload)
       .then(response => {
         console.log('Article created:', response.data);
-        setArticles(articles.concat(response.data));
+        const updatedArticles = articles.concat(response.data);
+        const sortedArticles = updatedArticles.sort((a, b) => {
+          return compareDates(a, b);
+        });
+        setArticles(sortedArticles);
         navigate('/articles');
       })
       .catch(error => {
