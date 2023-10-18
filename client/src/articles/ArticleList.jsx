@@ -2,22 +2,21 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, Box, CardContent, CardActions, Button, Grid, Typography, Divider } from '@mui/material';
 import ArticleCalendar from './calendar/ArticleCalendar';
-import { compareDates, formatDate } from '../utils/dates';
+import { compareDates, formatDateToReadable } from '../utils/dates';
 import { ArticleFilters } from './ArticleFilters';
 import { PURPOSE_CHOICES, PURPOSE_MAPPINGS } from '../utils/constants';
 import './ArticleList.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { articlesState, userState } from '../appState';
 import LoadingSpinner from '../helpers/LoadingSpinner';
-import EngineeringIcon from '@mui/icons-material/Engineering';import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const purposeIcons = {
-  'OM1': <EngineeringIcon />,
-  'UOFTAMR': < RocketLaunchIcon />,
+  OM1: <EngineeringIcon />,
+  UOFTAMR: <RocketLaunchIcon />
   // Add other purpose choices and their icons here
 };
-
 
 const ArticleList = () => {
   const [articles, setArticles] = useRecoilState(articlesState);
@@ -77,20 +76,13 @@ const ArticleList = () => {
     }));
   };
 
-    const currentDate = new Date();
-    const eightHoursAgo = new Date(currentDate);
-    eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
+  const currentDate = new Date();
+  const eightHoursAgo = new Date(currentDate);
+  eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
 
-
-
-    const filteredArticles = selectedPurposes.includes('Show All')
-      ? articles.filter((article) => new Date(article.made_on) >= eightHoursAgo && currentDate)
-      : articles.filter(
-          (article) =>
-            selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]) &&
-            new Date(article.made_on) >= currentDate
-        );
-
+  const filteredArticles = selectedPurposes.includes('Show All')
+    ? articles
+    : articles.filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]));
 
   return (
     <div>
@@ -99,26 +91,17 @@ const ArticleList = () => {
       ) : (
         <Box px={2}>
           <ArticleFilters selectedPurposes={selectedPurposes} handlePurposeChange={handlePurposeChange} />
-                  
-                  
+
           <Grid container spacing={3}>
-              
             <Grid item xs={12} md={7}>
               {filteredArticles.map((article, index) => {
-                const formattedDate = formatDate(article);
-
                 return (
-                  <Card key={index} variant="outlined" elevation={1} 
-                      
-                      sx={{ marginBottom: '20px' 
-                          
-                          }}>
-
+                  <Card key={index} variant='outlined' sx={{ marginBottom: '20px' }}>
                     <CardContent>
                       <Grid container spacing={2}>
                         <Grid item xs={3}>
                           <Typography variant='body2' color='textSecondary'>
-                            {formattedDate}
+                            {formatDateToReadable(article.dateString)}
                           </Typography>
                           <Typography variant='caption' color='textSecondary'>
                             {article.time}
@@ -136,11 +119,8 @@ const ArticleList = () => {
                               color='primary'
                               sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
                               size='small'>
-                                
                               {purposeIcons[article.purpose]} {/* Render the icon */}
-
                               {PURPOSE_CHOICES[article.purpose]}
-                                
                             </Button>
                             <Button
                               variant='contained'
