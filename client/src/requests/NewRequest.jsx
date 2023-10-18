@@ -48,7 +48,7 @@ const NewRequest = () => {
       </Grid>
       <form onSubmit={handleFormSubmit}>
         <Grid container spacing={3} sx={{ padding: 4 }}>
-          <Grid item xs={12}>
+          <Grid item xs={8}>
             <TextField select label='Purpose' fullWidth value={purpose} onChange={e => setPurpose(e.target.value)}>
               {Object.keys(PURPOSE_CHOICES).map((key, index) => (
                 <MenuItem key={index} value={key}>
@@ -57,11 +57,11 @@ const NewRequest = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={4}>
             <TextField
               fullWidth
               select
-              label='Year of Study'
+              label='Level'
               variant='outlined'
               value={yearOfStudy}
               onChange={e => setYearOfStudy(e.target.value)}>
@@ -75,7 +75,9 @@ const NewRequest = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label='Message'
+            multiline
+             rows={4} 
+              label='Message (optional)'
               variant='outlined'
               value={message}
               onChange={e => setMessage(e.target.value)}

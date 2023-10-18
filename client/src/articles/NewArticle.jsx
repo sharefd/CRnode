@@ -28,6 +28,7 @@ const NewArticle = () => {
     meeting_id: '',
     passcode: '',
     speaker: '',
+    additional_details: '',  
   });
 
   const handleSubmit = async e => {
@@ -117,8 +118,8 @@ const NewArticle = () => {
               </TextField>
             </Grid>
               
-            <Grid item xs={6}>
-              <Typography variant='body1'>Date: </Typography>
+            <Grid item xs={4}>
+              <Typography variant='body1'></Typography>
               <TextField
                 type='date'
                 fullWidth
@@ -126,8 +127,8 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, made_on: e.target.value })}
               />
             </Grid>
-            <Grid item xs={6} >
-              <Typography variant='body1'>Time:</Typography>
+            <Grid item xs={4} >
+              <Typography variant='body1'></Typography>
               <TimePicker
                 value={article.time}
                 onChange={newValue => {
@@ -138,7 +139,7 @@ const NewArticle = () => {
               />
             </Grid>
               
-                 <Grid item xs={4}>
+                      <Grid item xs={4}>
       <TextField
         label="Speaker"
         fullWidth
@@ -147,10 +148,23 @@ const NewArticle = () => {
       />
     </Grid>
               
+              <Grid item xs={6}>
+      <TextField
+        label="Passcode"
+        fullWidth
+        value={article.passcode}
+        onChange={e => setArticle({ ...article, passcode: e.target.value })}
+      />
+    </Grid>
+              
+              
+              
+         
+              
             
               
               
-             <Grid item xs={4}>
+             <Grid item xs={6}>
                     <TextField
         label="Meeting ID"
         fullWidth
@@ -162,15 +176,7 @@ const NewArticle = () => {
               
 
                          
-         <Grid item xs={4}>
-      <TextField
-        label="Passcode"
-        fullWidth
-        value={article.passcode}
-        onChange={e => setArticle({ ...article, passcode: e.target.value })}
-      />
-    </Grid>
-              
+         
                                        
          <Grid item xs={12}>
       <TextField
