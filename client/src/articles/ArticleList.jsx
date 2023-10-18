@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Box, CardContent, CardActions, Button, Grid, Typography, Divider } from '@mui/material';
+import { Card, Box, CardContent, CardActions, Button, Grid, Typography, Divider, IconButton } from '@mui/material';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { compareDates, formatDateToReadable } from '../utils/dates';
 import { ArticleFilters } from './ArticleFilters';
@@ -13,6 +13,7 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import EditArticleModal from './EditArticleModal';
 import EditIcon from '@mui/icons-material/Edit';
+import { BorderColorOutlined } from '@mui/icons-material';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -186,10 +187,6 @@ const ArticleList = () => {
                               }}>
                               More Details
                             </Button>
-                            {/* EDIT BUTTON FOR ARTICLES */}
-                            {article.organizer._id === user._id && (
-                              <Button startIcon={<EditIcon />} onClick={() => setSelectedArticle(article)} />
-                            )}
                           </CardActions>
                           <Box
                             sx={{
@@ -204,6 +201,21 @@ const ArticleList = () => {
                             <span>Passcode: {article.passcode || 'None'}</span>
                           </Box>
 
+                          {article.organizer._id === user._id && (
+                            <IconButton
+                              onClick={() => setSelectedArticle(article)}
+                              sx={{
+                                float: 'right',
+                                padding: '0px',
+                                ml: 0.5,
+                                '&:hover': {
+                                  backgroundColor: 'transparent',
+                                  color: 'blue'
+                                }
+                              }}>
+                              <BorderColorOutlined sx={{ fontSize: '15px' }} />
+                            </IconButton>
+                          )}
                           <Typography variant='caption' color='textSecondary' style={{ float: 'right' }}>
                             Created by {article.organizer.username}
                           </Typography>

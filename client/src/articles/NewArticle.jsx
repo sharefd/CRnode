@@ -37,7 +37,6 @@ const NewArticle = () => {
       time: formattedTime,
       organizer: currentUser?._id || ''
     };
-    console.log(payload, currentUser);
 
     if (!payload.title) {
       console.error('Title is required');
