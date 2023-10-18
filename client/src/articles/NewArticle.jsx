@@ -55,11 +55,8 @@ const NewArticle = () => {
       });
   };
 
-<<<<<<< HEAD
-if (!currentUser) {
-=======
+
   if (!currentUser) {
->>>>>>> d97617f1d08da572cfbcb8fc6d3d437a12013b0b
     return <LoadingSpinner />;
   } else {
     if (!currentUser.isAdmin) {
