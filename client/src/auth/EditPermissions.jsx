@@ -1,6 +1,7 @@
 import { FormControlLabel, Checkbox, Box, Typography, Button } from '@mui/material';
+import axios from 'axios';
 
-const EditPermissions = ({ user }) => {
+const EditPermissions = ({ user, setUser, closeModal }) => {
   const handlePermissionChange = (event, purpose) => {
     const { name, checked } = event.target;
     let updatedPermissions = [...user.permissions];
@@ -10,7 +11,7 @@ const EditPermissions = ({ user }) => {
       updatedPermissions[permissionIndex][name] = checked;
     }
 
-    setuser({
+    setUser({
       ...user,
       permissions: updatedPermissions
     });
@@ -23,7 +24,7 @@ const EditPermissions = ({ user }) => {
       })
       .then(response => {
         console.log('Permissions updated:', response.data);
-        setOpenModal(false);
+        closeModal();
       })
       .catch(error => {
         console.error('Error updating permissions:', error);

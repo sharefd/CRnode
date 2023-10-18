@@ -54,7 +54,7 @@ const UserList = ({ users }) => {
         aria-labelledby='modal-title'
         aria-describedby='modal-description'>
         <div>
-          <EditPermissions user={currentUser} />
+          <EditPermissions user={currentUser} setUser={setCurrentUser} closeModal={() => setOpenModal(false)} />
         </div>
       </Modal>
     </>
