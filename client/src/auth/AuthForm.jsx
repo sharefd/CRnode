@@ -4,6 +4,7 @@ import { TextField, Button, Typography, Grid, MenuItem, Paper } from '@mui/mater
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import { userState } from '../appState';
+import { PURPOSE_CHOICES } from '../utils/constants';
 
 const AuthForm = () => {
   const [user, setUser] = useRecoilState(userState);
