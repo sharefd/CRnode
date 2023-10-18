@@ -37,9 +37,19 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
 });
 
 router.delete('/:id', jwtMiddleware, async (req, res) => {
-  const article = await Article.findById(req.params.id);
-  await article.remove();
-  res.json({ message: 'Article deleted' });
+  try {
+    const article = await Article.findById(req.params.id);
+
+    if (!article) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+
+    await Article.deleteOne({ _id: req.params.id });
+    res.json({ message: 'Article deleted' });
+  } catch (error) {
+    console.error('Error deleting article:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;
