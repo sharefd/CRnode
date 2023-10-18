@@ -12,6 +12,12 @@ const AuthForm = () => {
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
+  const initialPermissions = Object.keys(PURPOSE_CHOICES).map(purpose => ({
+    purpose,
+    canRead: false,
+    canWrite: false
+  }));
+
   const [credentials, setCredentials] = useState({
     username: '',
     email: '',
@@ -42,7 +48,7 @@ const AuthForm = () => {
           password: credentials.password,
           university: credentials.university,
           isAdmin: credentials.isAdmin,
-          permissions: credentials.isAdmin ? ['admin'] : ['user']
+          permissions: initialPermissions
         });
 
         if (response.status === 200) {
