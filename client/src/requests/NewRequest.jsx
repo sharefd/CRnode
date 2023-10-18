@@ -89,7 +89,7 @@ const NewRequest = () => {
             </Button>
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Button variant='outlined' color='primary'>
+            <Button variant='outlined' color='primary' onClick={() => navigate('/requests/submitted')}>
               View Submitted Requests
             </Button>
           </Grid>
