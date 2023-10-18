@@ -9,6 +9,12 @@ import { useNavigate } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../appState';
 import { PURPOSE_CHOICES } from '../utils/constants';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
+
 
 const NewArticle = () => {
   const navigate = useNavigate();
@@ -93,30 +99,13 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, event_link: e.target.value })}
               />
             </Grid>
-            <Grid item xs={4}>
-              <Typography variant='body1'>Date: </Typography>
-              <TextField
-                type='date'
-                fullWidth
-                value={article.made_on}
-                onChange={e => setArticle({ ...article, made_on: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant='body1'>Time:</Typography>
-              <TimePicker
-                value={article.time}
-                onChange={newValue => {
-                  setArticle({ ...article, time: dayjs(newValue) });
-                }}
-                slotProps={{ textField: { variant: 'outlined' } }}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Grid>
-            <Grid item xs={12}>
+              
+              
+              <Grid item xs={12}>
               <TextField
                 select
                 label='Purpose'
+                required  
                 fullWidth
                 value={article.purpose}
                 onChange={e => setArticle({ ...article, purpose: e.target.value })}>
@@ -128,6 +117,38 @@ const NewArticle = () => {
               </TextField>
             </Grid>
               
+            <Grid item xs={6}>
+              <Typography variant='body1'>Date: </Typography>
+              <TextField
+                type='date'
+                fullWidth
+                value={article.made_on}
+                onChange={e => setArticle({ ...article, made_on: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant='body1'>Time:</Typography>
+              <TimePicker
+                value={article.time}
+                onChange={newValue => {
+                  setArticle({ ...article, time: dayjs(newValue) });
+                }}
+                slotProps={{ textField: { variant: 'outlined' } }}
+                sx={{ overflow: 'hidden' }}
+              />
+            </Grid>
+              
+                 <Grid item xs={4}>
+      <TextField
+        label="Speaker"
+        fullWidth
+        value={article.speaker}
+        onChange={e => setArticle({ ...article, speaker: e.target.value })}
+      />
+    </Grid>
+              
+            
+              
               
              <Grid item xs={4}>
                     <TextField
@@ -137,6 +158,8 @@ const NewArticle = () => {
         onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
                       />
                     </Grid>
+              
+              
 
                          
          <Grid item xs={4}>
@@ -147,14 +170,19 @@ const NewArticle = () => {
         onChange={e => setArticle({ ...article, passcode: e.target.value })}
       />
     </Grid>
-    <Grid item xs={4}>
+              
+                                       
+         <Grid item xs={12}>
       <TextField
-        label="Speaker"
+        label="Addtional Details (e.g. required readings, preparation material)"
         fullWidth
-        value={article.speaker}
-        onChange={e => setArticle({ ...article, speaker: e.target.value })}
+        multiline
+           rows={4}  
+        value={article.additional_details}
+        onChange={e => setArticle({ ...article, additional_details: e.target.value })}
       />
     </Grid>
+ 
               
               
 

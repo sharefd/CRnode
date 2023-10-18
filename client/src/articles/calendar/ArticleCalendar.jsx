@@ -67,7 +67,7 @@ const ArticleCalendar = ({ articles }) => {
           
         
           <Button id="today-button" onClick={goToToday}>
-          Today
+         TODAY
         </Button>
           
       <div id='calendar-header'>

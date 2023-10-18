@@ -79,7 +79,7 @@ const ArticleList = () => {
 
     const currentDate = new Date();
     const eightHoursAgo = new Date(currentDate);
-    eightHoursAgo.setHours(eightHoursAgo.getHours() - 24);
+    eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
 
 
 
