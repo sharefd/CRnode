@@ -4,7 +4,7 @@ import { Card, Box, CardContent, CardActions, Button, Grid, Typography, Divider,
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { compareDates, formatDateToReadable } from '../utils/dates';
 import { ArticleFilters } from './ArticleFilters';
-import { PURPOSE_CHOICES, PURPOSE_MAPPINGS } from '../utils/constants';
+import { PURPOSE_CHOICES } from '../utils/constants';
 import './ArticleList.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { articlesState, userState } from '../appState';
@@ -12,7 +12,6 @@ import LoadingSpinner from '../helpers/LoadingSpinner';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import EditArticleModal from './EditArticleModal';
-import EditIcon from '@mui/icons-material/Edit';
 import { BorderColorOutlined } from '@mui/icons-material';
 
 const purposeIcons = {
@@ -123,16 +122,20 @@ const ArticleList = () => {
   const filteredArticles = selectedPurposes.includes('Show All')
     ? articles.filter(isArticleAfterCurrentDate)
     : articles
-        .filter(article => selectedPurposes.includes(PURPOSE_MAPPINGS[article.purpose]))
+        .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
         .filter(isArticleAfterCurrentDate);
 
   return (
     <div>
-      {isLoading ? (
+      {!isUserLoaded ? (
         <LoadingSpinner />
       ) : (
         <Box px={2}>
-          <ArticleFilters selectedPurposes={selectedPurposes} handlePurposeChange={handlePurposeChange} />
+          <ArticleFilters
+            userPermissions={user.permissions}
+            selectedPurposes={selectedPurposes}
+            handlePurposeChange={handlePurposeChange}
+          />
 
           <Grid container spacing={3}>
             <Grid item xs={12} md={7}>

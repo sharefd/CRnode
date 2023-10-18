@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
+import { PURPOSE_CHOICES } from '../utils/constants';
 
-export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
+export const ArticleFilters = ({ userPermissions, selectedPurposes, handlePurposeChange }) => {
   const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
@@ -44,21 +45,20 @@ export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
         <ToggleButton value='Show All' aria-label='Show All' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
           Show All
         </ToggleButton>
-        <ToggleButton
-          value='Uoft OM Half-day'
-          aria-label='Uoft OM Half-day'
-          sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-          Uoft OM Half-day
-        </ToggleButton>
-        <ToggleButton
-          value='UofT Aerospace'
-          aria-label='UofT Aerospace'
-          sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-          UofT Aerospace
-        </ToggleButton>
-        <ToggleButton value='McM Im AHD' aria-label='UofT Im AHD' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-          McM Im AHD
-        </ToggleButton>
+        {userPermissions.map(permission => {
+          if (permission.canRead) {
+            return (
+              <ToggleButton
+                key={permission.purpose}
+                value={PURPOSE_CHOICES[permission.purpose]}
+                aria-label={PURPOSE_CHOICES[permission.purpose]}
+                sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+                {permission.purpose}
+              </ToggleButton>
+            );
+          }
+          return null;
+        })}
       </ToggleButtonGroup>
     </Grid>
   );
