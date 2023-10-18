@@ -49,7 +49,14 @@ const ArticleCalendar = ({ articles }) => {
           });
 
           cells.push(
-            <CalendarCell key={j} day={day} events={eventsOnThisDay} selected={selected} setSelected={setSelected} />
+            <CalendarCell
+              key={j}
+              day={day}
+              month={month}
+              year={year}
+              events={eventsOnThisDay}
+              setSelected={setSelected}
+            />
           );
           day++;
         }

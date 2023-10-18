@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
-
-import ArticleCalendar from './calendar/ArticleCalendar';
-
+import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 
 export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
   const [currentTime, setCurrentTime] = useState('');
@@ -33,38 +30,36 @@ export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
   };
 
   return (
-      <Grid item xs={4} md={4} sx={{ pt: 1, pb: 1}}>
-        <Typography variant='caption' id='current-time' sx={{ px: 2, color: 'gray' }}>
-          {currentTime}
-        </Typography>
-        <ToggleButtonGroup
-            color="primary"
-            
-
-          value={selectedPurposes}
-          onChange={handleToggle}
-          aria-label='purpose'
-          size='small'
-          sx={{ ml: 4 }}>
-          <ToggleButton value='Show All' aria-label='Show All' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-            Show All
-          </ToggleButton>
-          <ToggleButton
-            value='Uoft OM Half-day'
-            aria-label='Uoft OM Half-day'
-            sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-            Uoft OM Half-day
-          </ToggleButton>
-          <ToggleButton
-            value='UofT Aerospace'
-            aria-label='UofT Aerospace'
-            sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-            UofT Aerospace
-          </ToggleButton>
-          <ToggleButton value='McM Im AHD' aria-label='UofT Im AHD' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-            McM Im AHD
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Grid>
+    <Grid item xs={4} md={4} sx={{ pt: 2, pb: 2 }}>
+      <Typography variant='caption' id='current-time' sx={{ px: 2, color: 'gray' }}>
+        {currentTime}
+      </Typography>
+      <ToggleButtonGroup
+        color='primary'
+        value={selectedPurposes}
+        onChange={handleToggle}
+        aria-label='purpose'
+        size='small'
+        sx={{ ml: 4 }}>
+        <ToggleButton value='Show All' aria-label='Show All' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+          Show All
+        </ToggleButton>
+        <ToggleButton
+          value='Uoft OM Half-day'
+          aria-label='Uoft OM Half-day'
+          sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+          Uoft OM Half-day
+        </ToggleButton>
+        <ToggleButton
+          value='UofT Aerospace'
+          aria-label='UofT Aerospace'
+          sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+          UofT Aerospace
+        </ToggleButton>
+        <ToggleButton value='McM Im AHD' aria-label='UofT Im AHD' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+          McM Im AHD
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Grid>
   );
 };

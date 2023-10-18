@@ -3,11 +3,14 @@ import { TableCell, Badge, Typography, Box, Dialog, DialogContent, DialogTitle, 
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import './Modal.css';
 
-const CalendarCell = ({ day, events, selected, setSelected }) => {
+const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
-  const today = new Date().getDate();
+  const today = new Date();
+  const currentDay = today.getDate();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
 
   const handleCellClick = () => {
     setSelected(day);
@@ -52,10 +55,11 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
         <Box
           sx={{
             display: 'flex',
-            backgroundColor: day === today ? '#318CE7' : 'transparent', // Change the background color here
+            backgroundColor:
+              day === currentDay && month === currentMonth && year === currentYear ? '#318CE7' : 'transparent',
             borderRadius: '5px',
             p: '3px',
-            border: day === today ? '2px ridge black' : 'none',
+            border: day === currentDay && month === currentMonth && year === currentYear ? '2px ridge black' : 'none',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
@@ -65,7 +69,7 @@ const CalendarCell = ({ day, events, selected, setSelected }) => {
             sx={{
               fontSize: '16px',
               fontWeight: '700',
-              color: day === today ? 'white' : 'inherit' // Change the text color here
+              color: day === currentDay && month === currentMonth && year === currentYear ? 'white' : 'inherit'
             }}>
             {day}
           </Typography>
