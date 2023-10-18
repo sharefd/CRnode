@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 
+import ArticleCalendar from './calendar/ArticleCalendar';
 
 
 export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
@@ -32,13 +33,13 @@ export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
   };
 
   return (
-    <Box display='flex' alignItems='center' sx={{ my: 2, ml: 8 }}>
-      <Grid item xs={12} md={12}>
+      <Grid item xs={4} md={4} sx={{ pt: 1, pb: 1}}>
         <Typography variant='caption' id='current-time' sx={{ px: 2, color: 'gray' }}>
           {currentTime}
         </Typography>
         <ToggleButtonGroup
             color="primary"
+            
 
           value={selectedPurposes}
           onChange={handleToggle}
@@ -65,6 +66,5 @@ export const ArticleFilters = ({ selectedPurposes, handlePurposeChange }) => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-    </Box>
   );
 };

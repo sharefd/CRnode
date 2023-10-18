@@ -53,10 +53,10 @@ const NewArticle = () => {
       });
   };
 
-  if (!user) {
+if (!currentUser) {
     return <LoadingSpinner />;
   } else {
-    if (!user.isAdmin) {
+    if (!currentUser.isAdmin) {
       return <AccessDenied />;
     }
   }
