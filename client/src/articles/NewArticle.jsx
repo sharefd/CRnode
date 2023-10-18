@@ -65,7 +65,7 @@ const NewArticle = () => {
             variant='h5'
             align='center'
             sx={{
-              backgroundColor: '#84a9ce',
+              backgroundColor: '#0066b2',
               color: '#fff',
               borderTopRightRadius: '5px',
               borderTopLeftRadius: '5px',
@@ -126,7 +126,7 @@ const NewArticle = () => {
                 onChange={e => setArticle({ ...article, made_on: e.target.value })}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} >
               <Typography variant='body1'>Time:</Typography>
               <TimePicker
                 value={article.time}

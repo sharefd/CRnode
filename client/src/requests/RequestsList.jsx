@@ -60,8 +60,8 @@ const RequestsList = () => {
           variant='h5'
           align='left'
           sx={{
-            backgroundColor: 'white',
-            color: 'black',
+            backgroundColor: '#0066b2',
+            color: 'white',
             borderTopRightRadius: '5px',
             borderTopLeftRadius: '5px',
             padding: '1rem',

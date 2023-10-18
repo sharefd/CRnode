@@ -210,9 +210,10 @@ p:hover .additional-details {
 }
 
 .approve {
-  background-color: #28a745;
+  background-color: #0066b2;
   color: white;
   margin-right: 5px;
+    
 }
 
 .reset {
@@ -233,17 +234,17 @@ span.request-status {
 
 span.request-status.pending {
   background-color: goldenrod;
-  border-color: goldenrod;
+      border-color: goldenrod;
 }
 
 span.request-status.approved {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #0066b2;
+  border-color: black;
 }
 
 span.request-status.denied {
   background-color: indianred;
-  border-color: indianred;
+  border-color: black;
 }
 
 

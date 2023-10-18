@@ -36,7 +36,7 @@ const NewRequest = () => {
           variant='h5'
           align='center'
           sx={{
-            backgroundColor: '#84a9ce',
+            backgroundColor: '#0066b2',
             color: '#fff',
             borderTopRightRadius: '5px',
             borderTopLeftRadius: '5px',

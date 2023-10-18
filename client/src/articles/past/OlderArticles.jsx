@@ -132,7 +132,7 @@ const OlderArticles = () => {
         <Grid container justifyContent='center' sx={{ mt: 4 }}>
           <Grid item xs={12} md={10}>
             <Card>
-              <CardHeader title='Older Articles' style={{ backgroundColor: 'white', color: 'black' }} />
+              <CardHeader title='Older Articles' style={{ backgroundColor: '#0066b2', color: 'white' }} />
               <CardContent>
                 <TableContainer>
                   <Table>
