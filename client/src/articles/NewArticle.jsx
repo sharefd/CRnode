@@ -6,8 +6,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../appState';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { articlesState, userState } from '../appState';
 import { PURPOSE_CHOICES } from '../utils/constants';
 import LoadingSpinner from '../helpers/LoadingSpinner';
 import AccessDenied from '../auth/AccessDenied';
@@ -15,6 +15,7 @@ import AccessDenied from '../auth/AccessDenied';
 const NewArticle = () => {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userState);
+  const [articles, setArticles] = useRecoilState(articlesState);
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -46,6 +47,7 @@ const NewArticle = () => {
       .post('http://localhost:3001/api/articles/new', payload)
       .then(response => {
         console.log('Article created:', response.data);
+        setArticles(articles.concat(response.data));
         navigate('/articles');
       })
       .catch(error => {
@@ -53,10 +55,10 @@ const NewArticle = () => {
       });
   };
 
-  if (!user) {
+  if (!currentUser) {
     return <LoadingSpinner />;
   } else {
-    if (!user.isAdmin) {
+    if (!currentUser.isAdmin) {
       return <AccessDenied />;
     }
   }
