@@ -188,7 +188,7 @@ const ArticleList = () => {
                             </Button>
                             {/* EDIT BUTTON FOR ARTICLES */}
                             {article.organizer._id === user._id && (
-                              <Button startIcon={<EditIcon />} onClick={() => handleEdit(article)} />
+                              <Button startIcon={<EditIcon />} onClick={() => setSelectedArticle(article)} />
                             )}
                           </CardActions>
                           <Box
