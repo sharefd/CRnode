@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
-import { PURPOSE_CHOICES } from '../utils/constants';
+import { PURPOSE_CHOICES } from '@/utils/constants';
 
 export const ArticleFilters = ({ userPermissions, selectedPurposes, handlePurposeChange }) => {
   const [currentTime, setCurrentTime] = useState('');

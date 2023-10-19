@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Button, TextField, List, ListItem, ListItemText, Modal, Box } from '@mui/material';
 import EditPermissions from './EditPermissions';
+import userStore from '@/stores/userStore';
 
 const PasswordPrompt = ({ onPasswordSubmit }) => {
   const [password, setPassword] = useState('');
@@ -26,7 +27,7 @@ const PasswordPrompt = ({ onPasswordSubmit }) => {
   );
 };
 
-const UserList = ({ users }) => {
+const UserList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -38,7 +39,7 @@ const UserList = ({ users }) => {
   return (
     <>
       <List>
-        {users.map(user => (
+        {userStore.users.map(user => (
           <ListItem key={user._id}>
             <ListItemText
               primary={user.username}
@@ -63,16 +64,21 @@ const UserList = ({ users }) => {
 
 const Admin = () => {
   const [passwordEntered, setPasswordEntered] = useState(false);
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+        userStore.setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
     // if (passwordEntered) {
-    axios.get('http://localhost:3001/api/users').then(response => {
-      setUsers(response.data);
-    });
+    fetchUsers();
     // }
   }, []);
-  // }, [passwordEntered]);
 
   const onPasswordSubmit = password => {
     if (password === 'admin') {
@@ -85,7 +91,7 @@ const Admin = () => {
   return (
     <Container>
       {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
-      <UserList users={users} />
+      <UserList />
     </Container>
   );
 };

@@ -4,18 +4,19 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useNavigate } from 'react-router-dom';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useRecoilState } from 'recoil';
-import { userState } from './appState';
-import { navlinks, userlinks } from './utils/constants';
-import CloudLogo from './assets/logo.png';
+import { navlinks, userlinks } from '@/utils/constants';
+import CloudLogo from '@/assets/logo.png';
+import { observer } from 'mobx-react';
+import userStore from '@/stores/userStore';
 
-const Navbar = () => {
+const Navbar = observer(() => {
   const isSmallScreen = useMediaQuery('(max-width:950px)');
-  const [user, setUser] = useRecoilState(userState);
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [links, setLinks] = useState([]);
   const navigate = useNavigate();
+
+  const user = userStore.user;
 
   useEffect(() => {
     if (user) {
@@ -41,7 +42,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    userStore.setUser(null);
     localStorage.removeItem('CloudRoundsToken');
     handleClose();
     navigate('/login');
@@ -140,6 +141,6 @@ const Navbar = () => {
       </Toolbar>
     </AppBar>
   );
-};
+});
 
 export default Navbar;

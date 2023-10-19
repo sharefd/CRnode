@@ -17,18 +17,16 @@ const EditPermissions = ({ user, setUser, closeModal }) => {
     });
   };
 
-  const savePermissions = () => {
-    axios
-      .put(`http://localhost:3001/api/users/edit-permissions/${user._id}`, {
+  const savePermissions = async () => {
+    try {
+      const response = await axios.put(`http://localhost:3001/api/users/edit-permissions/${user._id}`, {
         permissions: user.permissions
-      })
-      .then(response => {
-        console.log('Permissions updated:', response.data);
-        closeModal();
-      })
-      .catch(error => {
-        console.error('Error updating permissions:', error);
       });
+      console.log('Permissions updated:', response.data);
+      closeModal();
+    } catch (error) {
+      console.error('Error updating permissions:', error);
+    }
   };
 
   return (

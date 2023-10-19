@@ -1,12 +1,11 @@
-import { Modal, Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Delete, Save } from '@mui/icons-material';
+import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-import React, { useState, useEffect } from 'react';
-import { Save, Delete } from '@mui/icons-material';
-
-import { PURPOSE_CHOICES } from '../utils/constants';
+import { useEffect, useState } from 'react';
+import { PURPOSE_CHOICES } from '../../../utils/constants';
 
 const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
   const [editedArticle, setEditedArticle] = useState(article);

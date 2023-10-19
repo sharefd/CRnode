@@ -97,7 +97,7 @@ router.post('/login', async (req, res) => {
       expiresIn: '72h'
     });
 
-    const { password: _, _id, ...userResponse } = user.toObject();
+    const { password: _, ...userResponse } = user.toObject();
     userResponse.attended = user.attended;
 
     res.status(200).json({ message: 'Successfully logged in', token: token, user: userResponse });
@@ -107,7 +107,22 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { username, email, password, university, permissions } = req.body;
+  const { username, email, password, university, permissions, firstName, lastName } = req.body;
+
+  if (!username || !email || !password || !university || !firstName || !lastName) {
+    return res.status(400).send('All fields are required');
+  }
+
+  const existingUserByUsername = await User.findOne({ username });
+  const existingUserByEmail = await User.findOne({ email });
+
+  if (existingUserByUsername) {
+    return res.status(400).send('Username already exists');
+  }
+
+  if (existingUserByEmail) {
+    return res.status(400).send('Email already exists');
+  }
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -117,7 +132,9 @@ router.post('/register', async (req, res) => {
     email,
     password: hashedPassword,
     university,
-    permissions
+    permissions,
+    firstName,
+    lastName
   });
 
   try {
@@ -127,7 +144,7 @@ router.post('/register', async (req, res) => {
       expiresIn: '72h'
     });
 
-    const { password: _, _id, ...userResponse } = newUser.toObject();
+    const { password: _, ...userResponse } = newUser.toObject();
     userResponse.attended = newUser.attended;
 
     res.status(200).json({

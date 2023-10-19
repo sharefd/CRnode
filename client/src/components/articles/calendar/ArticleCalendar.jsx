@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import CalendarCell from './CalendarCell';
-import { monthNames } from '../../utils/constants';
+import { monthNames } from '../../../utils/constants';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());

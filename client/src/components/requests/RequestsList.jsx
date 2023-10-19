@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  Paper,
-  Typography,
-  TablePagination
+  Typography
 } from '@mui/material';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../appState';
-import LoadingSpinner from '../helpers/LoadingSpinner';
+import axios from 'axios';
+import { observer } from 'mobx-react';
+import { useState } from 'react';
+import userStore from '@/stores/userStore';
 import AccessDenied from '../auth/AccessDenied';
+import LoadingSpinner from '@/helpers/LoadingSpinner';
 
-const RequestsList = () => {
-  const [requests, setRequests] = useState([]);
+const RequestsList = observer(({ resource }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const user = useRecoilValue(userState);
-
-  useEffect(() => {
-    axios.get('http://localhost:3001/api/requests').then(response => {
-      setRequests(response.data);
-    });
-  }, []);
+  const user = userStore.user;
+  const [requests, setRequests] = useState(resource.read());
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -129,6 +123,6 @@ const RequestsList = () => {
       />
     </Paper>
   );
-};
+});
 
 export default RequestsList;

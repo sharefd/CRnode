@@ -1,32 +1,40 @@
-import { useState } from 'react';
-import { TextField, Button, MenuItem, Paper, Grid, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import { observer } from 'mobx-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '../utils/constants';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../appState';
+import userStore from '@/stores/userStore';
+import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
+import { CheckCircle } from '@mui/icons-material';
 
-const NewRequest = () => {
+const NewRequest = observer(() => {
   const navigate = useNavigate();
   const [purpose, setPurpose] = useState('');
   const [yearOfStudy, setYearOfStudy] = useState('');
   const [message, setMessage] = useState('');
-  const user = useRecoilValue(userState);
+  const user = userStore.user;
 
-  const handleFormSubmit = e => {
+  const handleFormSubmit = async e => {
     e.preventDefault();
-    console.log(user);
     const data = { purpose, year_of_study: yearOfStudy, message, user: user._id, email: user.email };
 
-    axios
-      .post('http://localhost:3001/api/requests/new', data)
-      .then(response => {
-        console.log('Request created:', response.data);
-        navigate('/requests/submitted');
-      })
-      .catch(error => {
-        console.error('There was an error creating the request:', error);
-      });
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/requests/new`, data);
+      console.log('Request created:', response.data);
+
+      userStore.setSubmittedRequests([...userStore.submittedRequests, response.data]);
+
+      navigate('/requests/submitted');
+    } catch (error) {
+      console.error('There was an error creating the request:', error);
+    }
+  };
+
+  const isPurposeAllowed = purposeKey => {
+    if (!user || !user.permissions) return false;
+
+    const permission = user.permissions.find(p => p.purpose === purposeKey);
+    return permission ? permission.canRead : false;
   };
 
   return (
@@ -51,8 +59,9 @@ const NewRequest = () => {
           <Grid item xs={8}>
             <TextField select label='Purpose' fullWidth value={purpose} onChange={e => setPurpose(e.target.value)}>
               {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                <MenuItem key={index} value={key}>
+                <MenuItem key={index} value={key} disabled={isPurposeAllowed(key)}>
                   {PURPOSE_CHOICES[key]}
+                  {isPurposeAllowed(key) && <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />}
                 </MenuItem>
               ))}
             </TextField>
@@ -97,6 +106,6 @@ const NewRequest = () => {
       </form>
     </Paper>
   );
-};
+});
 
 export default NewRequest;
