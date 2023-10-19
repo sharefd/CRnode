@@ -32,13 +32,21 @@ const RequestsList = observer(({ resource }) => {
   };
 
   const updateStatus = (id, status) => {
+    const updatedRequests = requests.map(request => {
+      if (request._id === id) {
+        return { ...request, isApproving: true };
+      }
+      return request;
+    });
+    setRequests(updatedRequests);
+
     const data = { status, email: user.email };
     axios
       .put(`http://localhost:3001/api/requests/${id}/status`, data)
       .then(response => {
         const updatedRequests = requests.map(request => {
           if (request._id === id) {
-            return { ...request, status };
+            return { ...request, status, isApproving: false };
           }
           return request;
         });
@@ -46,15 +54,20 @@ const RequestsList = observer(({ resource }) => {
       })
       .catch(error => {
         console.error('There was an error updating the request:', error);
+        const updatedRequests = requests.map(request => {
+          if (request._id === id) {
+            return { ...request, isApproving: false };
+          }
+          return request;
+        });
+        setRequests(updatedRequests);
       });
   };
 
   if (!user) {
-    return <LoadingSpinner />;
-  } else {
-    if (!user.isAdmin) {
-      return <AccessDenied />;
-    }
+    return <LinearProgress />;
+  } else if (!user.isAdmin) {
+    return <AccessDenied />;
   }
 
   return (
@@ -96,14 +109,24 @@ const RequestsList = observer(({ resource }) => {
                   </TableCell>
                   <TableCell>{request.message}</TableCell>
                   <TableCell>
-                    <span className='status-button approve' onClick={() => updateStatus(request._id, 'Approved')}>
-                      Approve
-                    </span>
-                    <span className='status-button deny' onClick={() => updateStatus(request._id, 'Denied')}>
-                      Deny
-                    </span>
-                    <span className='status-button reset' onClick={() => updateStatus(request._id, 'Pending')}>
-                      Reset
+                    <span className='status-button'>
+                      {request.isApproving ? (
+                        <LinearProgress />
+                      ) : (
+                        <>
+                          <span className='status-button approve' onClick={() => updateStatus(request._id, 'Approved')}>
+                            Approve
+                          </span>
+
+                          <span className='status-button deny' onClick={() => updateStatus(request._id, 'Denied')}>
+                            Deny
+                          </span>
+
+                          <span className='status-button reset' onClick={() => updateStatus(request._id, 'Pending')}>
+                            Reset
+                          </span>
+                        </>
+                      )}
                     </span>
                   </TableCell>
                 </TableRow>

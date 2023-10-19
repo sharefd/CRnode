@@ -56,3 +56,14 @@
 .span-margin {
   margin-right: 12px;
 }
+
+/* Add this CSS rule to control the visibility of the button */
+.details-button {
+  display: none; /* Initially hide the button */
+}
+
+/* Show the button when the parent container (the grid) is being hovered */
+.Card:hover .details-button {
+  display: block;
+}
+
