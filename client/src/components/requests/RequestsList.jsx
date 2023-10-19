@@ -32,6 +32,7 @@ const RequestsList = observer(({ resource }) => {
     setPage(0);
   };
 
+
   const updateStatus = (id, purpose, status) => {
     const updatedRequests = requests.map(request => {
       if (request._id === id) {
@@ -41,7 +42,9 @@ const RequestsList = observer(({ resource }) => {
     });
     setRequests(updatedRequests);
 
+
     const data = { status, email: user.email, purpose };
+
     axios
       .put(`http://localhost:3001/api/requests/${id}/status`, data)
       .then(response => {
