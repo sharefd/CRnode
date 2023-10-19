@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '../utils/constants';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../appState';
+import LinearProgress from '@mui/material/LinearProgress';
+
 
 const NewRequest = () => {
   const navigate = useNavigate();
@@ -12,22 +14,29 @@ const NewRequest = () => {
   const [yearOfStudy, setYearOfStudy] = useState('');
   const [message, setMessage] = useState('');
   const user = useRecoilValue(userState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+    
 
   const handleFormSubmit = e => {
-    e.preventDefault();
-    console.log(user);
-    const data = { purpose, year_of_study: yearOfStudy, message, user: user._id, email: user.email };
+  e.preventDefault();
+  setIsSubmitting(true); // Start submission
 
-    axios
-      .post('http://localhost:3001/api/requests/new', data)
-      .then(response => {
-        console.log('Request created:', response.data);
-        navigate('/requests/submitted');
-      })
-      .catch(error => {
-        console.error('There was an error creating the request:', error);
-      });
-  };
+  const data = { purpose, year_of_study: yearOfStudy, message, user: user._id, email: user.email };
+
+  axios
+    .post('http://localhost:3001/api/requests/new', data)
+    .then(response => {
+      console.log('Request created:', response.data);
+      navigate('/requests/submitted');
+    })
+    .catch(error => {
+      console.error('There was an error creating the request:', error);
+    })
+    .finally(() => {
+      setIsSubmitting(false); // Submission completed
+    });
+};
+
 
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>
@@ -84,11 +93,16 @@ const NewRequest = () => {
               onChange={e => setMessage(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Button type='submit' variant='contained' color='primary' style={{ marginBottom: '10px' }}>
-              Submit
-            </Button>
-          </Grid>
+         <Grid item xs={12} style={{ textAlign: 'center' }}>
+  {isSubmitting ? (
+    <LinearProgress />
+  ) : (
+    <Button type='submit' variant='contained' color='primary' style={{ marginBottom: '10px' }}>
+      Submit
+    </Button>
+  )}
+</Grid>
+
           <Grid item xs={12} style={{ textAlign: 'center' }}>
             <Button variant='outlined' color='primary' onClick={() => navigate('/requests/submitted')}>
               View Submitted Requests
