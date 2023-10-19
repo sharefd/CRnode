@@ -28,7 +28,7 @@ const ArticleList = () => {
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState({});
     
 
   const user = useRecoilValue(userState);
@@ -112,10 +112,12 @@ const ArticleList = () => {
     [articleId]: !prevState[articleId]
   }));
 
-  if (!showDetails[articleId]) {
-    setIsExpanded(false);
-  }
+  setIsExpanded(prevState => ({
+    ...prevState,
+    [articleId]: !prevState[articleId]
+  }));
 };
+
 
 
   const currentDate = new Date();
@@ -184,12 +186,9 @@ const ArticleList = () => {
                               sx={{ mx: 1, textTransform: 'none' }}>
                               Join Meeting
                             </Button>
-                         <Button
+<Button
   variant='outlined'
-  onClick={() => {
-    toggleDetails(article._id);
-    setIsExpanded(!isExpanded);
-  }}
+  onClick={() => toggleDetails(article._id)}
   size='small'
   sx={{
     textTransform: 'none',
@@ -200,8 +199,9 @@ const ArticleList = () => {
     '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
   }}
 >
-  {isExpanded ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
+  {isExpanded[article._id] ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
 </Button>
+
 
                           </CardActions>
                           <Box
