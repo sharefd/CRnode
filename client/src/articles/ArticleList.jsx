@@ -13,6 +13,7 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import EditArticleModal from './EditArticleModal';
 import { BorderColorOutlined } from '@mui/icons-material';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -185,10 +186,10 @@ const ArticleList = () => {
                                 my: 0.5,
                                 mx: 1,
                                 color: 'gray',
-                                borderColor: 'gray',
+                                borderColor: 'white',
                                 '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
                               }}>
-                              More Details
+                              Expand {'\u00A0'} <OpenInFullIcon/>
                             </Button>
                           </CardActions>
                           <Box
@@ -202,7 +203,23 @@ const ArticleList = () => {
                             <span>Meeting ID: {article.meeting_id || 'None'}</span>
                             <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
                             <span>Passcode: {article.passcode || 'None'}</span>
+                             <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}  
+                            <span>Speaker: {article.speaker || 'None'}</span>  
                           </Box>
+                            
+                            
+                        <Box
+                            sx={{
+                              display: showDetails[article._id] ? 'flex' : 'none',
+                              alignItems: 'center',
+                              mx: 2,
+                              my: 1,
+                              fontSize: '0.9rem'
+                            }}>
+                            <span> {article.additional_details || ''}</span>
+                  
+                          </Box>
+                            
 
                           {article.organizer._id === user._id && (
                             <IconButton
