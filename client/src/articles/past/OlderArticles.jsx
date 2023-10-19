@@ -37,19 +37,24 @@ const OlderArticles = () => {
   const [feedbacks, setFeedbacks] = useRecoilState(feedbacksState);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchFeedbacks = () => {
+    setIsLoading(true);
+    axios
+      .get(`http://localhost:3001/api/feedbacks/${user._id}`)
+      .then(response => {
+        setFeedbacks(response.data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('There was an error fetching feedbacks:', error);
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
     if (user) {
       setIsUserLoaded(true);
-      axios
-        .get(`http://localhost:3001/api/feedbacks/${user._id}`)
-        .then(response => {
-          setFeedbacks(response.data);
-          setIsLoading(false);
-        })
-        .catch(error => {
-          console.error('There was an error fetching feedbacks:', error);
-          setIsLoading(false);
-        });
+      fetchFeedbacks();
     }
   }, [user]);
 
@@ -85,13 +90,13 @@ const OlderArticles = () => {
   const handleFeedbackSubmit = () => {
     if (isUserLoaded && currentArticle) {
       axios
-        .post('http://localhost:3001/api/feedbacks', {
+        .put('http://localhost:3001/api/feedbacks/updateOrCreate', {
           articleId: currentArticle._id,
           userId: user._id,
           feedback: currentFeedback
         })
         .then(response => {
-          console.log('Feedback submitted:', response.data);
+          fetchFeedbacks();
           handleClose();
         })
         .catch(error => {
