@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Feedback = require('../models/Feedback');
 
+router.get('/', async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find().populate('articleId').populate('userId');
+    res.status(200).json(feedbacks);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 router.post('/', async (req, res) => {
   const { articleId, userId, feedback } = req.body;
 
@@ -22,7 +31,7 @@ router.post('/', async (req, res) => {
 router.get('/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
-    const feedbacks = await Feedback.find({ userId }).populate('articleId');
+    const feedbacks = await Feedback.find({ userId }).populate('articleId').populate('userId');
     res.status(200).json(feedbacks);
   } catch (err) {
     res.status(500).send(err);

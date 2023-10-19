@@ -10,5 +10,10 @@ export default defineConfig({
         families: ['Lato', 'Inter', 'Fira Code']
       }
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  }
 });

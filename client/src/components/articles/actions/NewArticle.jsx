@@ -1,22 +1,20 @@
+import userStore from '@/stores/userStore';
+import AccessDenied from '@/components/auth/AccessDenied';
+import LoadingSpinner from '@/helpers/LoadingSpinner';
+import { createArticle } from '@/utils/articles';
+import { PURPOSE_CHOICES } from '@/utils/constants';
 import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import axios from 'axios';
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { articlesState, userState } from '../appState';
-import { PURPOSE_CHOICES } from '../utils/constants';
-import LoadingSpinner from '../helpers/LoadingSpinner';
-import AccessDenied from '../auth/AccessDenied';
-import { compareDates } from '../utils/dates';
 
-const NewArticle = () => {
+const NewArticle = observer(() => {
   const navigate = useNavigate();
-  const currentUser = useRecoilValue(userState);
-  const [articles, setArticles] = useRecoilState(articlesState);
+  const currentUser = userStore.user;
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -43,20 +41,8 @@ const NewArticle = () => {
       return;
     }
 
-    axios
-      .post('http://localhost:3001/api/articles/new', payload)
-      .then(response => {
-        console.log('Article created:', response.data);
-        const updatedArticles = articles.concat(response.data);
-        const sortedArticles = updatedArticles.sort((a, b) => {
-          return compareDates(a, b);
-        });
-        setArticles(sortedArticles);
-        navigate('/articles');
-      })
-      .catch(error => {
-        console.error('There was an error creating the article:', error);
-      });
+    await createArticle(payload);
+    navigate('/articles');
   };
 
   if (!currentUser) {
@@ -194,6 +180,6 @@ const NewArticle = () => {
       </Paper>
     </LocalizationProvider>
   );
-};
+});
 
 export default NewArticle;

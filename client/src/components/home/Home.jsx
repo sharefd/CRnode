@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import { useRecoilValue } from 'recoil';
-import { userState } from './appState';
+import userStore from '@/stores/userStore';
+import { observer } from 'mobx-react';
 
-const Home = () => {
-  const user = useRecoilValue(userState);
+const Home = observer(() => {
+  const user = userStore.user;
 
   return (
     <Box sx={{ ml: 4, mt: 4 }}>
@@ -19,6 +19,6 @@ const Home = () => {
       )}
     </Box>
   );
-};
+});
 
 export default Home;

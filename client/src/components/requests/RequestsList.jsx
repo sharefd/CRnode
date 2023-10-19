@@ -1,36 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  Paper,
-  Typography,
-  TablePagination
+  Typography
 } from '@mui/material';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../appState';
-import LinearProgress from '@mui/material/LinearProgress';
+import axios from 'axios';
+import { observer } from 'mobx-react';
+import { useState } from 'react';
+import userStore from '@/stores/userStore';
 import AccessDenied from '../auth/AccessDenied';
+import LoadingSpinner from '@/helpers/LoadingSpinner';
 
-const RequestsList = () => {
-  const [requests, setRequests] = useState([]);
+const RequestsList = observer(({ resource }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const user = useRecoilValue(userState);
-
-  useEffect(() => {
-    axios.get('http://localhost:3001/api/requests').then(response => {
-      const initialRequests = response.data.map(request => ({
-        ...request,
-        isApproving: false,
-      }));
-      setRequests(initialRequests);
-    });
-  }, []);
+  const user = userStore.user;
+  const [requests, setRequests] = useState(resource.read());
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -119,8 +109,7 @@ const RequestsList = () => {
                   </TableCell>
                   <TableCell>{request.message}</TableCell>
                   <TableCell>
-                      
-                      <span className='status-button'>
+                    <span className='status-button'>
                       {request.isApproving ? (
                         <LinearProgress />
                       ) : (
@@ -128,15 +117,11 @@ const RequestsList = () => {
                           <span className='status-button approve' onClick={() => updateStatus(request._id, 'Approved')}>
                             Approve
                           </span>
-                              
-                              
+
                           <span className='status-button deny' onClick={() => updateStatus(request._id, 'Denied')}>
                             Deny
                           </span>
-                              
-                              
-                              
-                              
+
                           <span className='status-button reset' onClick={() => updateStatus(request._id, 'Pending')}>
                             Reset
                           </span>
@@ -161,6 +146,6 @@ const RequestsList = () => {
       />
     </Paper>
   );
-};
+});
 
 export default RequestsList;
