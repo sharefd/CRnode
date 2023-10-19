@@ -28,6 +28,8 @@ const ArticleList = () => {
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+    
 
   const user = useRecoilValue(userState);
 
@@ -105,11 +107,16 @@ const ArticleList = () => {
   };
 
   const toggleDetails = articleId => {
-    setShowDetails(prevState => ({
-      ...prevState,
-      [articleId]: !prevState[articleId]
-    }));
-  };
+  setShowDetails(prevState => ({
+    ...prevState,
+    [articleId]: !prevState[articleId]
+  }));
+
+  if (!showDetails[articleId]) {
+    setIsExpanded(false);
+  }
+};
+
 
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
@@ -177,20 +184,25 @@ const ArticleList = () => {
                               sx={{ mx: 1, textTransform: 'none' }}>
                               Join Meeting
                             </Button>
-                            <Button
-                              variant='outlined'
-                              onClick={() => toggleDetails(article._id)}
-                              size='small'
-                              sx={{
-                                textTransform: 'none',
-                                my: 0.5,
-                                mx: 1,
-                                color: 'gray',
-                                borderColor: 'white',
-                                '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                              }}>
-                              Expand {'\u00A0'} <OpenInFullIcon/>
-                            </Button>
+                         <Button
+  variant='outlined'
+  onClick={() => {
+    toggleDetails(article._id);
+    setIsExpanded(!isExpanded);
+  }}
+  size='small'
+  sx={{
+    textTransform: 'none',
+    my: 0.5,
+    mx: 1,
+    color: 'gray',
+    borderColor: 'white',
+    '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+  }}
+>
+  {isExpanded ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
+</Button>
+
                           </CardActions>
                           <Box
                             sx={{
