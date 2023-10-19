@@ -49,7 +49,7 @@ const NewRequest = () => {
       <form onSubmit={handleFormSubmit}>
         <Grid container spacing={3} sx={{ padding: 4 }}>
           <Grid item xs={8}>
-            <TextField select label='Purpose' fullWidth value={purpose} onChange={e => setPurpose(e.target.value)}>
+            <TextField select label='Purpose' required fullWidth value={purpose} onChange={e => setPurpose(e.target.value)}>
               {Object.keys(PURPOSE_CHOICES).map((key, index) => (
                 <MenuItem key={index} value={key}>
                   {PURPOSE_CHOICES[key]}
@@ -60,6 +60,7 @@ const NewRequest = () => {
           <Grid item xs={4}>
             <TextField
               fullWidth
+              required
               select
               label='Level'
               variant='outlined'
