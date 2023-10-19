@@ -1,4 +1,5 @@
 import {
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -31,7 +32,8 @@ const RequestsList = observer(({ resource }) => {
     setPage(0);
   };
 
-  const updateStatus = (id, status) => {
+
+  const updateStatus = (id, purpose, status) => {
     const updatedRequests = requests.map(request => {
       if (request._id === id) {
         return { ...request, isApproving: true };
@@ -40,7 +42,9 @@ const RequestsList = observer(({ resource }) => {
     });
     setRequests(updatedRequests);
 
-    const data = { status, email: user.email };
+
+    const data = { status, email: user.email, purpose };
+
     axios
       .put(`http://localhost:3001/api/requests/${id}/status`, data)
       .then(response => {
@@ -66,8 +70,10 @@ const RequestsList = observer(({ resource }) => {
 
   if (!user) {
     return <LinearProgress />;
-  } else if (!user.isAdmin) {
-    return <AccessDenied />;
+  } else {
+    if (!user.isAdmin) {
+      return <AccessDenied />;
+    }
   }
 
   return (
@@ -114,15 +120,21 @@ const RequestsList = observer(({ resource }) => {
                         <LinearProgress />
                       ) : (
                         <>
-                          <span className='status-button approve' onClick={() => updateStatus(request._id, 'Approved')}>
+                          <span
+                            className='status-button approve'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Approved')}>
                             Approve
                           </span>
 
-                          <span className='status-button deny' onClick={() => updateStatus(request._id, 'Denied')}>
+                          <span
+                            className='status-button deny'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Denied')}>
                             Deny
                           </span>
 
-                          <span className='status-button reset' onClick={() => updateStatus(request._id, 'Pending')}>
+                          <span
+                            className='status-button reset'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Pending')}>
                             Reset
                           </span>
                         </>

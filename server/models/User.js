@@ -8,8 +8,8 @@ const PermissionSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  firstName: { type: String },
+  lastName: { type: String },
   password: { type: String, required: true },
   email: { type: String, required: true },
   university: { type: String, required: true },

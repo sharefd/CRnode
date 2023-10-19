@@ -54,7 +54,7 @@ router.post('/new', async (req, res) => {
 
 router.put('/:id/status', async (req, res) => {
   const { id } = req.params;
-  const { status, message, email } = req.body;
+  const { status, message, purpose, email } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid request ID' });
@@ -87,7 +87,7 @@ router.put('/:id/status', async (req, res) => {
           existingPermission.canRead = true;
         } else {
           user.permissions.push({
-            purpose: request.purpose,
+            purpose: purpose,
             canRead: true,
             canWrite: false
           });
