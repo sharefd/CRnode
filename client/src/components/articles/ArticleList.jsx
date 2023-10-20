@@ -71,7 +71,7 @@ const ArticleList = observer(({ resource }) => {
 
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
-  eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
+  eightHoursAgo.setHours(eightHoursAgo.getHours() - 45);
 
   const isArticleAfterCurrentDate = article => {
     const articleDate = new Date(article.dateString);

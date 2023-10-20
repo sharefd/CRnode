@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
-import { TableCell, Badge, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { TableCell, Badge, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton, Button } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import './Modal.css';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import LinkIcon from '@mui/icons-material/Link';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import HttpsIcon from '@mui/icons-material/Https';
+
+const purposeIcons = {
+  OM1: <EngineeringIcon />,
+  UOFTAMR: <RocketLaunchIcon />
+  // Add other purpose choices and their icons here
+};
+
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
@@ -77,22 +89,39 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
       </TableCell>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle className='modal-title'>{article.title}</DialogTitle>
-        <DialogContent>
+          
+        <DialogContent className='modal-title'>{article.title}
+         
           <Box className='modal-info'>
+                  
+              <p className='modal-purpose'>
+            
+                <AccessTimeIcon/>{'\u00A0'}{'\u00A0'}{'\u00A0'}
+                    {article.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'} 
+                 {article.time}
+              </p>
+
             <p className='modal-purpose'>
-              Purpose: <span>{article.purpose || 'None'}</span>
+          {purposeIcons[article.purpose]}  {'\u00A0'}   {'\u00A0'}    {article.purpose || 'None'}   
             </p>
-            <p>
-              Event link:
-              <a className='modal-event-link' href={article.event_link}>
-                Here
-              </a>
-            </p>
-            <p className='id-pass'>Meeting ID: {article.meeting_id || 'None'}</p>
-            <p className='id-pass'>Passcode: {article.passcode || 'None'}</p>
-            <p className='date-time'>Date: {article.dateString}</p>
-            <p className='date-time'>Time: {article.time}</p>
+          <p className='modal-purpose'>
+  <LinkIcon /> {'\u00A0'} {'\u00A0'} 
+  <Button
+    variant='contained'
+    color='primary'
+    onClick={() => window.open(article.event_link, '_blank')}
+    size='small'
+    sx={{ textTransform: 'none' }}
+  >
+    Join Meeting
+  </Button>
+</p>
+<p className='modal-purpose'>
+  <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'} {'\u00A0'}
+  Passcode: {article.passcode || 'None'}
+</p>
+
+        
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
