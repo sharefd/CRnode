@@ -69,20 +69,54 @@ const ArticleCalendar = ({ articles }) => {
   };
 
   return (
-    <div id='calendar-container'>
-      <Button id='today-button' onClick={goToToday}>
+    <div id='calendar-container'> 
+
+<div
+  id='calendar-head'
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#1976d2', // Background color
+    borderRadius: '20px', // Adjust the value to your desired level of rounding
+    color: 'white'
+  }}
+>
+    <Button id='prev-month' onClick={() => changeMonth(-1)} style={{ }}>
+          <ChevronLeft /> 
+        </Button>
+    
+            <Button 
+                variant='outlined'
+      size='small'
+      sx={{
+                
+        textTransform: 'none',
+        color: '#1976d2',
+        borderColor: 'white',
+        backgroundColor: 'white',    
+        '&:hover': {
+          backgroundColor: '#F5F5F5',
+          color: '#1976d2',
+          borderColor: 'white',
+        },
+      }}onClick={goToToday}>
         TODAY
       </Button>
+    
 
-      <div id='calendar-header'>
-        <Button id='prev-month' onClick={() => changeMonth(-1)}>
-          <ChevronLeft />
-        </Button>
-
-        <span id='current-month-year'>{`${monthNames[month]} ${year}`}</span>
-        <Button id='next-month' onClick={() => changeMonth(1)}>
+  <span id='current-month-year' style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+    {`${monthNames[month]} ${year}`}
+  </span>
+          
+    
+    
+            <Button id='next-month' onClick={() => changeMonth(1)} style={{ color: 'white' }}>
           <ChevronRight />
         </Button>
+    
+
+          
       </div>
       <Table id='calendar-body'>
         <TableHead>
