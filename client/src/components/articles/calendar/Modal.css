@@ -1,5 +1,5 @@
 .modal {
-  width: '100%';
+  width: 100%;
   display: block;
   position: fixed;
   top: 50%;
@@ -8,13 +8,12 @@
 }
 
 .modal-content {
-  width: 100%;
-  max-width: 400px;
+  max-width: 400px; /* Set a fixed width for the modal content */
   height: 100%;
   padding: 10px;
   background-color: #fff;
   overflow: auto;
-    font-style: normal;
+  font-style: normal;
 }
 
 .close-modal {
@@ -25,6 +24,7 @@
 }
 
 .modal-title {
+  max-width: 400px; /* Set a fixed width for the modal content */
 
   color: black;
   font-weight: bold;
@@ -42,9 +42,10 @@
 .modal-info {
   width: 100%;
   min-width: 370px;
+    
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
+  gap: 0px;
   
 }
 
@@ -58,3 +59,6 @@
 .modal-time {
     font-size: 16px;
 }
+
+
+ 

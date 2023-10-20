@@ -106,14 +106,16 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
             </p>
           <p className='modal-purpose'>
   <LinkIcon /> {'\u00A0'} {'\u00A0'} 
-  <Button
-    variant='contained'
-    color='primary'
+    <Button
+    variant='outlined'
     onClick={() => window.open(article.event_link, '_blank')}
     size='small'
-    sx={{ textTransform: 'none' }}
-  >
-    Join Meeting
+    sx={{ textTransform: 'none', color: 'black',
+                              borderColor: 'black',
+                              '&:hover': { backgroundColor: '#07A24A', color:'white', borderColor: 'black' }
+                            }}>
+  
+    Link to Meeting
   </Button>
 </p>
 <p className='modal-purpose'>
