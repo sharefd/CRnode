@@ -7,6 +7,8 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LinkIcon from '@mui/icons-material/Link';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import HttpsIcon from '@mui/icons-material/Https';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -60,6 +62,19 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
   const article = events[currentEventIndex] || {};
+    
+  const handleCopyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      function () {
+        // Successfully copied to clipboard
+        console.log('Link copied to clipboard');
+      },
+      function (err) {
+        // Unable to copy to clipboard
+        console.error('Failed to copy link to clipboard', err);
+      }
+    );
+  };    
 
   return (
     <>
@@ -106,17 +121,41 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
             </p>
           <p className='modal-purpose'>
   <LinkIcon /> {'\u00A0'} {'\u00A0'} 
+              
+              <Button
+      variant='outlined'
+      size='small'
+      sx={{
+        textTransform: 'none',
+        color: 'black',
+        borderColor: 'black',
+        '&:hover': {
+          backgroundColor: '#07A24A',
+          color: 'white',
+          borderColor: 'black',
+        },
+      }}
+      onClick={() => handleCopyToClipboard(article.event_link)}
+    >
+      <ContentCopyIcon/>  {'\u00A0'}  Copy Link
+    </Button>
+              
+              {'\u00A0'} {'\u00A0'} 
     <Button
     variant='outlined'
+       
     onClick={() => window.open(article.event_link, '_blank')}
     size='small'
     sx={{ textTransform: 'none', color: 'black',
                               borderColor: 'black',
-                              '&:hover': { backgroundColor: '#07A24A', color:'white', borderColor: 'black' }
+                              '&:hover': { backgroundColor: '#1976d2', color:'white', borderColor: 'black' }
                             }}>
   
-    Link to Meeting
+  <GroupsIcon/>  {'\u00A0'} Join Meeting
   </Button>
+              
+              
+              
 </p>
 <p className='modal-purpose'>
   <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'} {'\u00A0'}
