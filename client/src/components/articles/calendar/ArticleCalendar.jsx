@@ -105,9 +105,18 @@ const ArticleCalendar = ({ articles }) => {
       </Button>
     
 
-  <span id='current-month-year' style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-    {`${monthNames[month]} ${year}`}
-  </span>
+<span
+  id="current-month-year"
+  style={{
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    marginRight: '45px', // Adjust the margin value as needed
+  }}
+>
+  {`${monthNames[month]} ${year}`}
+</span>
+
           
     
     
