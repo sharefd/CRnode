@@ -1,5 +1,5 @@
 .modal {
-  width: '100%';
+  width: 100%;
   display: block;
   position: fixed;
   top: 50%;
@@ -8,12 +8,12 @@
 }
 
 .modal-content {
-  width: 100%;
-  max-width: 400px;
+  max-width: 400px; /* Set a fixed width for the modal content */
   height: 100%;
-  padding: 20px;
+  padding: 10px;
   background-color: #fff;
   overflow: auto;
+  font-style: normal;
 }
 
 .close-modal {
@@ -24,24 +24,29 @@
 }
 
 .modal-title {
-  font-size: 26px;
-  margin-bottom: 10px;
-  color: #004085;
+  max-width: 400px; /* Set a fixed width for the modal content */
+
+  color: black;
   font-weight: bold;
+    font-size: 16px;
 }
 
 .modal-purpose {
-  grid-column: span 2;
-  color: #383d41;
-  font-style: italic;
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+    font-style: normal;
+    font-size: 14px;
 }
+
 
 .modal-info {
   width: 100%;
   min-width: 370px;
+    
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 0px;
+  
 }
 
 .modal-event-link {
@@ -50,3 +55,10 @@
   font-weight: 600;
   margin-left: 2px;
 }
+
+.modal-time {
+    font-size: 16px;
+}
+
+
+ 

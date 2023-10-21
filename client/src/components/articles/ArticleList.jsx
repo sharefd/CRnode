@@ -124,7 +124,7 @@ const ArticleList = observer(({ resource }) => {
                             color='primary'
                             sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
                             size='small'>
-                            {purposeIcons[article.purpose]} {/* Render the icon */}
+                            {purposeIcons[article.purpose]} 
                             {PURPOSE_CHOICES[article.purpose]}
                           </Button>
                           <Button
