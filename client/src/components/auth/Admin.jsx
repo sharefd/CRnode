@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { Container, Button, TextField, List, ListItem, ListItemText, Modal, Box } from '@mui/material';
 import EditPermissions from './EditPermissions';
 import userStore from '@/stores/userStore';
@@ -27,7 +26,10 @@ const PasswordPrompt = ({ onPasswordSubmit }) => {
   );
 };
 
-const UserList = () => {
+const Admin = ({ resource }) => {
+  const users = resource.read();
+
+  const [passwordEntered, setPasswordEntered] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -36,10 +38,19 @@ const UserList = () => {
     setOpenModal(!openModal);
   };
 
+  const onPasswordSubmit = password => {
+    if (password === 'admin') {
+      setPasswordEntered(true);
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
   return (
-    <>
+    <Container>
+      {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
       <List>
-        {userStore.users.map(user => (
+        {users.map(user => (
           <ListItem key={user._id}>
             <ListItemText
               primary={user.username}
@@ -58,40 +69,6 @@ const UserList = () => {
           <EditPermissions user={currentUser} setUser={setCurrentUser} closeModal={() => setOpenModal(false)} />
         </div>
       </Modal>
-    </>
-  );
-};
-
-const Admin = () => {
-  const [passwordEntered, setPasswordEntered] = useState(false);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
-        userStore.setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-
-    // if (passwordEntered) {
-    fetchUsers();
-    // }
-  }, []);
-
-  const onPasswordSubmit = password => {
-    if (password === 'admin') {
-      setPasswordEntered(true);
-    } else {
-      alert('Incorrect password');
-    }
-  };
-
-  return (
-    <Container>
-      {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
-      <UserList />
     </Container>
   );
 };

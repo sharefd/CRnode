@@ -60,7 +60,7 @@ const App = observer(() => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/admin' element={<Admin />} />
+          <Route path='/admin' element={<Admin resource={resource.users} />} />
           <Route path='/articles' element={<ArticleList resource={resource.articles} />} />
           <Route path='/articles/new' element={<NewArticle />} />
           <Route path='/older-articles' element={<OlderArticles resource={resource} />} />
