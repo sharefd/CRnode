@@ -35,11 +35,12 @@ const OlderArticles = observer(({ resource }) => {
 
   const user = userStore.user;
   const articles = useMemo(() => sortArticles(resource.articles.read()).reverse(), [resource.articles]);
-  const feedbacks = useMemo(() => sortArticles(resource.feedbacks.read()), [resource.feedbacks]);
+  const feedbacks = useMemo(() => resource.feedbacks.read(), [resource.feedbacks]);
 
   useEffect(() => {
     if (!user) return;
-    userStore.setFeedbacks(feedbacks.filter(f => f.userId._id === user._id));
+    console.log(toJS(feedbacks));
+    userStore.setFeedbacks(feedbacks.filter(f => f.userId && f.userId._id === user._id));
   }, [user]);
 
   const getFeedback = articleId => {
