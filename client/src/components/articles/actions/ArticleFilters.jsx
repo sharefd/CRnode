@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 
-export const ArticleFilters = ({ userPermissions, selectedPurposes, handlePurposeChange }) => {
+export const ArticleFilters = ({ allowedPurposes, selectedPurposes, handlePurposeChange }) => {
   const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
@@ -45,20 +45,15 @@ export const ArticleFilters = ({ userPermissions, selectedPurposes, handlePurpos
         <ToggleButton value='Show All' aria-label='Show All' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
           Show All
         </ToggleButton>
-        {userPermissions.map(permission => {
-          if (permission.canRead) {
-            return (
-              <ToggleButton
-                key={permission.purpose}
-                value={PURPOSE_CHOICES[permission.purpose]}
-                aria-label={PURPOSE_CHOICES[permission.purpose]}
-                sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-                {permission.purpose}
-              </ToggleButton>
-            );
-          }
-          return null;
-        })}
+        {allowedPurposes.map(purpose => (
+          <ToggleButton
+            key={purpose}
+            value={PURPOSE_CHOICES[purpose]}
+            aria-label={purpose}
+            sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+            {purpose}
+          </ToggleButton>
+        ))}
       </ToggleButtonGroup>
     </Grid>
   );

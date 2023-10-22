@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
-
-const PermissionSchema = new mongoose.Schema({
-  purpose: String,
-  canRead: Boolean,
-  canWrite: Boolean
-});
+const { PermissionSchema } = require('./Permission');
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },

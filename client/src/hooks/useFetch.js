@@ -34,7 +34,8 @@ export default function useFetch() {
       articles: null,
       requests: null,
       feedbacks: null,
-      users: null
+      users: null,
+      permissions: null
     };
 
     return {
@@ -69,6 +70,14 @@ export default function useFetch() {
             cache.users = wrapPromise(fetchUsers());
           }
           return cache.users.read();
+        }
+      },
+      permissions: {
+        read() {
+          if (cache.permissions === null) {
+            cache.permissions = wrapPromise(fetchPermissions());
+          }
+          return cache.permissions.read();
         }
       }
     };
@@ -114,11 +123,22 @@ export default function useFetch() {
     return users;
   }
 
+  async function fetchPermissions() {
+    let permissions;
+    await axios
+      .get(`${baseUrl}/api/permissions`)
+      .then(response => (permissions = response.data))
+      .catch(error => console.log(error));
+
+    return permissions;
+  }
+
   return {
     createResource,
     fetchArticles,
     fetchRequests,
     fetchFeedbacks,
+    fetchPermissions,
     fetchUsers
   };
 }

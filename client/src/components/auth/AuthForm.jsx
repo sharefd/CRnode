@@ -102,7 +102,6 @@ const AuthForm = observer(() => {
             `${import.meta.env.VITE_API_URL}/feedbacks/${response.data.user._id}`
           );
 
-          console.log(feedbackResponse.data);
           userStore.setFeedbacks(feedbackResponse.data);
 
           setTimeout(() => {

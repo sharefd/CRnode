@@ -6,6 +6,7 @@ const userRouter = require('./routes/userRouter');
 const articlesRouter = require('./routes/articlesRouter');
 const requestsRouter = require('./routes/requestsRouter');
 const feedbackRouter = require('./routes/feedbackRouter');
+const permissionsRouter = require('./routes/permissionsRouter');
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ app.use('/api/users', userRouter);
 app.use('/api/articles', articlesRouter);
 app.use('/api/requests', requestsRouter);
 app.use('/api/feedbacks', feedbackRouter);
+app.use('/api/permissions', permissionsRouter);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

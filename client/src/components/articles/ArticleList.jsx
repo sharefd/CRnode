@@ -14,7 +14,8 @@ import './ArticleList.css';
 import { deleteArticle } from '@/utils/articles';
 import userStore from '@/stores/userStore';
 import { observer } from 'mobx-react';
-import { filterAllowedArticles, sortArticles } from '@/utils/articles';
+import { sortArticles } from '@/utils/articles';
+import { toJS } from 'mobx';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -27,18 +28,36 @@ const ArticleList = observer(({ resource }) => {
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isLoading, setIsLoading] = useState(true);
-  const [articles, setArticleList] = useState(resource.read());
+  const [allowedPurposes, setAllowedPurposes] = useState([]);
+
+  const articles = resource.articles.read();
+  const permissions = resource.permissions.read();
   const user = userStore.user;
 
   useEffect(() => {
-    const filterAndSortArticles = async () => {
-      setIsLoading(true);
-      const filtered = await filterAllowedArticles(articles);
-      const sorted = sortArticles(filtered);
-      userStore.setArticles(sorted);
-      setIsLoading(false);
-    };
-    filterAndSortArticles();
+    if (user && articles) {
+      const fetchAllowedArticles = async () => {
+        setIsLoading(true);
+
+        let allowed = [];
+
+        Object.keys(PURPOSE_CHOICES).forEach(purpose => {
+          const userCanRead = permissions.find(p => p.purpose === purpose).canRead.includes(user._id);
+          if (userCanRead) {
+            allowed.push(purpose);
+          }
+        });
+
+        setAllowedPurposes(allowed);
+
+        const allowedArticles = articles.filter(article => allowed.includes(article.purpose));
+
+        const sorted = sortArticles(allowedArticles);
+        userStore.setArticles(sorted);
+        setIsLoading(false);
+      };
+      fetchAllowedArticles();
+    }
   }, [articles]);
 
   const handleDelete = async articleId => {
@@ -83,8 +102,8 @@ const ArticleList = observer(({ resource }) => {
   }
 
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? articles.filter(isArticleAfterCurrentDate)
-    : articles
+    ? userStore.articles
+    : userStore.articles
         .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
         .filter(isArticleAfterCurrentDate);
 
@@ -92,7 +111,7 @@ const ArticleList = observer(({ resource }) => {
     <div>
       <Box px={2}>
         <ArticleFilters
-          userPermissions={user.permissions}
+          allowedPurposes={allowedPurposes}
           selectedPurposes={selectedPurposes}
           handlePurposeChange={handlePurposeChange}
         />
@@ -124,7 +143,7 @@ const ArticleList = observer(({ resource }) => {
                             color='primary'
                             sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
                             size='small'>
-                            {purposeIcons[article.purpose]} 
+                            {purposeIcons[article.purpose]}
                             {PURPOSE_CHOICES[article.purpose]}
                           </Button>
                           <Button
@@ -190,7 +209,7 @@ const ArticleList = observer(({ resource }) => {
             })}
           </Grid>
           <Grid item xs={6} md={5} style={{ marginTop: '-35px' }}>
-            <ArticleCalendar articles={articles} />
+            <ArticleCalendar articles={userStore.articles} />
           </Grid>
         </Grid>
       </Box>

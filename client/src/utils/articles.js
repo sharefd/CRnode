@@ -1,7 +1,7 @@
 import axios from 'axios';
 import userStore from '@/stores/userStore';
 import { compareDates } from '@/utils/dates';
-import resourceStore from '@/stores/resourceStore';
+import { toJS } from 'mobx';
 
 export const updateArticle = async editedArticle => {
   try {
@@ -32,12 +32,6 @@ export const deleteArticle = async articleId => {
   } catch (error) {
     console.error('Error deleting article:', error);
   }
-};
-
-export const filterAllowedArticles = async articles => {
-  return articles.filter(article => {
-    return userStore.user.permissions.some(permission => permission.purpose === article.purpose && permission.canRead);
-  });
 };
 
 export const sortArticles = articles => {

@@ -61,7 +61,7 @@ const App = observer(() => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/admin' element={<Admin resource={resource.users} />} />
-          <Route path='/articles' element={<ArticleList resource={resource.articles} />} />
+          <Route path='/articles' element={<ArticleList resource={resource} />} />
           <Route path='/articles/new' element={<NewArticle />} />
           <Route path='/older-articles' element={<OlderArticles resource={resource} />} />
           <Route path='/requests' element={<RequestsList resource={resource.requests} />} />
