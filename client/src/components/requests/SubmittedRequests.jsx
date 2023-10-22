@@ -25,7 +25,8 @@ const SubmittedRequests = observer(({ resource }) => {
   useEffect(() => {
     if (!user) return;
     setIsLoading(true);
-    userStore.setSubmittedRequests(allRequests.filter(request => request.user._id === user._id));
+    console.log(allRequests.find(r => !r.user));
+    userStore.setSubmittedRequests(allRequests.filter(request => request.user && request.user._id === user._id));
     setIsLoading(false);
   }, [user]);
 

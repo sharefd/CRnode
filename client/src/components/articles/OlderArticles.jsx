@@ -39,7 +39,6 @@ const OlderArticles = observer(({ resource }) => {
 
   useEffect(() => {
     if (!user) return;
-    console.log(toJS(feedbacks));
     userStore.setFeedbacks(feedbacks.filter(f => f.userId && f.userId._id === user._id));
   }, [user]);
 
