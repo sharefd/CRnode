@@ -5,6 +5,7 @@ class UserStore {
   articles = [];
   submittedRequests = [];
   feedbacks = [];
+  permissions = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -24,6 +25,10 @@ class UserStore {
 
   setFeedbacks(feedbacks) {
     this.feedbacks = feedbacks;
+  }
+
+  setPermissions(permissions) {
+    this.permissions = permissions;
   }
 }
 

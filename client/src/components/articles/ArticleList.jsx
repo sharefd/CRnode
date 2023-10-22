@@ -102,7 +102,7 @@ const ArticleList = observer(({ resource }) => {
   }
 
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? userStore.articles
+    ? userStore.articles.filter(isArticleAfterCurrentDate)
     : userStore.articles
         .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
         .filter(isArticleAfterCurrentDate);
