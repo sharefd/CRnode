@@ -19,7 +19,7 @@ import LoadingSpinner from '@/helpers/LoadingSpinner';
 
 const RequestsList = observer(({ resource }) => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const user = userStore.user;
   const [requests, setRequests] = useState(resource.read());
 
@@ -28,7 +28,7 @@ const RequestsList = observer(({ resource }) => {
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 25));
     setPage(0);
   };
 
@@ -77,7 +77,7 @@ const RequestsList = observer(({ resource }) => {
   }
 
   return (
-    <Paper sx={{ width: '80%', margin: '0 auto', mt: 5 }}>
+    <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
       <TableContainer>
         <Typography
           variant='h5'
@@ -98,8 +98,8 @@ const RequestsList = observer(({ resource }) => {
               <TableCell sx={{ fontWeight: '700' }}>Purpose</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>User</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Email</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Status</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
+              <TableCell sx={{ fontWeight: '700' }}>Status</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -110,10 +110,11 @@ const RequestsList = observer(({ resource }) => {
                   <TableCell>{request.purpose}</TableCell>
                   <TableCell>{request.user.username}</TableCell>
                   <TableCell>{request.email}</TableCell>
+                  <TableCell>{request.message}</TableCell>
+      
                   <TableCell>
                     <span className={`request-status ${request.status.toLowerCase()}`}>{request.status}</span>
                   </TableCell>
-                  <TableCell>{request.message}</TableCell>
                   <TableCell>
                     <span className='status-button'>
                       {request.isApproving ? (
@@ -148,7 +149,7 @@ const RequestsList = observer(({ resource }) => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[25, 50, 100]}
         component='div'
         count={requests.length}
         rowsPerPage={rowsPerPage}
