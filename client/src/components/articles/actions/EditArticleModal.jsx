@@ -32,7 +32,11 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose}>
-        <Paper elevation={3} sx={{ width: '50%', margin: '0 auto', mt: 12 }}>
+          
+          
+          
+          
+        <Paper elevation={3} sx={{ width: '50%', margin: '0 auto', mt: 2 }}>
           <Grid item xs={12}>
             <Typography
               variant='h5'
@@ -48,18 +52,10 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
               Edit Article
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{ textAlign: 'right', pr: 4, pt: 1 }}>
-            <Button
-              sx={{ marginLeft: 'auto', backgroundColor: 'gray', color: '#fff', '&:hover': { backgroundColor: 'red' } }}
-              variant='contained'
-              startIcon={<Delete />}
-              onClick={() => onDelete(article._id)}>
-              Delete
-            </Button>
-          </Grid>
+          
 
           <form onSubmit={handleSave}>
-            <Grid container spacing={3} sx={{ padding: 4 }}>
+            <Grid container spacing={2} sx={{ padding: 3}}>
               <Grid item xs={6}>
                 <TextField
                   label='Title'
@@ -153,11 +149,22 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
                   onChange={e => setEditedArticle({ ...editedArticle, additional_details: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} container justifyContent='center'>
+              <Grid item xs={6} > 
                 <Button type='submit' variant='contained' color='primary' startIcon={<Save />}>
                   Save Changes
                 </Button>
               </Grid>
+            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    sx={{ backgroundColor: 'gray', color: '#fff', '&:hover': { backgroundColor: 'red' } }}
+                    variant='contained'
+                    startIcon={<Delete />}
+                    onClick={() => onDelete(article._id)}>
+                    Delete
+                  </Button>
+                </Grid>
+
+                
             </Grid>
           </form>
         </Paper>
