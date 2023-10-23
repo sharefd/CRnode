@@ -152,7 +152,7 @@ const ArticleList = observer(({ resource }) => {
                             href={article.event_link}
                             target='_blank'
                             size='small'
-                            sx={{ mx: 1, textTransform: 'none' }}>
+                            sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
                             Join Meeting
                           </Button>
                           <Button
