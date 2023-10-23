@@ -64,9 +64,9 @@
    position: absolute;
   z-index: 999;
   color: black;
-  background-color: #FFFFFF; /* Dark gray background color */
+  background-color: #F4FFF8; /* Dark gray background color */
   padding: 8px 12px; /* Adjust padding as needed */
-  border: 1px solid black; /* Black border */
+  border: 0px solid black; /* Black border */
   border-radius: 10px; /* Add a bit of border radius for rounded corners */
   /* Add other relevant styles as needed */
 margin-left: 60px;

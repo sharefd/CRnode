@@ -71,7 +71,7 @@ const handleCopyToClipboard = (text) => {
     function () {
       // Successfully copied to clipboard
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 1000); // Reset the state after 2 seconds
+      setTimeout(() => setIsCopied(false), 600); // Reset the state after 2 seconds
       console.log('Link copied to clipboard');
     },
     function (err) {
