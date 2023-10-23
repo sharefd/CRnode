@@ -62,19 +62,30 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
   const article = events[currentEventIndex] || {};
+ 
+  const [isCopied, setIsCopied] = useState(false);
+
     
-  const handleCopyToClipboard = (text) => {
-    navigator.clipboard.writeText(text).then(
-      function () {
-        // Successfully copied to clipboard
-        console.log('Link copied to clipboard');
-      },
-      function (err) {
-        // Unable to copy to clipboard
-        console.error('Failed to copy link to clipboard', err);
-      }
-    );
-  };    
+const handleCopyToClipboard = (text) => {
+  navigator.clipboard.writeText(text).then(
+    function () {
+      // Successfully copied to clipboard
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 1000); // Reset the state after 2 seconds
+      console.log('Link copied to clipboard');
+    },
+    function (err) {
+      // Unable to copy to clipboard
+      console.error('Failed to copy link to clipboard', err);
+    }
+  );
+};
+
+  
+
+
+    
+     
 
   return (
     <>
@@ -117,7 +128,15 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
               </p>
 
             <p className='modal-purpose'>
-          {purposeIcons[article.purpose]}  {'\u00A0'}   {'\u00A0'}    {article.purpose || 'None'}   
+          {purposeIcons[article.purpose]}  {'\u00A0'}   {'\u00A0'}    {article.purpose || 'None'}  
+                
+                
+                              {isCopied && (
+  <div className="copied-message">Copied</div>
+)}          
+          
+
+                
             </p>
           <p className='modal-purpose'>
   <LinkIcon /> {'\u00A0'} {'\u00A0'} 
@@ -140,6 +159,8 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
       <ContentCopyIcon/>  {'\u00A0'}  Copy Link
     </Button>
               
+    
+              
               {'\u00A0'} {'\u00A0'} 
     <Button
     variant='outlined'
@@ -153,6 +174,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   
   <GroupsIcon/>  {'\u00A0'} Join Meeting
   </Button>
+            
               
               
               
@@ -161,7 +183,8 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'} {'\u00A0'}
   Passcode: {article.passcode || 'None'}
 </p>
-
+              
+  
         
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
