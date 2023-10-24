@@ -73,7 +73,7 @@ const RequestsList = observer(({ resource }) => {
       return <AccessDenied />;
     }
   }
-  console.log(requests);
+
   return (
     <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
       <TableContainer>
@@ -109,7 +109,7 @@ const RequestsList = observer(({ resource }) => {
                   <TableCell>{request.user.username}</TableCell>
                   <TableCell>{request.email}</TableCell>
                   <TableCell>{request.message}</TableCell>
-      
+
                   <TableCell>
                     <span className={`request-status ${request.status.toLowerCase()}`}>{request.status}</span>
                   </TableCell>

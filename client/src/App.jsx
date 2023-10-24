@@ -11,9 +11,10 @@ import NewRequest from './components/requests/NewRequest';
 import LoadingSpinner from './helpers/LoadingSpinner';
 import userStore from './stores/userStore';
 import resourceStore from './stores/resourceStore';
+import SuccessMessage from './components/requests/SuccessMessage';
 
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
-const SubmittedRequests = lazy(() => import('./components/requests/SubmittedRequests'));
+const SubmittedRequests = lazy(() => import('./components/requests/SuccessMessage'));
 const ArticleList = lazy(() => import('./components/articles/ArticleList'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
@@ -65,6 +66,7 @@ const App = observer(() => {
           <Route path='/requests' element={<RequestsList resource={resource.requests} />} />
           <Route path='/login' element={<AuthForm />} />
           <Route path='/requests/new' element={<NewRequest resource={resource} />} />
+          <Route path='/requests/submitted' element={<SuccessMessage />} />
         </Routes>
       </Suspense>
     </Router>
