@@ -1,10 +1,10 @@
 import { FormControlLabel, Checkbox, Box, Typography, Button } from '@mui/material';
 import axios from 'axios';
 
-const EditPermissions = ({ user, setUser, closeModal }) => {
+const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
   const handlePermissionChange = (event, purpose) => {
     const { name, checked } = event.target;
-    let updatedPermissions = [...user.permissions];
+    let updatedPermissions = [...userPermissions.permissions];
 
     const permissionIndex = updatedPermissions.findIndex(p => p.purpose === purpose);
     if (permissionIndex !== -1) {
@@ -12,17 +12,20 @@ const EditPermissions = ({ user, setUser, closeModal }) => {
     }
 
     setUser({
-      ...user,
+      ...userPermissions,
       permissions: updatedPermissions
     });
   };
 
   const savePermissions = async () => {
     try {
-      const response = await axios.put(`http://localhost:3001/api/users/edit-permissions/${user._id}`, {
-        permissions: user.permissions
-      });
-      console.log('Permissions updated:', response.data);
+      // Update user permissions
+      await axios.put(
+        `http://localhost:3001/api/permissions/bulk-update/${userPermissions.user._id}`,
+        userPermissions.permissions
+      );
+
+      console.log('Permissions updated successfully');
       closeModal();
     } catch (error) {
       console.error('Error updating permissions:', error);
@@ -46,31 +49,32 @@ const EditPermissions = ({ user, setUser, closeModal }) => {
         Edit Permissions for {user?.username}
       </Typography>
       <form noValidate autoComplete='off'>
-        {user.permissions.map(permission => (
-          <Box key={permission.purpose}>
-            <Typography>{permission.purpose}</Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={permission.canRead}
-                  onChange={e => handlePermissionChange(e, permission.purpose)}
-                  name='canRead'
-                />
-              }
-              label='Read'
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={permission.canWrite}
-                  onChange={e => handlePermissionChange(e, permission.purpose)}
-                  name='canWrite'
-                />
-              }
-              label='Write'
-            />
-          </Box>
-        ))}
+        {userPermissions &&
+          userPermissions.permissions.map(permission => (
+            <Box key={permission.purpose}>
+              <Typography>{permission.purpose}</Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={permission.canRead}
+                    onChange={e => handlePermissionChange(e, permission.purpose)}
+                    name='canRead'
+                  />
+                }
+                label='Read'
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={permission.canWrite}
+                    onChange={e => handlePermissionChange(e, permission.purpose)}
+                    name='canWrite'
+                  />
+                }
+                label='Write'
+              />
+            </Box>
+          ))}
         <Button onClick={savePermissions}>Save</Button>
       </form>
     </Box>

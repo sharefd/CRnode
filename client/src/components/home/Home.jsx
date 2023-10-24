@@ -1,10 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import userStore from '@/stores/userStore';
 import { observer } from 'mobx-react';
+import { toJS } from 'mobx';
 
 const Home = observer(() => {
   const user = userStore.user;
-
+  console.log(toJS(user));
   return (
     <Box sx={{ ml: 4, mt: 4 }}>
       {user ? (

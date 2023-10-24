@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 
 const PermissionSchema = new mongoose.Schema({
   purpose: { type: String, required: true },
-  canRead: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  canWrite: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  canRead: { type: Boolean, default: false },
+  canWrite: { type: Boolean, default: false }
 });
 
-const Permission = mongoose.model('Permission', PermissionSchema);
-
-module.exports = { Permission, PermissionSchema };
+module.exports = mongoose.model('Permission', PermissionSchema);

@@ -32,7 +32,6 @@ const RequestsList = observer(({ resource }) => {
     setPage(0);
   };
 
-
   const updateStatus = (id, purpose, status) => {
     const updatedRequests = requests.map(request => {
       if (request._id === id) {
@@ -41,7 +40,6 @@ const RequestsList = observer(({ resource }) => {
       return request;
     });
     setRequests(updatedRequests);
-
 
     const data = { status, email: user.email, purpose };
 
@@ -75,7 +73,7 @@ const RequestsList = observer(({ resource }) => {
       return <AccessDenied />;
     }
   }
-
+  console.log(requests);
   return (
     <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
       <TableContainer>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import NewArticle from './components/articles/actions/NewArticle';
 import Admin from './components/auth/Admin';
@@ -18,7 +18,9 @@ const ArticleList = lazy(() => import('./components/articles/ArticleList'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
 const App = observer(() => {
-  const user = userStore.user;
+  const [user, setUser] = useState(userStore.user);
+  const [permissions, setPermissions] = useState(userStore.permissions);
+
   const resource = resourceStore.resource;
 
   axios.interceptors.request.use(
@@ -39,20 +41,37 @@ const App = observer(() => {
       const token = localStorage.getItem('CloudRoundsToken');
       if (token) {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/me`);
           userStore.setUser(response.data);
+          setUser(response.data);
         } catch (error) {
           console.error('Error fetching user data:', error);
           localStorage.removeItem('CloudRoundsToken');
         }
       }
     };
+
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/permissions/user/${user._id}`);
+        console.log(response.data);
+        userStore.setPermissions(response.data);
+        setPermissions(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        localStorage.removeItem('CloudRoundsToken');
+      }
+    };
+
+    fetchPermissions();
+  }, [user]);
+
+  if (!user || !permissions) return <LoadingSpinner />;
 
   return (
     <Router>
@@ -60,8 +79,8 @@ const App = observer(() => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/admin' element={<Admin resource={resource.users} />} />
-          <Route path='/articles' element={<ArticleList resource={resource} />} />
+          <Route path='/admin' element={<Admin resource={resource} />} />
+          <Route path='/articles' element={<ArticleList resource={resource.articles} />} />
           <Route path='/articles/new' element={<NewArticle />} />
           <Route path='/older-articles' element={<OlderArticles resource={resource} />} />
           <Route path='/requests' element={<RequestsList resource={resource.requests} />} />

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Request = require('../models/Request');
 const User = require('../models/User');
 const sendEmail = require('../middleware/mailer');
+const Permission = require('../models/Permission');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -79,22 +80,21 @@ router.put('/:id/status', async (req, res) => {
     await request.save();
 
     if (status === 'Approved') {
-      const user = await User.findById(request.user._id);
-      if (user) {
-        const existingPermission = user.permissions.find(p => p.purpose === request.purpose);
+      const userId = request.user._id;
+      let permission = await Permission.findOne({ userId, purpose });
 
-        if (existingPermission) {
-          existingPermission.canRead = true;
-        } else {
-          user.permissions.push({
-            purpose: purpose,
-            canRead: true,
-            canWrite: false
-          });
-        }
-
-        await user.save();
+      if (!permission) {
+        permission = new Permission({
+          userId,
+          purpose,
+          canRead: true,
+          canWrite: false
+        });
+      } else {
+        permission.canRead = true;
       }
+
+      await permission.save();
     }
 
     await sendEmail('Request Status Updated', `The status of your request has been updated to ${status}.`, email);

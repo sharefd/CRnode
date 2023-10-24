@@ -13,9 +13,7 @@ export const useFetchArticles = (userStore, isUserLoaded) => {
         userStore.setPastArticles(response.data);
 
         let permittedArticles = response.data.filter(article => {
-          return userStore.user.permissions.some(
-            permission => permission.purpose === article.purpose && permission.canRead
-          );
+          return userStore.permissions.some(permission => permission.purpose === article.purpose && permission.canRead);
         });
 
         const sortedArticles = permittedArticles.sort((a, b) => {
