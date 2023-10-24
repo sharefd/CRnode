@@ -32,6 +32,7 @@ const ArticleList = observer(({ resource }) => {
 
   const articles = resource.read();
   const user = userStore.user;
+  const permissions = userStore.permissions;
 
   useEffect(() => {
     if (user && articles) {
@@ -41,7 +42,7 @@ const ArticleList = observer(({ resource }) => {
         let allowed = [];
 
         Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-          const userCanRead = userStore.permissions.find(p => p.purpose === purpose).canRead;
+          const userCanRead = permissions.find(p => p.purpose === purpose).canRead;
           if (userCanRead) {
             allowed.push(purpose);
           }
