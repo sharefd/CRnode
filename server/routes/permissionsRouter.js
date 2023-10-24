@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { jwtMiddleware } = require('../middleware/permissions');
-const { Permission } = require('../models/Permission');
+const Permission = require('../models/Permission');
 
 router.get('/', async (req, res) => {
   try {
@@ -9,6 +9,20 @@ router.get('/', async (req, res) => {
     res.status(200).json(permissions);
   } catch (err) {
     console.error('There was an error fetching permissions:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/user/:userId', jwtMiddleware, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const userPermissions = await Permission.find({ userId });
+    if (!userPermissions || userPermissions.length === 0) {
+      return res.status(404).json({ message: `No permissions found for user ${userId}` });
+    }
+    res.status(200).json(userPermissions);
+  } catch (err) {
+    console.error(`There was an error fetching permissions for user ${userId}:`, err);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -24,15 +38,33 @@ router.post('/new', jwtMiddleware, async (req, res) => {
   }
 });
 
-router.put('/:id', jwtMiddleware, async (req, res) => {
-  const permission = await Permission.findById(req.params.id);
+router.put('/bulk-update/:userId', jwtMiddleware, async (req, res) => {
+  const { userId } = req.params;
+  const updates = req.body;
 
-  for (let key in req.body) {
-    permission[key] = req.body[key];
+  if (!Array.isArray(updates)) {
+    return res.status(400).send('Updates should be an array of objects');
   }
 
-  await permission.save();
-  res.json(permission);
+  try {
+    for (const { purpose, canRead, canWrite } of updates) {
+      let permission = await Permission.findOne({ userId, purpose });
+
+      if (!permission) {
+        return res.status(404).json({ message: `Permission with purpose ${purpose} not found for user ${userId}` });
+      }
+
+      permission.canRead = canRead;
+      permission.canWrite = canWrite;
+
+      await permission.save();
+    }
+
+    res.status(200).json({ message: 'Permissions updated successfully' });
+  } catch (error) {
+    console.error('Error bulk updating permissions:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 router.delete('/:id', jwtMiddleware, async (req, res) => {

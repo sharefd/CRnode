@@ -30,8 +30,7 @@ const ArticleList = observer(({ resource }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [allowedPurposes, setAllowedPurposes] = useState([]);
 
-  const articles = resource.articles.read();
-  const permissions = resource.permissions.read();
+  const articles = resource.read();
   const user = userStore.user;
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const ArticleList = observer(({ resource }) => {
         let allowed = [];
 
         Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-          const userCanRead = permissions.find(p => p.purpose === purpose).canRead.includes(user._id);
+          const userCanRead = userStore.permissions.find(p => p.purpose === purpose).canRead;
           if (userCanRead) {
             allowed.push(purpose);
           }

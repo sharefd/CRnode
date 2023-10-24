@@ -1,7 +1,7 @@
 const express = require('express');
 const Article = require('../models/Article');
 const router = express.Router();
-const { checkPermissions, jwtMiddleware } = require('../middleware/permissions');
+const { jwtMiddleware } = require('../middleware/permissions');
 
 router.get('/', async (req, res) => {
   try {

@@ -31,9 +31,9 @@ const NewRequest = observer(() => {
   };
 
   const isPurposeAllowed = purposeKey => {
-    if (!user || !user.permissions) return false;
+    if (!user || !userStore.permissions) return false;
 
-    const permission = user.permissions.find(p => p.purpose === purposeKey);
+    const permission = userStore.permissions.find(p => p.purpose === purposeKey);
     return permission ? permission.canRead : false;
   };
 

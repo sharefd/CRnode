@@ -27,14 +27,24 @@ const PasswordPrompt = ({ onPasswordSubmit }) => {
 };
 
 const Admin = ({ resource }) => {
-  const users = resource.read();
+  const users = resource.users.read();
+  const permissions = resource.permissions.read();
+
+  const usersPermissions = users.map(user => {
+    return {
+      user,
+      permissions: permissions.filter(perm => perm.userId === user._id)
+    };
+  });
+  console.log(usersPermissions);
 
   const [passwordEntered, setPasswordEntered] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   const toggleModal = user => {
-    setCurrentUser(user);
+    const userWithPermissions = usersPermissions.find(up => up.user._id === user._id);
+    setCurrentUser(userWithPermissions);
     setOpenModal(!openModal);
   };
 
@@ -50,13 +60,16 @@ const Admin = ({ resource }) => {
     <Container>
       {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
       <List>
-        {users.map(user => (
-          <ListItem key={user._id}>
+        {usersPermissions.map(up => (
+          <ListItem key={up.user._id}>
             <ListItemText
-              primary={user.username}
-              secondary={`Permissions: ${user.permissions.map(perm => perm.purpose).join(', ')}`}
+              primary={up.user.username}
+              secondary={`Permissions: ${up.permissions
+                .filter(perm => perm.canRead)
+                .map(p => p.purpose)
+                .join(', ')}`}
             />
-            <Button onClick={() => toggleModal(user)}>Edit Permissions</Button>
+            <Button onClick={() => toggleModal(up.user)}>Edit Permissions</Button>
           </ListItem>
         ))}
       </List>
@@ -66,7 +79,11 @@ const Admin = ({ resource }) => {
         aria-labelledby='modal-title'
         aria-describedby='modal-description'>
         <div>
-          <EditPermissions user={currentUser} setUser={setCurrentUser} closeModal={() => setOpenModal(false)} />
+          <EditPermissions
+            userPermissions={currentUser}
+            setUser={setCurrentUser}
+            closeModal={() => setOpenModal(false)}
+          />
         </div>
       </Modal>
     </Container>
