@@ -2,7 +2,7 @@ import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/mater
 import axios from 'axios';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
 import { CheckCircle } from '@mui/icons-material';
@@ -76,7 +76,7 @@ const NewRequest = observer(({ resource }) => {
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>
       {isSubmitted ? (
-        <div>
+        <div style={{ padding: '20px' }}>
           <Typography variant='h6'>Request Successfully Submitted!</Typography>
           <Link to='/requests/new'>Submit a New Request</Link>
           <br />
