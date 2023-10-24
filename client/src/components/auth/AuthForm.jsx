@@ -104,6 +104,15 @@ const AuthForm = observer(() => {
 
           userStore.setFeedbacks(feedbackResponse.data);
 
+          try {
+            const permissionsResponse = await axios.get(
+              `${import.meta.env.VITE_API_URL}/permissions/user/${response.data.user._id}`
+            );
+            userStore.setPermissions(permissionsResponse.data);
+          } catch (error) {
+            console.error('Error fetching permissions:', error);
+          }
+
           setTimeout(() => {
             setIsLoading(false);
             navigate('/');

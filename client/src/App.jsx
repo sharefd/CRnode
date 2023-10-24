@@ -19,8 +19,6 @@ const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
 const App = observer(() => {
   const [user, setUser] = useState(userStore.user);
-  const [permissions, setPermissions] = useState(userStore.permissions);
-
   const resource = resourceStore.resource;
 
   axios.interceptors.request.use(
@@ -53,25 +51,6 @@ const App = observer(() => {
 
     fetchUserData();
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const fetchPermissions = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/permissions/user/${user._id}`);
-        console.log(response.data);
-        userStore.setPermissions(response.data);
-        setPermissions(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        localStorage.removeItem('CloudRoundsToken');
-      }
-    };
-
-    fetchPermissions();
-  }, [user]);
-
-  if (!user || !permissions) return <LoadingSpinner />;
 
   return (
     <Router>

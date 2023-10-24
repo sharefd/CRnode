@@ -36,7 +36,6 @@ const Admin = ({ resource }) => {
       permissions: permissions.filter(perm => perm.userId === user._id)
     };
   });
-  console.log(usersPermissions);
 
   const [passwordEntered, setPasswordEntered] = useState(false);
   const [openModal, setOpenModal] = useState(false);
