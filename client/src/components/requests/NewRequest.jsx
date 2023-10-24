@@ -15,9 +15,11 @@ const NewRequest = observer(({ resource }) => {
   const [yearOfStudy, setYearOfStudy] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const allRequests = resource.read();
   const user = userStore.user;
+  const allRequests = resource.requests.read();
+  const allPermissions = resource.permissions.read();
 
   const handleFormSubmit = async e => {
     e.preventDefault();
@@ -28,10 +30,11 @@ const NewRequest = observer(({ resource }) => {
       console.log('Request created:', response.data);
 
       userStore.setSubmittedRequests([...userStore.submittedRequests, response.data]);
-
-      navigate('/requests/submitted');
+      setIsSubmitted(true);
+      navigate('/requests/new');
     } catch (error) {
       console.error('There was an error creating the request:', error);
+      setIsSubmitted(false);
     }
   };
 
@@ -54,6 +57,17 @@ const NewRequest = observer(({ resource }) => {
     setIsLoading(true);
     const userRequests = allRequests.filter(request => request.user && request.user._id === user._id);
     userStore.setSubmittedRequests(userRequests);
+    async function fetchPermissions() {
+      try {
+        const permissionsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/permissions/user/${user._id}`);
+        userStore.setPermissions(permissionsResponse.data);
+      } catch (error) {
+        console.error('Error fetching permissions:', error);
+      }
+    }
+    if (!userStore.permissions || userStore.permissions.length === 0) {
+      fetchPermissions();
+    }
     setIsLoading(false);
   }, [user]);
 
@@ -61,82 +75,93 @@ const NewRequest = observer(({ resource }) => {
 
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>
-      <Grid item xs={12}>
-        <Typography
-          variant='h5'
-          align='center'
-          sx={{
-            backgroundColor: '#0066b2',
-            color: '#fff',
-            borderTopRightRadius: '5px',
-            borderTopLeftRadius: '5px',
-            padding: '1rem',
-            mb: 2
-          }}>
-          Submit Request
-        </Typography>
-      </Grid>
-      <form onSubmit={handleFormSubmit}>
-        <Grid container spacing={3} sx={{ padding: 4 }}>
-          <Grid item xs={8}>
-            <TextField
-              select
-              label='Purpose'
-              required
-              fullWidth
-              value={purpose}
-              onChange={e => setPurpose(e.target.value)}>
-              {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                <MenuItem key={index} value={key} disabled={isPurposeAllowed(key) || isRequestPending(key)}>
-                  {PURPOSE_CHOICES[key]}
-                  {isPurposeAllowed(key) ? (
-                    <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />
-                  ) : isRequestPending(key) ? (
-                    <ErrorOutlineIcon style={{ color: 'goldenrod', marginLeft: '10px' }} />
-                  ) : null}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              fullWidth
-              required
-              select
-              label='Level'
-              variant='outlined'
-              value={yearOfStudy}
-              onChange={e => setYearOfStudy(e.target.value)}>
-              {YEAR_OF_STUDY_CHOICES.map((option, index) => (
-                <MenuItem key={index} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+      {isSubmitted ? (
+        <div>
+          <Typography variant='h6'>Request Successfully Submitted!</Typography>
+          <Link to='/requests/new'>Submit a New Request</Link>
+          <br />
+          <Link to='/articles'>View Articles</Link>
+        </div>
+      ) : (
+        <>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label='Message (optional)'
-              variant='outlined'
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-            />
+            <Typography
+              variant='h5'
+              align='center'
+              sx={{
+                backgroundColor: '#0066b2',
+                color: '#fff',
+                borderTopRightRadius: '5px',
+                borderTopLeftRadius: '5px',
+                padding: '1rem',
+                mb: 2
+              }}>
+              Submit Request
+            </Typography>
           </Grid>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Button type='submit' variant='contained' color='primary' style={{ marginBottom: '10px' }}>
-              Submit
-            </Button>
-          </Grid>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Button variant='outlined' color='primary' onClick={() => navigate('/requests/submitted')}>
-              View Submitted Requests
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+          <form onSubmit={handleFormSubmit}>
+            <Grid container spacing={3} sx={{ padding: 4 }}>
+              <Grid item xs={8}>
+                <TextField
+                  select
+                  label='Purpose'
+                  required
+                  fullWidth
+                  value={purpose}
+                  onChange={e => setPurpose(e.target.value)}>
+                  {Object.keys(PURPOSE_CHOICES).map((key, index) => (
+                    <MenuItem key={index} value={key} disabled={isPurposeAllowed(key) || isRequestPending(key)}>
+                      {PURPOSE_CHOICES[key]}
+                      {isPurposeAllowed(key) ? (
+                        <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />
+                      ) : isRequestPending(key) ? (
+                        <ErrorOutlineIcon style={{ color: 'goldenrod', marginLeft: '10px' }} />
+                      ) : null}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  required
+                  select
+                  label='Level'
+                  variant='outlined'
+                  value={yearOfStudy}
+                  onChange={e => setYearOfStudy(e.target.value)}>
+                  {YEAR_OF_STUDY_CHOICES.map((option, index) => (
+                    <MenuItem key={index} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  label='Message (optional)'
+                  variant='outlined'
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} style={{ textAlign: 'center' }}>
+                <Button type='submit' variant='contained' color='primary' style={{ marginBottom: '10px' }}>
+                  Submit
+                </Button>
+              </Grid>
+              <Grid item xs={12} style={{ textAlign: 'center' }}>
+                <Button variant='outlined' color='primary' onClick={() => navigate('/requests/submitted')}>
+                  View Submitted Requests
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </>
+      )}
     </Paper>
   );
 });

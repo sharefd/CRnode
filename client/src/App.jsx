@@ -64,7 +64,7 @@ const App = observer(() => {
           <Route path='/older-articles' element={<OlderArticles resource={resource} />} />
           <Route path='/requests' element={<RequestsList resource={resource.requests} />} />
           <Route path='/login' element={<AuthForm />} />
-          <Route path='/requests/new' element={<NewRequest resource={resource.requests} />} />
+          <Route path='/requests/new' element={<NewRequest resource={resource} />} />
         </Routes>
       </Suspense>
     </Router>
