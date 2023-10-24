@@ -1,17 +1,22 @@
 import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { observer } from 'mobx-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
 import { CheckCircle } from '@mui/icons-material';
+import LoadingSpinner from '../../helpers/LoadingSpinner';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const NewRequest = observer(() => {
+const NewRequest = observer(({ resource }) => {
   const navigate = useNavigate();
   const [purpose, setPurpose] = useState('');
   const [yearOfStudy, setYearOfStudy] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  const allRequests = resource.read();
   const user = userStore.user;
 
   const handleFormSubmit = async e => {
@@ -36,6 +41,23 @@ const NewRequest = observer(() => {
     const permission = userStore.permissions.find(p => p.purpose === purposeKey);
     return permission ? permission.canRead : false;
   };
+
+  const isRequestPending = purposeKey => {
+    if (!user || !userStore.permissions) return false;
+
+    const request = userStore.submittedRequests.find(r => r.purpose === purposeKey);
+    return request && request.status === 'Pending';
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    setIsLoading(true);
+    const userRequests = allRequests.filter(request => request.user && request.user._id === user._id);
+    userStore.setSubmittedRequests(userRequests);
+    setIsLoading(false);
+  }, [user]);
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>
@@ -65,9 +87,13 @@ const NewRequest = observer(() => {
               value={purpose}
               onChange={e => setPurpose(e.target.value)}>
               {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                <MenuItem key={index} value={key} disabled={isPurposeAllowed(key)}>
+                <MenuItem key={index} value={key} disabled={isPurposeAllowed(key) || isRequestPending(key)}>
                   {PURPOSE_CHOICES[key]}
-                  {isPurposeAllowed(key) && <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />}
+                  {isPurposeAllowed(key) ? (
+                    <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />
+                  ) : isRequestPending(key) ? (
+                    <ErrorOutlineIcon style={{ color: 'goldenrod', marginLeft: '10px' }} />
+                  ) : null}
                 </MenuItem>
               ))}
             </TextField>

@@ -16,6 +16,7 @@ import userStore from '@/stores/userStore';
 import { observer } from 'mobx-react';
 import { sortArticles } from '@/utils/articles';
 import { toJS } from 'mobx';
+import axios from 'axios';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -32,30 +33,39 @@ const ArticleList = observer(({ resource }) => {
 
   const articles = resource.read();
   const user = userStore.user;
-  const permissions = userStore.permissions;
 
   useEffect(() => {
+    const fetchAllowedArticles = async () => {
+      if (!userStore.permissions || userStore.permissions.length === 0) {
+        try {
+          const permissionsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/permissions/user/${user._id}`);
+          userStore.setPermissions(permissionsResponse.data);
+        } catch (error) {
+          console.error('Error fetching permissions:', error);
+        }
+      }
+
+      setIsLoading(true);
+
+      let allowed = [];
+
+      Object.keys(PURPOSE_CHOICES).forEach(purpose => {
+        const userCanRead = userStore.permissions.find(p => p.purpose === purpose).canRead;
+        if (userCanRead) {
+          allowed.push(purpose);
+        }
+      });
+
+      setAllowedPurposes(allowed);
+
+      const allowedArticles = articles.filter(article => allowed.includes(article.purpose));
+
+      const sorted = sortArticles(allowedArticles);
+      userStore.setArticles(sorted);
+      setIsLoading(false);
+    };
+
     if (user && articles) {
-      const fetchAllowedArticles = async () => {
-        setIsLoading(true);
-
-        let allowed = [];
-
-        Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-          const userCanRead = permissions.find(p => p.purpose === purpose).canRead;
-          if (userCanRead) {
-            allowed.push(purpose);
-          }
-        });
-
-        setAllowedPurposes(allowed);
-
-        const allowedArticles = articles.filter(article => allowed.includes(article.purpose));
-
-        const sorted = sortArticles(allowedArticles);
-        userStore.setArticles(sorted);
-        setIsLoading(false);
-      };
       fetchAllowedArticles();
     }
   }, [articles]);

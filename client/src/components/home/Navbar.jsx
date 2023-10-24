@@ -43,10 +43,10 @@ const Navbar = observer(() => {
 
   const handleLogout = () => {
     userStore.setUser(null);
-    userStore.setArticles(null);
-    userStore.setSubmittedRequests(null);
-    userStore.setFeedbacks(null);
-    userStore.setPermissions(null);
+    userStore.setArticles([]);
+    userStore.setSubmittedRequests([]);
+    userStore.setFeedbacks([]);
+    userStore.setPermissions([]);
     localStorage.removeItem('CloudRoundsToken');
     handleClose();
     navigate('/login');
