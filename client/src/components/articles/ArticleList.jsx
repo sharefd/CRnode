@@ -1,22 +1,20 @@
 import LoadingSpinner from '@/helpers/LoadingSpinner';
+import userStore from '@/stores/userStore';
+import { deleteArticle, sortArticles, updateArticle } from '@/utils/articles';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
 import { BorderColorOutlined } from '@mui/icons-material';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, IconButton, Typography } from '@mui/material';
+import axios from 'axios';
+import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
+import './ArticleList.css';
 import { ArticleFilters } from './actions/ArticleFilters';
 import EditArticleModal from './actions/EditArticleModal';
 import ArticleCalendar from './calendar/ArticleCalendar';
-import { updateArticle } from '@/utils/articles';
-import './ArticleList.css';
-import { deleteArticle } from '@/utils/articles';
-import userStore from '@/stores/userStore';
-import { observer } from 'mobx-react';
-import { sortArticles } from '@/utils/articles';
-import { toJS } from 'mobx';
-import axios from 'axios';
+import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -28,47 +26,12 @@ const ArticleList = observer(({ resource }) => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
-  const [isLoading, setIsLoading] = useState(true);
   const [allowedPurposes, setAllowedPurposes] = useState([]);
 
-  const articles = resource.read();
   const user = userStore.user;
+  const articles = resource.read();
 
-  useEffect(() => {
-    const fetchAllowedArticles = async () => {
-      if (!userStore.permissions || userStore.permissions.length === 0) {
-        try {
-          const permissionsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/permissions/user/${user._id}`);
-          userStore.setPermissions(permissionsResponse.data);
-        } catch (error) {
-          console.error('Error fetching permissions:', error);
-        }
-      }
-
-      setIsLoading(true);
-
-      let allowed = [];
-
-      Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-        const userCanRead = userStore.permissions.find(p => p.purpose === purpose).canRead;
-        if (userCanRead) {
-          allowed.push(purpose);
-        }
-      });
-
-      setAllowedPurposes(allowed);
-
-      const allowedArticles = articles.filter(article => allowed.includes(article.purpose));
-
-      const sorted = sortArticles(allowedArticles);
-      userStore.setArticles(sorted);
-      setIsLoading(false);
-    };
-
-    if (user && articles) {
-      fetchAllowedArticles();
-    }
-  }, [articles]);
+  const { allowedArticles, isLoading } = useAllowedArticles(articles);
 
   const handleDelete = async articleId => {
     const isConfirmed = window.confirm('Are you sure you want to delete this article?');
@@ -112,8 +75,8 @@ const ArticleList = observer(({ resource }) => {
   }
 
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? userStore.articles.filter(isArticleAfterCurrentDate)
-    : userStore.articles
+    ? allowedArticles.filter(isArticleAfterCurrentDate)
+    : allowedArticles
         .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
         .filter(isArticleAfterCurrentDate);
 
@@ -219,7 +182,7 @@ const ArticleList = observer(({ resource }) => {
             })}
           </Grid>
           <Grid item xs={6} md={5} style={{ marginTop: '-35px' }}>
-            <ArticleCalendar articles={userStore.articles} />
+            <ArticleCalendar articles={allowedArticles} />
           </Grid>
         </Grid>
       </Box>

@@ -25,6 +25,7 @@ import { sortArticles } from '@/utils/articles';
 import userStore from '../../stores/userStore';
 import { observer } from 'mobx-react';
 import { toJS, runInAction } from 'mobx';
+import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 
 const OlderArticles = observer(({ resource }) => {
   const [page, setPage] = useState(0);
@@ -36,6 +37,8 @@ const OlderArticles = observer(({ resource }) => {
   const user = userStore.user;
   const articles = useMemo(() => sortArticles(resource.articles.read()).reverse(), [resource.articles]);
   const feedbacks = useMemo(() => resource.feedbacks.read(), [resource.feedbacks]);
+
+  const { allowedArticles, isLoading } = useAllowedArticles(articles);
 
   useEffect(() => {
     if (!user) return;
@@ -127,45 +130,47 @@ const OlderArticles = observer(({ resource }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {articles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((article, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{article.purpose}</TableCell>
-                        <TableCell>{article.title}</TableCell>
-                        <TableCell>{formatDate(article)}</TableCell>
-                        <TableCell>
-                          <Checkbox
-                            id={`attended-${article._id}`}
-                            name={`attended-${article._id}`}
-                            checked={user && user.attended.includes(article._id)}
-                            onChange={e => handleToggleAttending(article._id, e.target.checked)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {(() => {
-                            const feedback = getFeedback(article._id);
-                            return feedback ? (
-                              <div style={{ fontSize: '12px' }}>
-                                <span>{feedback}</span>
-                                <IconButton onClick={() => handleOpen(article, feedback)}>
-                                  <Edit />
+                    {allowedArticles
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((article, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{article.purpose}</TableCell>
+                          <TableCell>{article.title}</TableCell>
+                          <TableCell>{formatDate(article)}</TableCell>
+                          <TableCell>
+                            <Checkbox
+                              id={`attended-${article._id}`}
+                              name={`attended-${article._id}`}
+                              checked={user && user.attended.includes(article._id)}
+                              onChange={e => handleToggleAttending(article._id, e.target.checked)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            {(() => {
+                              const feedback = getFeedback(article._id);
+                              return feedback ? (
+                                <div style={{ fontSize: '12px' }}>
+                                  <span>{feedback}</span>
+                                  <IconButton onClick={() => handleOpen(article, feedback)}>
+                                    <Edit />
+                                  </IconButton>
+                                </div>
+                              ) : (
+                                <IconButton onClick={() => handleOpen(article, '')}>
+                                  <AddCircle />
                                 </IconButton>
-                              </div>
-                            ) : (
-                              <IconButton onClick={() => handleOpen(article, '')}>
-                                <AddCircle />
-                              </IconButton>
-                            );
-                          })()}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                              );
+                            })()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component='div'
-                count={articles.length}
+                count={allowedArticles.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

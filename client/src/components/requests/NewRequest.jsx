@@ -81,7 +81,6 @@ const NewRequest = observer(({ resource }) => {
 
   if (isLoading) return <LoadingSpinner />;
 
-  console.log(toJS(userStore.submittedRequests));
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>
       <Grid item xs={12}>

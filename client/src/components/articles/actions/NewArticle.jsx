@@ -1,17 +1,17 @@
-import userStore from '@/stores/userStore';
 import AccessDenied from '@/components/auth/AccessDenied';
 import LoadingSpinner from '@/helpers/LoadingSpinner';
+import userStore from '@/stores/userStore';
 import { createArticle } from '@/utils/articles';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import axios from 'axios';
 
 const NewArticle = observer(() => {
   const navigate = useNavigate();
