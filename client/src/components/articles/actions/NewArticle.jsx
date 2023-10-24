@@ -9,12 +9,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const NewArticle = observer(() => {
   const navigate = useNavigate();
   const currentUser = userStore.user;
+  const [isLoading, setIsLoading] = useState(true);
+  const [allowedPurposes, setAllowedPurposes] = useState([]);
+
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -26,6 +30,38 @@ const NewArticle = observer(() => {
     speaker: '',
     additional_details: ''
   });
+
+  useEffect(() => {
+    if (!currentUser) return;
+    setIsLoading(true);
+
+    async function fetchPermissions() {
+      try {
+        const permissionsResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/permissions/user/${currentUser._id}`
+        );
+        userStore.setPermissions(permissionsResponse.data);
+
+        let allowed = [];
+
+        Object.keys(PURPOSE_CHOICES).forEach(purpose => {
+          const userCanWrite = permissionsResponse.data.find(p => p.purpose === purpose).canWrite;
+          if (userCanWrite) {
+            allowed.push(purpose);
+          }
+        });
+
+        setAllowedPurposes(allowed);
+      } catch (error) {
+        console.error('Error fetching permissions:', error);
+      }
+    }
+
+    if (!userStore.permissions || userStore.permissions.length === 0) {
+      fetchPermissions();
+    }
+    setIsLoading(false);
+  }, [currentUser]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -102,7 +138,7 @@ const NewArticle = observer(() => {
                 value={article.purpose}
                 onChange={e => setArticle({ ...article, purpose: e.target.value })}>
                 {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                  <MenuItem key={index} value={key}>
+                  <MenuItem key={index} value={key} disabled={!allowedPurposes.includes(key)}>
                     {PURPOSE_CHOICES[key]}
                   </MenuItem>
                 ))}
