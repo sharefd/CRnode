@@ -1,14 +1,13 @@
+import OM1Icon from '@/assets/om1.png';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { deleteArticle, fetchArticles, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
-import { BorderColorOutlined, Edit } from '@mui/icons-material';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import { Edit } from '@mui/icons-material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import { Box, Button, Card, CardActions, CardContent, Divider, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -19,8 +18,8 @@ import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 
 const purposeIcons = {
-  OM1: <EngineeringIcon sx={{ width: '18px', mr: 0.6 }} />,
-  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', mr: 0.6 }} />
+  OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', marginRight: '6px', height: '18px' }} />
   // Add other purpose choices and their icons here
 };
 
@@ -179,7 +178,7 @@ const ArticleList = observer(() => {
                         <Box sx={{ mt: 2 }}>
                           <Box className='purpose-badge'>
                             {purposeIcons[article.purpose]}
-                            {PURPOSE_CHOICES[article.purpose]}
+                            <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[article.purpose]}</span>
                           </Box>
                           <button
                             className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
@@ -188,7 +187,7 @@ const ArticleList = observer(() => {
                             Created by {article.organizer.username}
                             {article.organizer._id === user._id && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
                           </button>
-                          {/* END OF */}
+                          {/* END OF card footer*/}
                         </Box>
                       </Grid>
                     </Grid>

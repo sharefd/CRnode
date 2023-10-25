@@ -1,5 +1,5 @@
 import { Delete, Save } from '@mui/icons-material';
-import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, MenuItem, Modal, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -50,8 +50,8 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
           </Grid>
 
           <form onSubmit={handleSave}>
-            <Grid container spacing={2} sx={{ padding: 3 }}>
-              <Grid item xs={6}>
+            <Grid container spacing={3} sx={{ padding: 3 }}>
+              <Grid item xs={12}>
                 <TextField
                   label='Title'
                   required
@@ -60,17 +60,8 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
                   onChange={e => setEditedArticle({ ...editedArticle, title: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label='Event Link'
-                  required
-                  fullWidth
-                  value={editedArticle.event_link}
-                  onChange={e => setEditedArticle({ ...editedArticle, event_link: e.target.value })}
-                />
-              </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   select
                   label='Purpose'
@@ -85,29 +76,7 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
                   ))}
                 </TextField>
               </Grid>
-
-              <Grid item xs={4}>
-                <Typography variant='body1'></Typography>
-                <TextField
-                  type='date'
-                  fullWidth
-                  value={editedArticle.dateString}
-                  onChange={e => setEditedArticle({ ...editedArticle, dateString: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant='body1'></Typography>
-                <TimePicker
-                  value={editedArticle.time}
-                  onChange={newValue => {
-                    setEditedArticle({ ...editedArticle, time: dayjs(newValue) });
-                  }}
-                  slotProps={{ textField: { variant: 'outlined' } }}
-                  sx={{ overflow: 'hidden' }}
-                />
-              </Grid>
-
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <TextField
                   label='Speaker'
                   fullWidth
@@ -117,20 +86,49 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
               </Grid>
 
               <Grid item xs={6}>
+                <Typography variant='body1'></Typography>
                 <TextField
-                  label='Passcode'
+                  type='date'
                   fullWidth
-                  value={editedArticle.passcode}
-                  onChange={e => setEditedArticle({ ...editedArticle, passcode: e.target.value })}
+                  value={editedArticle.dateString}
+                  onChange={e => setEditedArticle({ ...editedArticle, dateString: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant='body1'></Typography>
+                <TimePicker
+                  value={editedArticle.time}
+                  onChange={newValue => {
+                    setEditedArticle({ ...editedArticle, time: dayjs(newValue) });
+                  }}
+                  slotProps={{ textField: { variant: 'outlined' } }}
+                  sx={{ overflow: 'hidden', width: '100%' }}
                 />
               </Grid>
 
+              <Grid item xs={12}>
+                <TextField
+                  label='Event Link'
+                  required
+                  fullWidth
+                  value={editedArticle.event_link}
+                  onChange={e => setEditedArticle({ ...editedArticle, event_link: e.target.value })}
+                />
+              </Grid>
               <Grid item xs={6}>
                 <TextField
                   label='Meeting ID'
                   fullWidth
                   value={editedArticle.meeting_id}
                   onChange={e => setEditedArticle({ ...editedArticle, meeting_id: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label='Passcode'
+                  fullWidth
+                  value={editedArticle.passcode}
+                  onChange={e => setEditedArticle({ ...editedArticle, passcode: e.target.value })}
                 />
               </Grid>
 
@@ -144,19 +142,26 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
                   onChange={e => setEditedArticle({ ...editedArticle, additional_details: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Button type='submit' variant='contained' color='primary' startIcon={<Save />}>
-                  Save Changes
-                </Button>
-              </Grid>
-              <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button
-                  sx={{ backgroundColor: 'gray', color: '#fff', '&:hover': { backgroundColor: 'red' } }}
-                  variant='contained'
-                  startIcon={<Delete />}
-                  onClick={() => onDelete(article._id)}>
-                  Delete
-                </Button>
+              <Grid container sx={{ mt: 3.5, mb: 0.5 }}>
+                <Grid item xs={4} />
+                <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                  <Button type='submit' variant='contained' color='primary' startIcon={<Save />}>
+                    Save Changes
+                  </Button>
+                </Grid>
+
+                <Grid item xs={3.7} sx={{ textAlign: 'right' }}>
+                  <IconButton
+                    sx={{
+                      borderRadius: '20px',
+                      backgroundColor: 'gray',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: 'red' }
+                    }}
+                    onClick={() => onDelete(article._id)}>
+                    <Delete sx={{ fontSize: '22px' }} />
+                  </IconButton>
+                </Grid>
               </Grid>
             </Grid>
           </form>

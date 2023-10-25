@@ -78,7 +78,7 @@ const NewArticle = ({ open, onClose, permissions }) => {
 
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3} sx={{ padding: 4 }}>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <TextField
                   label='Title'
                   required
@@ -87,17 +87,8 @@ const NewArticle = ({ open, onClose, permissions }) => {
                   onChange={e => setArticle({ ...article, title: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label='Event Link'
-                  required
-                  fullWidth
-                  value={article.event_link}
-                  onChange={e => setArticle({ ...article, event_link: e.target.value })}
-                />
-              </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   select
                   label='Purpose'
@@ -113,28 +104,7 @@ const NewArticle = ({ open, onClose, permissions }) => {
                 </TextField>
               </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant='body1'></Typography>
-                <TextField
-                  type='date'
-                  fullWidth
-                  value={article.dateString}
-                  onChange={e => setArticle({ ...article, dateString: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant='body1'></Typography>
-                <TimePicker
-                  value={article.time}
-                  onChange={newValue => {
-                    setArticle({ ...article, time: dayjs(newValue) });
-                  }}
-                  slotProps={{ textField: { variant: 'outlined' } }}
-                  sx={{ overflow: 'hidden' }}
-                />
-              </Grid>
-
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <TextField
                   label='Speaker'
                   fullWidth
@@ -145,19 +115,47 @@ const NewArticle = ({ open, onClose, permissions }) => {
 
               <Grid item xs={6}>
                 <TextField
-                  label='Passcode'
+                  type='date'
                   fullWidth
-                  value={article.passcode}
-                  onChange={e => setArticle({ ...article, passcode: e.target.value })}
+                  value={article.dateString}
+                  onChange={e => setArticle({ ...article, dateString: e.target.value })}
                 />
               </Grid>
 
+              <Grid item xs={6}>
+                <TimePicker
+                  value={article.time}
+                  onChange={newValue => {
+                    setArticle({ ...article, time: dayjs(newValue) });
+                  }}
+                  slotProps={{ textField: { variant: 'outlined' } }}
+                  sx={{ overflow: 'hidden', width: '100%' }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label='Event Link'
+                  required
+                  fullWidth
+                  value={article.event_link}
+                  onChange={e => setArticle({ ...article, event_link: e.target.value })}
+                />
+              </Grid>
               <Grid item xs={6}>
                 <TextField
                   label='Meeting ID'
                   fullWidth
                   value={article.meeting_id}
                   onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label='Passcode'
+                  fullWidth
+                  value={article.passcode}
+                  onChange={e => setArticle({ ...article, passcode: e.target.value })}
                 />
               </Grid>
 
@@ -172,14 +170,12 @@ const NewArticle = ({ open, onClose, permissions }) => {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{ textAlign: 'center', my: 1.5 }}>
                 <Button type='submit' variant='contained' color='primary'>
                   Create Article
                 </Button>
               </Grid>
             </Grid>
-
-            <Grid container spacing={3} sx={{ padding: 4 }}></Grid>
           </form>
         </Paper>
       </Modal>
