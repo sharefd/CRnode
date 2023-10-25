@@ -1,7 +1,7 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { fetchArticles } from '@/services/articles';
-import { createFeedback, fetchFeedbacks } from '@/services/feedbacks';
+import { createFeedback, fetchUserFeedbacks } from '@/services/feedbacks';
 import { toggleAttending } from '@/services/users';
 import userStore from '@/stores/userStore';
 import { formatDate } from '@/utils/dates';
