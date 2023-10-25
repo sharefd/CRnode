@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
 import { CheckCircle } from '@mui/icons-material';
-import LoadingSpinner from '../../helpers/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequests, createRequest } from '@/services/requests';
 import { fetchUserPermissions } from '@/services/permissions';
 import { fetchCanReadPermissions } from '../../services/permissions';
-import { toJS } from 'mobx';
 
 const NewRequest = observer(() => {
   const navigate = useNavigate();

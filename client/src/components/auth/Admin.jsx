@@ -5,7 +5,7 @@ import EditPermissions from './EditPermissions';
 import { fetchUsers } from '@/services/users';
 import { fetchPermissions } from '@/services/permissions';
 
-import LoadingSpinner from '@/helpers/LoadingSpinner';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import resourceStore from '@/stores/resourceStore';
 
 const PasswordPrompt = ({ onPasswordSubmit }) => {

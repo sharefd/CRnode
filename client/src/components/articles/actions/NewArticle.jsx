@@ -1,5 +1,4 @@
-import AccessDenied from '@/components/auth/AccessDenied';
-import LoadingSpinner from '@/helpers/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { createArticle } from '@/services/articles';
 import { fetchCanWritePermissions } from '@/services/permissions';
 import userStore from '@/stores/userStore';

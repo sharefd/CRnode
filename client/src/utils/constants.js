@@ -1,6 +1,6 @@
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',
-  UOFTAMR: 'UofT Aerospace Rounds',
+  UOFTAMR: 'UofT Aerospace',
   MACIMAHD1: 'McMaster IM PGY-1 AHD',
   MACIMAHD2: 'McMaster IM PGY-2 AHD',
   MACIMAHD3: 'McMaster IM PGY-3 AHD'

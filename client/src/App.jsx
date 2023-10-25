@@ -8,7 +8,7 @@ import AuthForm from './components/auth/AuthForm';
 import Home from './components/home/Home';
 import Navbar from './components/home/Navbar';
 import NewRequest from './components/requests/NewRequest';
-import LoadingSpinner from './helpers/LoadingSpinner';
+import LoadingSpinner from './components/ui/LoadingSpinner';
 import userStore from './stores/userStore';
 
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));

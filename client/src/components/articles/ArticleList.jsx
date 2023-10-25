@@ -1,10 +1,10 @@
-import LoadingSpinner from '@/helpers/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { deleteArticle, fetchArticles, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
-import { BorderColorOutlined } from '@mui/icons-material';
+import { BorderColorOutlined, Edit } from '@mui/icons-material';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
@@ -19,8 +19,8 @@ import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 
 const purposeIcons = {
-  OM1: <EngineeringIcon />,
-  UOFTAMR: <RocketLaunchIcon />
+  OM1: <EngineeringIcon sx={{ width: '18px', mr: 0.6 }} />,
+  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', mr: 0.6 }} />
   // Add other purpose choices and their icons here
 };
 
@@ -125,7 +125,7 @@ const ArticleList = observer(() => {
           <Grid item xs={12} md={7}>
             {filteredArticles.map((article, index) => {
               return (
-                <Card key={index} variant='outlined' sx={{ marginBottom: '20px' }}>
+                <Card key={index} variant='outlined' sx={{ marginBottom: '20px', position: 'relative' }}>
                   <CardContent>
                     <Grid container spacing={2}>
                       <Grid item xs={3}>
@@ -143,37 +143,12 @@ const ArticleList = observer(() => {
                           </Typography>
                         </Box>
                         <CardActions sx={{ my: 1 }}>
-                          <Button
-                            variant='outlined'
-                            color='primary'
-                            sx={{ my: 0.5, mx: 1, textTransform: 'none' }}
-                            size='small'>
-                            {purposeIcons[article.purpose]}
-                            {PURPOSE_CHOICES[article.purpose]}
-                          </Button>
-                          <Button
-                            variant='contained'
-                            color='primary'
-                            href={article.event_link}
-                            target='_blank'
-                            size='small'
-                            sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
-                            Join Meeting
-                          </Button>
-                          <Button
-                            variant='outlined'
-                            onClick={() => toggleDetails(article._id)}
-                            size='small'
-                            sx={{
-                              textTransform: 'none',
-                              my: 0.5,
-                              mx: 1,
-                              color: 'gray',
-                              borderColor: 'white',
-                              '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                            }}>
-                            {isExpanded[article._id] ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
-                          </Button>
+                          <button className='join-button'>Join Meeting</button>
+                          <button
+                            className={`info-button ${showDetails[article._id] ? 'active' : ''}`}
+                            onClick={() => toggleDetails(article._id)}>
+                            More Info
+                          </button>
                         </CardActions>
                         <Box
                           sx={{
@@ -200,25 +175,21 @@ const ArticleList = observer(() => {
                           }}>
                           <span> {article.additional_details || ''}</span>
                         </Box>
-
-                        {article.organizer._id === user._id && (
-                          <IconButton
+                        {/* BEGINNING OF card footer */}
+                        <Box sx={{ mt: 2 }}>
+                          <Box className='purpose-badge'>
+                            {purposeIcons[article.purpose]}
+                            {PURPOSE_CHOICES[article.purpose]}
+                          </Box>
+                          <button
+                            className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
                             onClick={() => setSelectedArticle(article)}
-                            sx={{
-                              float: 'right',
-                              padding: '0px',
-                              ml: 0.5,
-                              '&:hover': {
-                                backgroundColor: 'transparent',
-                                color: 'blue'
-                              }
-                            }}>
-                            <BorderColorOutlined sx={{ fontSize: '15px' }} />
-                          </IconButton>
-                        )}
-                        <Typography variant='caption' color='textSecondary' style={{ float: 'right' }}>
-                          Created by {article.organizer.username}
-                        </Typography>
+                            disabled={article.organizer._id !== user._id}>
+                            Created by {article.organizer.username}
+                            {article.organizer._id === user._id && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
+                          </button>
+                          {/* END OF */}
+                        </Box>
                       </Grid>
                     </Grid>
                   </CardContent>

@@ -46,15 +46,9 @@ const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArtic
         />
       </Box>
       {user.isAdmin && (
-        <Box>
-          <Button
-            fullWidth
-            variant='contained'
-            sx={{ color: '#eaeaec' }}
-            startIcon={<Add />}
-            onClick={toggleNewArticleModal}>
-            Create Article
-          </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center' }} className='button-4' onClick={toggleNewArticleModal}>
+          <Add sx={{ fontSize: '1.1rem', mr: 0.5 }} />
+          Create Article
         </Box>
       )}
     </Box>

@@ -31,7 +31,7 @@ export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }
         aria-label='purpose'
         size='small'
         sx={{ ml: 4 }}>
-        <ToggleButton value='Show All' aria-label='Show All' sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
+        <ToggleButton value='Show All' aria-label='Show All' className='button-4'>
           Show All
         </ToggleButton>
         {allowedPurposes.map(purpose => (

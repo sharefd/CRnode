@@ -1,4 +1,4 @@
-import LoadingSpinner from '@/helpers/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { fetchArticles } from '@/services/articles';
 import { createFeedback, fetchFeedbacks } from '@/services/feedbacks';
