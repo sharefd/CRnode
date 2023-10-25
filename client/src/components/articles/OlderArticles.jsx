@@ -1,6 +1,6 @@
 import LoadingSpinner from '@/helpers/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
-import { fetchArticles, sortArticles } from '@/services/articles';
+import { fetchArticles } from '@/services/articles';
 import { createFeedback, fetchFeedbacks } from '@/services/feedbacks';
 import { toggleAttending } from '@/services/users';
 import userStore from '@/stores/userStore';
@@ -29,6 +29,7 @@ import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { sortArticlesDescending } from '../../services/articles';
 
 const OlderArticles = observer(() => {
   const [page, setPage] = useState(0);
@@ -51,7 +52,7 @@ const OlderArticles = observer(() => {
     refetch
   } = useQuery(['articles', { type: 'older' }], fetchArticles);
   const { allowedArticles, isLoading } = useAllowedArticles(articles);
-  const sortedArticles = sortArticles(allowedArticles);
+  const sortedArticles = sortArticlesDescending(allowedArticles);
 
   useEffect(() => {
     if (!user || isFeedbacksQueryLoading) return;

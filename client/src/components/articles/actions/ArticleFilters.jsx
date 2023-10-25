@@ -5,27 +5,11 @@ import { useQuery } from 'react-query';
 import { fetchUserPermissions, fetchCanReadPermissions } from '@/services/permissions';
 
 export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }) => {
-  const [currentTime, setCurrentTime] = useState('');
-
   const { data: permissions, isLoading } = useQuery(['permissions', userId], () => fetchUserPermissions(userId), {
     enabled: !!userId
   });
 
   const allowedPurposes = permissions ? fetchCanReadPermissions(permissions) : [];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const formattedTime = now.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-      });
-      setCurrentTime(formattedTime);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleToggle = (event, newPurposes) => {
     if (newPurposes.length === 0) {
@@ -40,9 +24,6 @@ export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }
 
   return (
     <Grid item xs={4} md={4} sx={{ pt: 2, pb: 2 }}>
-      <Typography variant='caption' id='current-time' sx={{ px: 2, color: 'gray' }}>
-        {currentTime}
-      </Typography>
       <ToggleButtonGroup
         color='primary'
         value={selectedPurposes}

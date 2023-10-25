@@ -13,8 +13,9 @@ import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import './ArticleList.css';
-import { ArticleFilters } from './actions/ArticleFilters';
+import ActionBar from './actions/ActionBar';
 import EditArticleModal from './actions/EditArticleModal';
+import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 
 const purposeIcons = {
@@ -28,6 +29,7 @@ const ArticleList = observer(() => {
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
 
   const user = userStore.user;
 
@@ -37,18 +39,18 @@ const ArticleList = observer(() => {
     refetch
   } = useQuery(['articles', { type: 'list' }], fetchArticles);
 
-  const { allowedArticles, isLoading } = useAllowedArticles(articles);
+  const { allowedArticles, permissions, isLoading } = useAllowedArticles(articles);
   const sortedArticles = sortArticles(allowedArticles);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries('articles');
+      refetch();
     }
   });
 
   const updateMutation = useMutation(updateArticle, {
     onSuccess: () => {
-      queryClient.invalidateQueries('articles');
+      refetch();
     }
   });
 
@@ -87,6 +89,10 @@ const ArticleList = observer(() => {
     }));
   };
 
+  const toggleNewArticleModal = () => {
+    setOpenNewArticleModal(!openNewArticleModal);
+  };
+
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
   eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
@@ -108,13 +114,13 @@ const ArticleList = observer(() => {
 
   return (
     <div>
+      <ActionBar
+        user={user}
+        selectedPurposes={selectedPurposes}
+        handlePurposeChange={handlePurposeChange}
+        toggleNewArticleModal={toggleNewArticleModal}
+      />
       <Box px={2}>
-        <ArticleFilters
-          userId={user._id}
-          selectedPurposes={selectedPurposes}
-          handlePurposeChange={handlePurposeChange}
-        />
-
         <Grid container spacing={3}>
           <Grid item xs={12} md={7}>
             {filteredArticles.map((article, index) => {
@@ -220,11 +226,12 @@ const ArticleList = observer(() => {
               );
             })}
           </Grid>
-          <Grid item xs={6} md={5} style={{ marginTop: '-35px' }}>
+          <Grid item xs={6} md={5} style={{ position: 'relative', marginTop: '-20px' }}>
             <ArticleCalendar articles={sortedArticles} />
           </Grid>
         </Grid>
       </Box>
+      <NewArticle open={openNewArticleModal} onClose={toggleNewArticleModal} permissions={permissions} />
       <EditArticleModal
         open={!!selectedArticle}
         onClose={() => setSelectedArticle(null)}

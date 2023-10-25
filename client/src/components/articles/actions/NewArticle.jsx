@@ -1,21 +1,18 @@
 import AccessDenied from '@/components/auth/AccessDenied';
 import LoadingSpinner from '@/helpers/LoadingSpinner';
 import { createArticle } from '@/services/articles';
-import { fetchCanWritePermissions, fetchUserPermissions } from '@/services/permissions';
+import { fetchCanWritePermissions } from '@/services/permissions';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
-import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useMutation } from 'react-query';
 
-const NewArticle = observer(() => {
-  const navigate = useNavigate();
+const NewArticle = ({ open, onClose, permissions }) => {
   const currentUser = userStore.user;
 
   const [article, setArticle] = useState({
@@ -30,20 +27,12 @@ const NewArticle = observer(() => {
     additional_details: ''
   });
 
-  const { data: permissions, isLoading } = useQuery(
-    ['permissions', currentUser?._id],
-    () => fetchUserPermissions(currentUser._id),
-    {
-      enabled: !!currentUser
-    }
-  );
-
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
       userStore.setArticles([...userStore.articles, newArticle]);
-      navigate('/articles');
+      onClose();
     }
   });
 
@@ -66,139 +55,137 @@ const NewArticle = observer(() => {
 
   if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
-  } else {
-    if (!currentUser.isAdmin) {
-      return <AccessDenied />;
-    }
   }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Paper elevation={3} sx={{ width: '50%', margin: '0 auto', mt: 8 }}>
-        <Grid item xs={12}>
-          <Typography
-            variant='h5'
-            align='center'
-            sx={{
-              backgroundColor: '#0066b2',
-              color: '#fff',
-              borderTopRightRadius: '5px',
-              borderTopLeftRadius: '5px',
-              padding: '1rem',
-              mb: 2
-            }}>
-            Create Article
-          </Typography>
-        </Grid>
-
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={3} sx={{ padding: 4 }}>
-            <Grid item xs={6}>
-              <TextField
-                label='Title'
-                required
-                fullWidth
-                value={article.title}
-                onChange={e => setArticle({ ...article, title: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label='Event Link'
-                required
-                fullWidth
-                value={article.event_link}
-                onChange={e => setArticle({ ...article, event_link: e.target.value })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                select
-                label='Purpose'
-                required
-                fullWidth
-                value={article.purpose}
-                onChange={e => setArticle({ ...article, purpose: e.target.value })}>
-                {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                  <MenuItem key={index} value={key} disabled={!allowedPurposes.includes(key)}>
-                    {PURPOSE_CHOICES[key]}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <Grid item xs={4}>
-              <Typography variant='body1'></Typography>
-              <TextField
-                type='date'
-                fullWidth
-                value={article.dateString}
-                onChange={e => setArticle({ ...article, dateString: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant='body1'></Typography>
-              <TimePicker
-                value={article.time}
-                onChange={newValue => {
-                  setArticle({ ...article, time: dayjs(newValue) });
-                }}
-                slotProps={{ textField: { variant: 'outlined' } }}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Grid>
-
-            <Grid item xs={4}>
-              <TextField
-                label='Speaker'
-                fullWidth
-                value={article.speaker}
-                onChange={e => setArticle({ ...article, speaker: e.target.value })}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                label='Passcode'
-                fullWidth
-                value={article.passcode}
-                onChange={e => setArticle({ ...article, passcode: e.target.value })}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                label='Meeting ID'
-                fullWidth
-                value={article.meeting_id}
-                onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label='Addtional Details (e.g. required readings, preparation material)'
-                fullWidth
-                multiline
-                rows={4}
-                value={article.additional_details}
-                onChange={e => setArticle({ ...article, additional_details: e.target.value })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button type='submit' variant='contained' color='primary'>
-                Create Article
-              </Button>
-            </Grid>
+      <Modal open={open} onClose={onClose}>
+        <Paper elevation={3} sx={{ width: '60%', margin: '0 auto', mt: 8 }}>
+          <Grid item xs={12}>
+            <Typography
+              variant='h5'
+              align='center'
+              sx={{
+                backgroundColor: '#0066b2',
+                color: '#fff',
+                borderTopRightRadius: '5px',
+                borderTopLeftRadius: '5px',
+                padding: '1rem',
+                mb: 2
+              }}>
+              Create Article
+            </Typography>
           </Grid>
 
-          <Grid container spacing={3} sx={{ padding: 4 }}></Grid>
-        </form>
-      </Paper>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3} sx={{ padding: 4 }}>
+              <Grid item xs={6}>
+                <TextField
+                  label='Title'
+                  required
+                  fullWidth
+                  value={article.title}
+                  onChange={e => setArticle({ ...article, title: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label='Event Link'
+                  required
+                  fullWidth
+                  value={article.event_link}
+                  onChange={e => setArticle({ ...article, event_link: e.target.value })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  label='Purpose'
+                  required
+                  fullWidth
+                  value={article.purpose}
+                  onChange={e => setArticle({ ...article, purpose: e.target.value })}>
+                  {Object.keys(PURPOSE_CHOICES).map((key, index) => (
+                    <MenuItem key={index} value={key} disabled={!allowedPurposes.includes(key)}>
+                      {PURPOSE_CHOICES[key]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Typography variant='body1'></Typography>
+                <TextField
+                  type='date'
+                  fullWidth
+                  value={article.dateString}
+                  onChange={e => setArticle({ ...article, dateString: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant='body1'></Typography>
+                <TimePicker
+                  value={article.time}
+                  onChange={newValue => {
+                    setArticle({ ...article, time: dayjs(newValue) });
+                  }}
+                  slotProps={{ textField: { variant: 'outlined' } }}
+                  sx={{ overflow: 'hidden' }}
+                />
+              </Grid>
+
+              <Grid item xs={4}>
+                <TextField
+                  label='Speaker'
+                  fullWidth
+                  value={article.speaker}
+                  onChange={e => setArticle({ ...article, speaker: e.target.value })}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  label='Passcode'
+                  fullWidth
+                  value={article.passcode}
+                  onChange={e => setArticle({ ...article, passcode: e.target.value })}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  label='Meeting ID'
+                  fullWidth
+                  value={article.meeting_id}
+                  onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label='Addtional Details (e.g. required readings, preparation material)'
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={article.additional_details}
+                  onChange={e => setArticle({ ...article, additional_details: e.target.value })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button type='submit' variant='contained' color='primary'>
+                  Create Article
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={3} sx={{ padding: 4 }}></Grid>
+          </form>
+        </Paper>
+      </Modal>
     </LocalizationProvider>
   );
-});
+};
 
 export default NewArticle;

@@ -1,4 +1,3 @@
-
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',
   UOFTAMR: 'UofT Aerospace Rounds',
@@ -41,7 +40,6 @@ export const monthNames = [
 export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF'];
 
 export const navlinks = [
-  { label: 'Create Article', endpoint: '/articles/new' },
   { label: 'Manage Requests', endpoint: '/requests' },
   { label: 'My Rounds', endpoint: '/articles' },
   { label: 'Past Rounds', endpoint: '/older-articles' },

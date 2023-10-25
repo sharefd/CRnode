@@ -29,5 +29,5 @@ export const useAllowedArticles = articles => {
     setAllowedArticles(allowedFilteredArticles);
   }, [articles, permissions, isPermissionsLoading, isError]);
 
-  return { allowedArticles, isLoading: isPermissionsLoading };
+  return { allowedArticles, permissions, isLoading: isPermissionsLoading };
 };

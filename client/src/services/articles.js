@@ -42,6 +42,12 @@ export const sortArticles = articles => {
   });
 };
 
+export const sortArticlesDescending = articles => {
+  return articles.sort((a, b) => {
+    return compareDates(b, a);
+  });
+};
+
 export const fetchArticles = async () => {
   try {
     const response = await axios.get(`${baseUrl}/api/articles`);

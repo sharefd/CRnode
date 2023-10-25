@@ -58,7 +58,6 @@ const App = observer(() => {
           <Route path='/' element={<Home />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/articles' element={<ArticleList />} />
-          <Route path='/articles/new' element={<NewArticle />} />
           <Route path='/older-articles' element={<OlderArticles />} />
           <Route path='/requests' element={<RequestsList />} />
           <Route path='/login' element={<AuthForm />} />
