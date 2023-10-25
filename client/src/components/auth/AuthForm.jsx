@@ -4,7 +4,10 @@ import { TextField, Button, Typography, Grid, MenuItem, Paper, CircularProgress 
 import { useNavigate } from 'react-router';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/userStore';
-import { initialPermissions, UNIVERSITY_CHOICES } from '@/utils/authForm';
+import { UNIVERSITY_CHOICES } from '@/utils/authForm';
+import { createUser, loginUser } from '@/services/users';
+import { fetchUserPermissions, initPermissions } from '@/services/permissions';
+import { fetchUserFeedbacks } from '@/services/feedbacks';
 
 const AuthForm = observer(() => {
   const navigate = useNavigate();
@@ -71,53 +74,38 @@ const AuthForm = observer(() => {
     setIsLoading(true);
     setError(null);
     try {
-      let response;
       if (isSignup) {
-        response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
-          ...credentials,
-          permissions: initialPermissions
-        });
+        const user = await createUser(credentials);
 
-        if (response.status === 200) {
-          setMessage('Successfully signed up');
-          userStore.setUser(response.data.user);
-          setTimeout(() => {
-            setIsSignup(false);
-            setIsLoading(false);
-            setMessage(null);
-          }, 2000);
-        }
+        setMessage('Successfully signed up');
+        userStore.setUser(user);
+        console.log(user);
+        await initPermissions(user._id);
+
+        setTimeout(() => {
+          setIsSignup(false);
+          setIsLoading(false);
+          setMessage(null);
+        }, 1500);
       } else {
-        response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
-          username: credentials.username,
-          password: credentials.password
-        });
+        const response = await loginUser(credentials.username, credentials.password);
+        setMessage('Successfully logged in');
+        userStore.setUser(response.user);
+        localStorage.setItem('CloudRoundsToken', response.token);
 
-        if (response.status === 200) {
-          setMessage('Successfully logged in');
-          userStore.setUser(response.data.user);
-          localStorage.setItem('CloudRoundsToken', response.data.token);
+        const feedbacks = await fetchUserFeedbacks(response.user._id);
+        userStore.setFeedbacks(feedbacks);
 
-          const feedbackResponse = await axios.get(
-            `${import.meta.env.VITE_API_URL}/feedbacks/${response.data.user._id}`
-          );
-
-          userStore.setFeedbacks(feedbackResponse.data);
-
-          try {
-            const permissionsResponse = await axios.get(
-              `${import.meta.env.VITE_API_URL}/permissions/user/${response.data.user._id}`
-            );
-            userStore.setPermissions(permissionsResponse.data);
-          } catch (error) {
-            console.error('Error fetching permissions:', error);
-          }
-
-          setTimeout(() => {
-            setIsLoading(false);
-            navigate('/');
-          }, 1500);
+        try {
+          await fetchUserPermissions(response.user._id);
+        } catch (error) {
+          console.error('Error fetching permissions:', error);
         }
+
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate('/');
+        }, 1500);
       }
     } catch (error) {
       console.error(error);

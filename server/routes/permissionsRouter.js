@@ -38,6 +38,34 @@ router.post('/new', jwtMiddleware, async (req, res) => {
   }
 });
 
+router.post('/init-permissions', async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+
+  const purposes = ['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'];
+
+  try {
+    const newPermissions = purposes.map(purpose => ({
+      userId,
+      purpose,
+      canRead: false,
+      canWrite: false
+    }));
+
+    const result = await Permission.insertMany(newPermissions);
+    if (result && result.length === purposes.length) {
+      res.status(201).json({ message: 'Permissions initialized successfully', result });
+    } else {
+      res.status(500).json({ message: 'Not all permissions were initialized', result });
+    }
+  } catch (err) {
+    console.error('Error initializing permissions:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.put('/bulk-update/:userId', jwtMiddleware, async (req, res) => {
   const { userId } = req.params;
   const updates = req.body;

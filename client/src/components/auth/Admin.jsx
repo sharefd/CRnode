@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Container, Button, TextField, List, ListItem, ListItemText, Modal, Box } from '@mui/material';
 import EditPermissions from './EditPermissions';
@@ -38,20 +38,10 @@ const Admin = () => {
   const [passwordEntered, setPasswordEntered] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-
-  if (isLoadingUsers || isLoadingPermissions) {
-    return <LoadingSpinner />;
-  }
+  const [usersPermissions, setUsersPermissions] = useState(null);
 
   resourceStore.setPermissions(permissions);
   resourceStore.setUsers(users);
-
-  const usersPermissions = users.map(user => {
-    return {
-      user,
-      permissions: permissions.filter(perm => perm.userId === user._id)
-    };
-  });
 
   const toggleModal = user => {
     const userWithPermissions = usersPermissions.find(up => up.user._id === user._id);
@@ -67,22 +57,38 @@ const Admin = () => {
     }
   };
 
+  useEffect(() => {
+    if (!users || !permissions) return;
+    const perms = users.map(user => {
+      return {
+        user,
+        permissions: permissions.filter(perm => perm.userId === user._id)
+      };
+    });
+    setUsersPermissions(perms);
+  }, [isLoadingUsers, isLoadingPermissions]);
+
+  if (isLoadingUsers || isLoadingPermissions) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <Container>
       {/* {!passwordEntered ? <PasswordPrompt onPasswordSubmit={onPasswordSubmit} /> : <UserList users={users} />} */}
       <List>
-        {usersPermissions.map(up => (
-          <ListItem key={up.user._id}>
-            <ListItemText
-              primary={up.user.username}
-              secondary={`Permissions: ${up.permissions
-                .filter(perm => perm.canRead)
-                .map(p => p.purpose)
-                .join(', ')}`}
-            />
-            <Button onClick={() => toggleModal(up.user)}>Edit Permissions</Button>
-          </ListItem>
-        ))}
+        {usersPermissions &&
+          usersPermissions.map(up => (
+            <ListItem key={up.user._id}>
+              <ListItemText
+                primary={up.user.username}
+                secondary={`Permissions: ${up.permissions
+                  .filter(perm => perm.canRead)
+                  .map(p => p.purpose)
+                  .join(', ')}`}
+              />
+              <Button onClick={() => toggleModal(up.user)}>Edit Permissions</Button>
+            </ListItem>
+          ))}
       </List>
       <Modal
         open={openModal}

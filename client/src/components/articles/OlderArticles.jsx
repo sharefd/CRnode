@@ -44,7 +44,9 @@ const OlderArticles = observer(() => {
     data: feedbacks,
     isLoading: isFeedbacksQueryLoading,
     refetch: refetchFeedbacks
-  } = useQuery('feedbacks', fetchFeedbacks);
+  } = useQuery(['feedbacks', user?._id], () => fetchUserFeedbacks(user?._id), {
+    enabled: !!user
+  });
 
   const {
     data: articles,
@@ -56,7 +58,7 @@ const OlderArticles = observer(() => {
 
   useEffect(() => {
     if (!user || isFeedbacksQueryLoading) return;
-    userStore.setFeedbacks(feedbacks.filter(f => f.userId && f.userId._id === user._id));
+    userStore.setFeedbacks(feedbacks);
   }, [user, feedbacks]);
 
   const handleFeedbackSubmit = async currentArticle => {

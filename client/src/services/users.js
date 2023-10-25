@@ -14,10 +14,18 @@ export const updateUser = async editedUser => {
   }
 };
 
-export const createUser = async user => {
+export const createUser = async credentials => {
   try {
-    const response = await axios.post(`${baseUrl}/api/users/new`, user);
-    console.log('user created:', response.data);
+    const response = await axios.post(`${baseUrl}/api/users/register`, credentials);
+    return response.data.user;
+  } catch (error) {
+    console.error('There was an error creating the user:', error);
+  }
+};
+
+export const loginUser = async (username, password) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/users/login`, { username, password });
     return response.data;
   } catch (error) {
     console.error('There was an error creating the user:', error);

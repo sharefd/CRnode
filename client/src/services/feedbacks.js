@@ -41,6 +41,15 @@ export const deleteFeedback = async feedbackId => {
   }
 };
 
+export const fetchUserFeedbacks = async userId => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/feedbacks/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating feedback:', error);
+  }
+};
+
 export const fetchFeedbacks = async () => {
   try {
     const response = await axios.get(`${baseUrl}/api/feedbacks`);

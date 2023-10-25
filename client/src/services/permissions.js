@@ -6,6 +6,15 @@ import { PURPOSE_CHOICES } from '@/utils/constants';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
+export const initPermissions = async userId => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/permissions/init-permissions`, userId);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating permission:', error);
+  }
+};
+
 export const savePermissions = async userPermissions => {
   try {
     const response = await axios.put(
