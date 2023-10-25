@@ -80,14 +80,8 @@ export const fetchCanWritePermissions = permissions => {
 };
 
 export const fetchCanReadPermissions = permissions => {
-  let allowed = [];
-
-  Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-    const permission = permissions.find(p => p.purpose === purpose);
-    if (permission.canRead) {
-      allowed.push(purpose);
-    }
+  return Object.keys(PURPOSE_CHOICES).filter(purpose => {
+    const canRead = permissions.find(p => p.purpose === purpose).canRead;
+    return canRead;
   });
-
-  return allowed;
 };

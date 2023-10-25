@@ -48,12 +48,7 @@ const OlderArticles = observer(() => {
     enabled: !!user
   });
 
-  const {
-    data: articles,
-    isLoading: isQueryLoading,
-    refetch
-  } = useQuery(['articles', { type: 'older' }], fetchArticles);
-  const { allowedArticles, isLoading } = useAllowedArticles(articles);
+  const { allowedArticles, permissions, isLoading } = useAllowedArticles();
   const sortedArticles = sortArticlesDescending(allowedArticles);
 
   useEffect(() => {
@@ -121,7 +116,7 @@ const OlderArticles = observer(() => {
     setOpen(false);
   };
 
-  if (isLoading || isQueryLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <Container>

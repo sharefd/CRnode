@@ -39,13 +39,7 @@ const ArticleList = observer(() => {
 
   const user = userStore.user;
 
-  const {
-    data: articles,
-    isLoading: isQueryLoading,
-    refetch
-  } = useQuery(['articles', { type: 'list' }], fetchArticles);
-
-  const { allowedArticles, permissions, isLoading } = useAllowedArticles(articles);
+  const { allowedArticles, permissions, isLoading, refetch } = useAllowedArticles();
   const sortedArticles = sortArticles(allowedArticles);
 
   const deleteMutation = useMutation(deleteArticle, {
