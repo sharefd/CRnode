@@ -15,6 +15,7 @@ import { ArticleFilters } from './actions/ArticleFilters';
 import EditArticleModal from './actions/EditArticleModal';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -27,6 +28,7 @@ const ArticleList = observer(({ resource }) => {
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [allowedPurposes, setAllowedPurposes] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false);    
 
   const user = userStore.user;
   const articles = resource.read();
@@ -54,12 +56,18 @@ const ArticleList = observer(({ resource }) => {
     }
   };
 
-  const toggleDetails = articleId => {
-    setShowDetails(prevState => ({
-      ...prevState,
-      [articleId]: !prevState[articleId]
-    }));
-  };
+  const toggleDetails = (articleId) => {
+      setShowDetails(prevState => ({
+    ...prevState,
+    [articleId]: !prevState[articleId]
+  }));
+
+     setIsExpanded(prevState => ({
+        ...prevState,
+        [articleId]: !prevState[articleId]
+      }));
+    };
+
 
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
@@ -128,20 +136,23 @@ const ArticleList = observer(({ resource }) => {
                             sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
                             Join Meeting
                           </Button>
-                          <Button
-                            variant='outlined'
-                            onClick={() => toggleDetails(article._id)}
-                            size='small'
-                            sx={{
-                              textTransform: 'none',
-                              my: 0.5,
-                              mx: 1,
-                              color: 'gray',
-                              borderColor: 'gray',
-                              '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                            }}>
-                            More Details
-                          </Button>
+                        <Button
+                          variant='outlined'
+                        onClick={() => toggleDetails(article._id)}
+                            
+                            
+                          size='small'
+                          sx={{
+                            textTransform: 'none',
+                            my: 0.5,
+                            mx: 1,
+                            color: 'gray',
+                            borderColor: 'white',
+                            '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+                          }}
+                        >
+                       {isExpanded[article._id] ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
+                        </Button>
                         </CardActions>
                         <Box
                           sx={{
