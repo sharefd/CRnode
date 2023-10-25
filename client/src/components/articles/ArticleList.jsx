@@ -16,10 +16,17 @@ import ActionBar from './actions/ActionBar';
 import EditArticleModal from './actions/EditArticleModal';
 import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
+import MACIMAHD1Icon from '@/assets/mcm.png';
+import MACIMAHD2Icon from '@/assets/mcm2.png';
+import MACIMAHD3Icon from '@/assets/mcm3.png';
 
 const purposeIcons = {
   OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', marginRight: '6px', height: '18px' }} />
+  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+  MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />
+
   // Add other purpose choices and their icons here
 };
 
@@ -201,7 +208,12 @@ const ArticleList = observer(() => {
           </Grid>
         </Grid>
       </Box>
-      <NewArticle open={openNewArticleModal} onClose={toggleNewArticleModal} permissions={permissions} />
+      <NewArticle
+        open={openNewArticleModal}
+        onClose={toggleNewArticleModal}
+        permissions={permissions}
+        refetch={refetch}
+      />
       <EditArticleModal
         open={!!selectedArticle}
         onClose={() => setSelectedArticle(null)}

@@ -61,7 +61,7 @@ const NewRequest = observer(() => {
   const createRequestMutation = useMutation(createRequest, {
     onSuccess: data => {
       userStore.setSubmittedRequests([...userStore.submittedRequests, data.request]);
-      refetch();
+      // refetch();
       navigate('/requests/submitted');
     },
     onError: error => {

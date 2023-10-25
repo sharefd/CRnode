@@ -1,5 +1,6 @@
-import { fetchRequests, updateRequest } from '@/services/requests';
+import { fetchRequests, updateRequest, deleteRequest } from '@/services/requests';
 import userStore from '@/stores/userStore';
+
 import {
   LinearProgress,
   Paper,
@@ -24,6 +25,20 @@ const RequestsList = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: requests, isLoading: isRequestQueryLoading, refetch } = useQuery('requests', fetchRequests);
+
+  const deleteMutation = useMutation(deleteRequest, {
+    onSuccess: (data, variables) => {
+      refetch();
+      userStore.setSubmittedRequests(userStore.submittedRequests.filter(request => request._id !== variables));
+    },
+    onError: error => {
+      console.error('Error deleting request:', error);
+    }
+  });
+
+  const handleDelete = requestId => {
+    deleteMutation.mutate(requestId);
+  };
 
   const updateStatusMutation = useMutation(
     async ({ id, purpose, status }) => {
@@ -104,6 +119,7 @@ const RequestsList = observer(() => {
               <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Status</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: '700' }}>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -144,6 +160,9 @@ const RequestsList = observer(() => {
                         </>
                       )}
                     </span>
+                  </TableCell>
+                  <TableCell>
+                    <button onClick={() => handleDelete(request._id)}>Delete</button>
                   </TableCell>
                 </TableRow>
               )

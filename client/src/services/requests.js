@@ -27,8 +27,8 @@ export const createRequest = async request => {
 
 export const deleteRequest = async requestId => {
   try {
-    await axios.delete(`${baseUrl}/api/requests/${requestId}`);
-    userStore.setRequests(userStore.requests.filter(request => request._id !== requestId));
+    const response = await axios.delete(`${baseUrl}/api/requests/${requestId}`);
+    return response.data;
   } catch (error) {
     console.error('Error deleting request:', error);
   }

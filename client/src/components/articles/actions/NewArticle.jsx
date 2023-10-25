@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
-const NewArticle = ({ open, onClose, permissions }) => {
+const NewArticle = ({ open, onClose, permissions, refetch }) => {
   const currentUser = userStore.user;
 
   const [article, setArticle] = useState({
@@ -31,6 +31,7 @@ const NewArticle = ({ open, onClose, permissions }) => {
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
       userStore.setArticles([...userStore.articles, newArticle]);
+      refetch();
       onClose();
     }
   });
