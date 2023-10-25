@@ -46,10 +46,25 @@ const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArtic
         />
       </Box>
       {user.isAdmin && (
-        <Box sx={{ display: 'flex', alignItems: 'center' }} className='button-4' onClick={toggleNewArticleModal}>
+               <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: '#1976d2', // Set the background color
+                    color: 'white', // Set the text color to white
+                    '&:hover': {
+                      backgroundColor: '#135fab', // Change the background color on hover
+                    },
+                
+
+                  }}
+                  className='button-4'
+                  onClick={toggleNewArticleModal}
+                >
           <Add sx={{ fontSize: '1.1rem', mr: 0.5 }} />
-          Create Article
-        </Box>
+          Create Event
+                </Box>
+
       )}
     </Box>
   );
