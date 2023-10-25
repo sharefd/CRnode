@@ -10,17 +10,14 @@ import Navbar from './components/home/Navbar';
 import NewRequest from './components/requests/NewRequest';
 import LoadingSpinner from './helpers/LoadingSpinner';
 import userStore from './stores/userStore';
-import resourceStore from './stores/resourceStore';
-import SuccessMessage from './components/requests/SuccessMessage';
 
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
-const SubmittedRequests = lazy(() => import('./components/requests/SuccessMessage'));
+const SuccessMessage = lazy(() => import('./components/requests/SuccessMessage'));
 const ArticleList = lazy(() => import('./components/articles/ArticleList'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
 const App = observer(() => {
   const [user, setUser] = useState(userStore.user);
-  const resource = resourceStore.resource;
 
   axios.interceptors.request.use(
     config => {
@@ -59,13 +56,13 @@ const App = observer(() => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/admin' element={<Admin resource={resource} />} />
-          <Route path='/articles' element={<ArticleList resource={resource.articles} />} />
+          <Route path='/admin' element={<Admin />} />
+          <Route path='/articles' element={<ArticleList />} />
           <Route path='/articles/new' element={<NewArticle />} />
-          <Route path='/older-articles' element={<OlderArticles resource={resource} />} />
-          <Route path='/requests' element={<RequestsList resource={resource.requests} />} />
+          <Route path='/older-articles' element={<OlderArticles />} />
+          <Route path='/requests' element={<RequestsList />} />
           <Route path='/login' element={<AuthForm />} />
-          <Route path='/requests/new' element={<NewRequest resource={resource} />} />
+          <Route path='/requests/new' element={<NewRequest />} />
           <Route path='/requests/submitted' element={<SuccessMessage />} />
         </Routes>
       </Suspense>

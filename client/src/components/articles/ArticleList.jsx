@@ -1,21 +1,21 @@
 import LoadingSpinner from '@/helpers/LoadingSpinner';
+import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import { deleteArticle, fetchArticles, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
-import { deleteArticle, sortArticles, updateArticle } from '@/utils/articles';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
 import { BorderColorOutlined } from '@mui/icons-material';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, IconButton, Typography } from '@mui/material';
-import axios from 'axios';
 import { observer } from 'mobx-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import './ArticleList.css';
 import { ArticleFilters } from './actions/ArticleFilters';
 import EditArticleModal from './actions/EditArticleModal';
 import ArticleCalendar from './calendar/ArticleCalendar';
-import { useAllowedArticles } from '@/hooks/useAllowedArticles';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 const purposeIcons = {
   OM1: <EngineeringIcon />,
@@ -23,17 +23,34 @@ const purposeIcons = {
   // Add other purpose choices and their icons here
 };
 
-const ArticleList = observer(({ resource }) => {
+const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
-  const [allowedPurposes, setAllowedPurposes] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);    
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const user = userStore.user;
-  const articles = resource.read();
+
+  const {
+    data: articles,
+    isLoading: isQueryLoading,
+    refetch
+  } = useQuery(['articles', { type: 'list' }], fetchArticles);
 
   const { allowedArticles, isLoading } = useAllowedArticles(articles);
+  const sortedArticles = sortArticles(allowedArticles);
+
+  const deleteMutation = useMutation(deleteArticle, {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries('articles');
+    }
+  });
+
+  const updateMutation = useMutation(updateArticle, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('articles');
+    }
+  });
 
   const handleDelete = async articleId => {
     const isConfirmed = window.confirm('Are you sure you want to delete this article?');
@@ -41,11 +58,13 @@ const ArticleList = observer(({ resource }) => {
 
     deleteArticle(articleId);
     setSelectedArticle(null);
+    deleteMutation.mutate(articleId);
   };
 
   const handleSave = async editedArticle => {
     await updateArticle(editedArticle);
     setSelectedArticle(null);
+    updateMutation.mutate(editedArticle);
   };
 
   const handlePurposeChange = newPurposes => {
@@ -56,18 +75,17 @@ const ArticleList = observer(({ resource }) => {
     }
   };
 
-  const toggleDetails = (articleId) => {
-      setShowDetails(prevState => ({
-    ...prevState,
-    [articleId]: !prevState[articleId]
-  }));
+  const toggleDetails = articleId => {
+    setShowDetails(prevState => ({
+      ...prevState,
+      [articleId]: !prevState[articleId]
+    }));
 
-     setIsExpanded(prevState => ({
-        ...prevState,
-        [articleId]: !prevState[articleId]
-      }));
-    };
-
+    setIsExpanded(prevState => ({
+      ...prevState,
+      [articleId]: !prevState[articleId]
+    }));
+  };
 
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
@@ -83,8 +101,8 @@ const ArticleList = observer(({ resource }) => {
   }
 
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? allowedArticles.filter(isArticleAfterCurrentDate)
-    : allowedArticles
+    ? sortedArticles.filter(isArticleAfterCurrentDate)
+    : sortedArticles
         .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
         .filter(isArticleAfterCurrentDate);
 
@@ -92,7 +110,7 @@ const ArticleList = observer(({ resource }) => {
     <div>
       <Box px={2}>
         <ArticleFilters
-          allowedPurposes={allowedPurposes}
+          userId={user._id}
           selectedPurposes={selectedPurposes}
           handlePurposeChange={handlePurposeChange}
         />
@@ -136,23 +154,20 @@ const ArticleList = observer(({ resource }) => {
                             sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
                             Join Meeting
                           </Button>
-                        <Button
-                          variant='outlined'
-                        onClick={() => toggleDetails(article._id)}
-                            
-                            
-                          size='small'
-                          sx={{
-                            textTransform: 'none',
-                            my: 0.5,
-                            mx: 1,
-                            color: 'gray',
-                            borderColor: 'white',
-                            '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                          }}
-                        >
-                       {isExpanded[article._id] ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
-                        </Button>
+                          <Button
+                            variant='outlined'
+                            onClick={() => toggleDetails(article._id)}
+                            size='small'
+                            sx={{
+                              textTransform: 'none',
+                              my: 0.5,
+                              mx: 1,
+                              color: 'gray',
+                              borderColor: 'white',
+                              '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+                            }}>
+                            {isExpanded[article._id] ? 'Collapse' : 'Expand'} {'\u00A0'} <OpenInFullIcon />
+                          </Button>
                         </CardActions>
                         <Box
                           sx={{
@@ -165,24 +180,20 @@ const ArticleList = observer(({ resource }) => {
                           <span>Meeting ID: {article.meeting_id || 'None'}</span>
                           <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
                           <span>Passcode: {article.passcode || 'None'}</span>
-                            
-                             <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}  
-                            <span> Speaker: {article.speaker || ''}</span>  
-                            
+                          <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
+                          <span> Speaker: {article.speaker || ''}</span>
                         </Box>
-                          
-                           <Box
-                            sx={{
-                              display: showDetails[article._id] ? 'flex' : 'none',
-                              alignItems: 'center',
-                              mx: 2,
-                              my: 1,
-                              fontSize: '0.9rem'
-                            }}>
-                            <span> {article.additional_details || ''}</span>
 
-                          </Box>
-                          
+                        <Box
+                          sx={{
+                            display: showDetails[article._id] ? 'flex' : 'none',
+                            alignItems: 'center',
+                            mx: 2,
+                            my: 1,
+                            fontSize: '0.9rem'
+                          }}>
+                          <span> {article.additional_details || ''}</span>
+                        </Box>
 
                         {article.organizer._id === user._id && (
                           <IconButton
@@ -210,7 +221,7 @@ const ArticleList = observer(({ resource }) => {
             })}
           </Grid>
           <Grid item xs={6} md={5} style={{ marginTop: '-35px' }}>
-            <ArticleCalendar articles={allowedArticles} />
+            <ArticleCalendar articles={sortedArticles} />
           </Grid>
         </Grid>
       </Box>

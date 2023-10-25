@@ -1,3 +1,5 @@
+import { fetchRequests, updateRequest } from '@/services/requests';
+import userStore from '@/stores/userStore';
 import {
   LinearProgress,
   Paper,
@@ -10,18 +12,50 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import axios from 'axios';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import userStore from '@/stores/userStore';
+import { useMutation, useQuery } from 'react-query';
 import AccessDenied from '../auth/AccessDenied';
-import LoadingSpinner from '@/helpers/LoadingSpinner';
 
-const RequestsList = observer(({ resource }) => {
+const RequestsList = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const user = userStore.user;
-  const [requests, setRequests] = useState(resource.read());
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { data: requests, isLoading: isRequestQueryLoading, refetch } = useQuery('requests', fetchRequests);
+
+  const updateStatusMutation = useMutation(
+    async ({ id, purpose, status }) => {
+      setIsLoading(true);
+      const updatedRequest = { _id: id, status, email: user.email, purpose };
+      await updateRequest(updatedRequest);
+    },
+    {
+      onSuccess: (data, variables) => {
+        const updatedRequests = requests.map(request => {
+          if (request._id === variables.id) {
+            return { ...request, status: variables.status, isApproving: false };
+          }
+          return request;
+        });
+        refetch();
+        userStore.setSubmittedRequests(updatedRequests.filter(r => r.user._id === user._id));
+        setIsLoading(false);
+      },
+      onError: (error, variables) => {
+        console.error('There was an error updating the request:', error);
+        const updatedRequests = requests.map(request => {
+          if (request._id === variables.id) {
+            return { ...request, isApproving: false };
+          }
+          return request;
+        });
+        // setRequests(updatedRequests);
+        setIsLoading(false);
+      }
+    }
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -33,40 +67,10 @@ const RequestsList = observer(({ resource }) => {
   };
 
   const updateStatus = (id, purpose, status) => {
-    const updatedRequests = requests.map(request => {
-      if (request._id === id) {
-        return { ...request, isApproving: true };
-      }
-      return request;
-    });
-    setRequests(updatedRequests);
-
-    const data = { status, email: user.email, purpose };
-
-    axios
-      .put(`http://localhost:3001/api/requests/${id}/status`, data)
-      .then(response => {
-        const updatedRequests = requests.map(request => {
-          if (request._id === id) {
-            return { ...request, status, isApproving: false };
-          }
-          return request;
-        });
-        setRequests(updatedRequests);
-      })
-      .catch(error => {
-        console.error('There was an error updating the request:', error);
-        const updatedRequests = requests.map(request => {
-          if (request._id === id) {
-            return { ...request, isApproving: false };
-          }
-          return request;
-        });
-        setRequests(updatedRequests);
-      });
+    updateStatusMutation.mutate({ id, purpose, status });
   };
 
-  if (!user) {
+  if (!user || isRequestQueryLoading) {
     return <LinearProgress />;
   } else {
     if (!user.isAdmin) {
@@ -90,6 +94,7 @@ const RequestsList = observer(({ resource }) => {
           }}>
           Requests
         </Typography>
+        {isLoading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>

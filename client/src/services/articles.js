@@ -1,7 +1,9 @@
 import axios from 'axios';
 import userStore from '@/stores/userStore';
 import { compareDates } from '@/utils/dates';
-import { toJS } from 'mobx';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
 export const updateArticle = async editedArticle => {
   try {
@@ -19,7 +21,7 @@ export const createArticle = async article => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/articles/new`, article);
     console.log('Article created:', response.data);
-    userStore.setArticles([...userStore.articles, response.data].sort(compareDates));
+    return response.data;
   } catch (error) {
     console.error('There was an error creating the article:', error);
   }
@@ -38,4 +40,15 @@ export const sortArticles = articles => {
   return articles.sort((a, b) => {
     return compareDates(a, b);
   });
+};
+
+export const fetchArticles = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/articles`);
+    const articles = response.data;
+    userStore.setArticles(articles);
+    return articles;
+  } catch (error) {
+    console.error('Error updating article:', error);
+  }
 };

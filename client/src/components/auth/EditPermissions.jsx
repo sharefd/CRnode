@@ -1,7 +1,18 @@
-import { FormControlLabel, Checkbox, Box, Typography, Button } from '@mui/material';
-import axios from 'axios';
+import { savePermissions } from '@/services/permissions';
+import { Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
+import { useMutation } from 'react-query';
 
 const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
+  const mutation = useMutation(savePermissions, {
+    onSuccess: () => {
+      console.log('Permissions updated successfully');
+      closeModal();
+    },
+    onError: error => {
+      console.error('Error updating permissions:', error);
+    }
+  });
+
   const handlePermissionChange = (event, purpose) => {
     const { name, checked } = event.target;
     let updatedPermissions = [...userPermissions.permissions];
@@ -17,19 +28,8 @@ const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
     });
   };
 
-  const savePermissions = async () => {
-    try {
-      // Update user permissions
-      await axios.put(
-        `http://localhost:3001/api/permissions/bulk-update/${userPermissions.user._id}`,
-        userPermissions.permissions
-      );
-
-      console.log('Permissions updated successfully');
-      closeModal();
-    } catch (error) {
-      console.error('Error updating permissions:', error);
-    }
+  const handleSavePermissions = () => {
+    mutation.mutate(userPermissions);
   };
 
   return (
@@ -75,7 +75,7 @@ const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
               />
             </Box>
           ))}
-        <Button onClick={savePermissions}>Save</Button>
+        <Button onClick={handleSavePermissions}>Save</Button>
       </form>
     </Box>
   );

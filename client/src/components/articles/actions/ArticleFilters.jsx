@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 import { PURPOSE_CHOICES } from '@/utils/constants';
+import { useQuery } from 'react-query';
+import { fetchUserPermissions, fetchCanReadPermissions } from '@/services/permissions';
 
-export const ArticleFilters = ({ allowedPurposes, selectedPurposes, handlePurposeChange }) => {
+export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }) => {
   const [currentTime, setCurrentTime] = useState('');
+
+  const { data: permissions, isLoading } = useQuery(['permissions', userId], () => fetchUserPermissions(userId), {
+    enabled: !!userId
+  });
+
+  const allowedPurposes = permissions ? fetchCanReadPermissions(permissions) : [];
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -1,15 +1,25 @@
 // resourceStore.js
 import { makeAutoObservable } from 'mobx';
-import useFetch from '@/hooks/useFetch';
-
-const { createResource } = useFetch();
-const resource = createResource();
 
 class ResourceStore {
-  resource = resource;
+  permissions = [];
+  requests = [];
+  users = [];
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setPermissions(permissions) {
+    this.permissions = permissions;
+  }
+
+  setRequests(requests) {
+    this.requests = requests;
+  }
+
+  setUsers(users) {
+    this.users = users;
   }
 }
 

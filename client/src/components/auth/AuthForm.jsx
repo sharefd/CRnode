@@ -133,7 +133,16 @@ const AuthForm = observer(() => {
   const gridFormItem = (label, value, onChange, fieldName, type = 'text', choices) => (
     <Grid item xs={12}>
       {type === 'select' ? (
-        <TextField label={label} select fullWidth value={value} onChange={onChange} error={!!fieldErrors[fieldName]}>
+        <TextField
+          id={label}
+          inputProps={{ id: label }}
+          name={label}
+          label={label}
+          select
+          fullWidth
+          value={value}
+          onChange={onChange}
+          error={!!fieldErrors[fieldName]}>
           {choices.map((choice, index) => (
             <MenuItem key={index} value={choice.label}>
               {choice.label}
@@ -142,6 +151,9 @@ const AuthForm = observer(() => {
         </TextField>
       ) : (
         <TextField
+          id={label}
+          name={label}
+          inputProps={{ id: label }}
           label={label}
           type={type}
           fullWidth

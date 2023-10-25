@@ -10,6 +10,7 @@ const articleSchema = new mongoose.Schema({
   meeting_id: { type: String, maxlength: 50 },
   passcode: { type: String, maxlength: 50 },
   speaker: { type: String },
+  location: { type: String },
   additional_details: { type: String, maxlength: 1000 }
 });
 

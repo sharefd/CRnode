@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import LoadingSpinner from '@/helpers/LoadingSpinner';
+import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import { fetchArticles, sortArticles } from '@/services/articles';
+import { createFeedback, fetchFeedbacks } from '@/services/feedbacks';
+import { toggleAttending } from '@/services/users';
+import userStore from '@/stores/userStore';
+import { formatDate } from '@/utils/dates';
+import { AddCircle, Edit } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -18,16 +25,12 @@ import {
   TableRow,
   TextField
 } from '@mui/material';
-import { formatDate } from '@/utils/dates';
-import axios from 'axios';
-import { AddCircle, Edit } from '@mui/icons-material';
-import { sortArticles } from '@/utils/articles';
-import userStore from '../../stores/userStore';
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
-import { toJS, runInAction } from 'mobx';
-import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 
-const OlderArticles = observer(({ resource }) => {
+const OlderArticles = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
@@ -35,15 +38,41 @@ const OlderArticles = observer(({ resource }) => {
   const [currentArticle, setCurrentArticle] = useState(null);
 
   const user = userStore.user;
-  const articles = useMemo(() => sortArticles(resource.articles.read()).reverse(), [resource.articles]);
-  const feedbacks = useMemo(() => resource.feedbacks.read(), [resource.feedbacks]);
 
+  const {
+    data: feedbacks,
+    isLoading: isFeedbacksQueryLoading,
+    refetch: refetchFeedbacks
+  } = useQuery('feedbacks', fetchFeedbacks);
+
+  const {
+    data: articles,
+    isLoading: isQueryLoading,
+    refetch
+  } = useQuery(['articles', { type: 'older' }], fetchArticles);
   const { allowedArticles, isLoading } = useAllowedArticles(articles);
+  const sortedArticles = sortArticles(allowedArticles);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isFeedbacksQueryLoading) return;
     userStore.setFeedbacks(feedbacks.filter(f => f.userId && f.userId._id === user._id));
-  }, [user]);
+  }, [user, feedbacks]);
+
+  const handleFeedbackSubmit = async currentArticle => {
+    try {
+      const newFeedback = await createFeedback(user._id, currentFeedback, currentArticle._id);
+      feedbackMutation.mutate(newFeedback);
+      handleClose();
+    } catch (error) {
+      console.error('There was an error submitting the feedback:', error);
+    }
+  };
+
+  const feedbackMutation = useMutation(handleFeedbackSubmit, {
+    onSuccess: () => {
+      refetchFeedbacks();
+    }
+  });
 
   const getFeedback = articleId => {
     const feedbackObj = userStore.feedbacks.find(f => f.articleId._id === articleId);
@@ -53,12 +82,7 @@ const OlderArticles = observer(({ resource }) => {
   const handleToggleAttending = async (articleId, isAttending) => {
     if (user) {
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/toggle-attend`, {
-          userId: user._id,
-          articleId,
-          isAttending
-        });
-
+        await toggleAttending(user._id, articleId, isAttending);
         runInAction(() => {
           if (isAttending) {
             userStore.user.attended.push(articleId);
@@ -72,23 +96,6 @@ const OlderArticles = observer(({ resource }) => {
       } catch (error) {
         console.error('There was an error updating attendance:', error);
       }
-    }
-  };
-
-  const handleFeedbackSubmit = async currentArticle => {
-    try {
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/feedbacks/updateOrCreate`, {
-        articleId: currentArticle._id,
-        userId: user._id,
-        feedback: currentFeedback
-      });
-
-      const temp = userStore.feedbacks.filter(f => f._id !== response.data.feedback._id);
-      userStore.setFeedbacks([...temp, response.data.feedback]);
-
-      handleClose();
-    } catch (error) {
-      console.error('There was an error submitting the feedback:', error);
     }
   };
 
@@ -111,6 +118,8 @@ const OlderArticles = observer(({ resource }) => {
     setOpen(false);
   };
 
+  if (isLoading || isQueryLoading) return <LoadingSpinner />;
+
   return (
     <Container>
       <Grid container justifyContent='center' sx={{ mt: 4 }}>
@@ -130,7 +139,7 @@ const OlderArticles = observer(({ resource }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {allowedArticles
+                    {sortedArticles
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((article, index) => (
                         <TableRow key={index}>
@@ -170,7 +179,7 @@ const OlderArticles = observer(({ resource }) => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component='div'
-                count={allowedArticles.length}
+                count={sortedArticles.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

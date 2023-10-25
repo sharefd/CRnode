@@ -1,23 +1,22 @@
 import AccessDenied from '@/components/auth/AccessDenied';
 import LoadingSpinner from '@/helpers/LoadingSpinner';
+import { createArticle } from '@/services/articles';
+import { fetchCanWritePermissions, fetchUserPermissions } from '@/services/permissions';
 import userStore from '@/stores/userStore';
-import { createArticle } from '@/utils/articles';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 
 const NewArticle = observer(() => {
   const navigate = useNavigate();
   const currentUser = userStore.user;
-  const [isLoading, setIsLoading] = useState(true);
-  const [allowedPurposes, setAllowedPurposes] = useState([]);
 
   const [article, setArticle] = useState({
     title: '',
@@ -31,37 +30,22 @@ const NewArticle = observer(() => {
     additional_details: ''
   });
 
-  useEffect(() => {
-    if (!currentUser) return;
-    setIsLoading(true);
-
-    async function fetchPermissions() {
-      try {
-        const permissionsResponse = await axios.get(
-          `${import.meta.env.VITE_API_URL}/permissions/user/${currentUser._id}`
-        );
-        userStore.setPermissions(permissionsResponse.data);
-
-        let allowed = [];
-
-        Object.keys(PURPOSE_CHOICES).forEach(purpose => {
-          const userCanWrite = permissionsResponse.data.find(p => p.purpose === purpose).canWrite;
-          if (userCanWrite) {
-            allowed.push(purpose);
-          }
-        });
-
-        setAllowedPurposes(allowed);
-      } catch (error) {
-        console.error('Error fetching permissions:', error);
-      }
+  const { data: permissions, isLoading } = useQuery(
+    ['permissions', currentUser?._id],
+    () => fetchUserPermissions(currentUser._id),
+    {
+      enabled: !!currentUser
     }
+  );
 
-    if (!userStore.permissions || userStore.permissions.length === 0) {
-      fetchPermissions();
+  const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
+
+  const createMutation = useMutation(createArticle, {
+    onSuccess: newArticle => {
+      userStore.setArticles([...userStore.articles, newArticle]);
+      navigate('/articles');
     }
-    setIsLoading(false);
-  }, [currentUser]);
+  });
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -69,7 +53,7 @@ const NewArticle = observer(() => {
     const payload = {
       ...article,
       time: formattedTime,
-      organizer: currentUser?._id || ''
+      organizer: currentUser._id
     };
 
     if (!payload.title) {
@@ -77,11 +61,10 @@ const NewArticle = observer(() => {
       return;
     }
 
-    await createArticle(payload);
-    navigate('/articles');
+    createMutation.mutate(payload);
   };
 
-  if (!currentUser) {
+  if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
   } else {
     if (!currentUser.isAdmin) {

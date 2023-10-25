@@ -4,11 +4,14 @@ import App from './App.jsx';
 import './assets/main.css';
 import { Provider } from 'mobx-react';
 import userStore from './stores/userStore.js';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
   <Provider userStore={userStore}>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>
-  // </React.StrictMode>
 );

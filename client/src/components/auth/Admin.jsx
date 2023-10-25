@@ -1,7 +1,12 @@
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 import { Container, Button, TextField, List, ListItem, ListItemText, Modal, Box } from '@mui/material';
 import EditPermissions from './EditPermissions';
-import userStore from '@/stores/userStore';
+import { fetchUsers } from '@/services/users';
+import { fetchPermissions } from '@/services/permissions';
+
+import LoadingSpinner from '@/helpers/LoadingSpinner';
+import resourceStore from '@/stores/resourceStore';
 
 const PasswordPrompt = ({ onPasswordSubmit }) => {
   const [password, setPassword] = useState('');
@@ -26,9 +31,20 @@ const PasswordPrompt = ({ onPasswordSubmit }) => {
   );
 };
 
-const Admin = ({ resource }) => {
-  const users = resource.users.read();
-  const permissions = resource.permissions.read();
+const Admin = () => {
+  const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
+  const { data: permissions, isLoading: isLoadingPermissions } = useQuery('permissions', fetchPermissions);
+
+  const [passwordEntered, setPasswordEntered] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  if (isLoadingUsers || isLoadingPermissions) {
+    return <LoadingSpinner />;
+  }
+
+  resourceStore.setPermissions(permissions);
+  resourceStore.setUsers(users);
 
   const usersPermissions = users.map(user => {
     return {
@@ -36,10 +52,6 @@ const Admin = ({ resource }) => {
       permissions: permissions.filter(perm => perm.userId === user._id)
     };
   });
-
-  const [passwordEntered, setPasswordEntered] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const toggleModal = user => {
     const userWithPermissions = usersPermissions.find(up => up.user._id === user._id);
