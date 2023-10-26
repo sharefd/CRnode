@@ -32,15 +32,15 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // today.setHours(0, 0, 0, 0);
   const currentDay = today.getDate();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
   const cellDate = new Date(year, month, day);
-  cellDate.setHours(0, 0, 0, 0);
+  // cellDate.setHours(0, 0, 0, 0);
 
-  const isPastDate = cellDate < today;
+  // const isPastDate = cellDate < today;
 
   const handleCellClick = () => {
     setSelected(day);
@@ -69,14 +69,14 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
   const cellStyle = {
-    cursor: isPastDate ? 'default' : 'pointer',
+    cursor: 'pointer',
     position: 'relative',
     height: '20px',
     alignItems: 'center',
     padding: '1rem',
     borderRadius: '50%',
-    textDecoration: isPastDate ? 'line-through' : 'none',
-    color: isPastDate ? grey[500] : 'inherit'
+    textDecoration: 'none',
+    color: 'inherit'
   };
 
   const article = events[currentEventIndex] || {};
@@ -112,8 +112,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          {!isPastDate && <Badge badgeContent={events.length} color='primary' sx={badgeStyle} />}
-
+          <Badge badgeContent={events.length} color='primary' sx={badgeStyle} />
           <Typography
             sx={{
               fontSize: '16px',

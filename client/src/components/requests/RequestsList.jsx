@@ -2,6 +2,7 @@ import { fetchRequests, updateRequest, deleteRequest } from '@/services/requests
 import userStore from '@/stores/userStore';
 
 import {
+  IconButton,
   LinearProgress,
   Paper,
   Table,
@@ -17,6 +18,8 @@ import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import AccessDenied from '../auth/AccessDenied';
+import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty } from '@mui/icons-material';
+import DotsIcon from '@/assets/dots.png';
 
 const RequestsList = observer(() => {
   const [page, setPage] = useState(0);
@@ -115,7 +118,6 @@ const RequestsList = observer(() => {
             <TableRow>
               <TableCell sx={{ fontWeight: '700' }}>Purpose</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>User</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Email</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Status</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Actions</TableCell>
@@ -127,12 +129,22 @@ const RequestsList = observer(() => {
               request => (
                 <TableRow key={request._id}>
                   <TableCell>{request.purpose}</TableCell>
-                  <TableCell>{request.user.username}</TableCell>
-                  <TableCell>{request.email}</TableCell>
+                  <TableCell>
+                    <div>
+                      <p style={{ padding: 0, margin: 0, fontSize: '12px' }}>{request.user.username}</p>
+                      <span style={{ padding: 0, margin: 0, fontSize: '12px', color: 'blue' }}>{request.email}</span>
+                    </div>
+                  </TableCell>
                   <TableCell>{request.message}</TableCell>
 
-                  <TableCell>
-                    <span className={`request-status ${request.status.toLowerCase()}`}>{request.status}</span>
+                  <TableCell sx={{ textAlign: 'center' }}>
+                    {request.status === 'Denied' ? (
+                      <DoNotDisturb sx={{ opacity: '0.5' }} />
+                    ) : request.status === 'Pending' ? (
+                      <HourglassEmpty sx={{ opacity: '0.5' }} />
+                    ) : (
+                      <CheckCircle sx={{ opacity: '0.5' }} />
+                    )}
                   </TableCell>
                   <TableCell>
                     <span className='status-button'>
@@ -162,7 +174,9 @@ const RequestsList = observer(() => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <button onClick={() => handleDelete(request._id)}>Delete</button>
+                    <IconButton onClick={() => handleDelete(request._id)} color='error'>
+                      <Delete />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               )
