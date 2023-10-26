@@ -1,10 +1,12 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtMiddleware } = require('../middleware/permissions');
 
+// fetch all users
 router.get('/', jwtMiddleware, async (req, res) => {
   try {
     const authHeader = req.headers['authorization'];
@@ -22,6 +24,7 @@ router.get('/', jwtMiddleware, async (req, res) => {
   }
 });
 
+// fetch user by token
 router.get('/me', jwtMiddleware, async (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -34,13 +37,15 @@ router.get('/me', jwtMiddleware, async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const username = decoded.username;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).populate('attended');
     if (!user) {
       return res.status(404).send('User not found');
     }
 
     const userResponse = {
       _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       username: user.username,
       university: user.university,
       email: user.email,
@@ -54,6 +59,7 @@ router.get('/me', jwtMiddleware, async (req, res) => {
   }
 });
 
+// login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -81,6 +87,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// sign up - create a new user
 router.post('/register', async (req, res) => {
   const { username, email, password, university, firstName, lastName } = req.body;
 
@@ -131,6 +138,35 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// change user password (from user settings)
+router.put('/change-password', jwtMiddleware, async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const validPassword = await bcrypt.compare(currentPassword, user.password);
+
+    if (!validPassword) {
+      return res.status(401).send('Invalid current password');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+
+    await user.save();
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// toggle attend for a given article
 router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
   const { userId, articleId, isAttending } = req.body;
 
@@ -159,6 +195,50 @@ router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
   }
 });
 
+// Update user details (from user settings)
+router.put('/:id', jwtMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send('Invalid user ID');
+  }
+
+  if (updates.password) {
+    delete updates.password;
+  }
+
+  if (updates.username) {
+    const existingUserByUsername = await User.findOne({ username: updates.username });
+    if (existingUserByUsername && existingUserByUsername._id.toString() !== id) {
+      return res.status(400).send('Username already taken');
+    }
+  }
+
+  if (updates.email) {
+    const existingUserByEmail = await User.findOne({ email: updates.email });
+    if (existingUserByEmail && existingUserByEmail._id.toString() !== id) {
+      return res.status(400).send('Email already in use');
+    }
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(id, updates, { new: true });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).json({
+      message: 'User updated successfully',
+      user
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// get user info by username
 router.get('/:username', jwtMiddleware, async (req, res) => {
   const { username } = req.params;
 
@@ -180,6 +260,27 @@ router.get('/:username', jwtMiddleware, async (req, res) => {
     res.status(200).json(userResponse);
   } catch (err) {
     res.status(500).send(err);
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid user ID' });
+  }
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.deleteOne({ _id: id });
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while deleting the user', error });
   }
 });
 

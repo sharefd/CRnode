@@ -13,6 +13,9 @@ import { fetchRequests, createRequest } from '@/services/requests';
 import { fetchUserPermissions } from '@/services/permissions';
 import { fetchCanReadPermissions } from '../../services/permissions';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+
 const NewRequest = observer(() => {
   const navigate = useNavigate();
   const [purpose, setPurpose] = useState('');
@@ -37,7 +40,7 @@ const NewRequest = observer(() => {
 
   const handleFeedbackSubmit = async currentArticle => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/feedbacks/updateOrCreate`, {
+      const response = await axios.put(`${baseUrl}/feedbacks/updateOrCreate`, {
         articleId: currentArticle._id,
         userId: user._id,
         feedback: currentFeedback

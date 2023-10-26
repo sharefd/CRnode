@@ -126,6 +126,7 @@ const AuthForm = observer(() => {
           inputProps={{ id: label }}
           name={label}
           label={label}
+          required
           select
           fullWidth
           value={value}
@@ -144,6 +145,7 @@ const AuthForm = observer(() => {
           inputProps={{ id: label }}
           label={label}
           type={type}
+          required
           fullWidth
           value={value}
           onChange={onChange}

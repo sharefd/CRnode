@@ -7,7 +7,7 @@ const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
 export const updateArticle = async editedArticle => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/articles/${editedArticle._id}`, editedArticle);
+    const response = await axios.put(`${baseUrl}/api/articles/${editedArticle._id}`, editedArticle);
     const updatedArticle = response.data;
     userStore.setArticles(
       userStore.articles.map(article => (article._id === updatedArticle._id ? updatedArticle : article))
@@ -19,7 +19,7 @@ export const updateArticle = async editedArticle => {
 
 export const createArticle = async article => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/articles/new`, article);
+    const response = await axios.post(`${baseUrl}/api/articles/new`, article);
     console.log('Article created:', response.data);
     return response.data;
   } catch (error) {
@@ -29,7 +29,7 @@ export const createArticle = async article => {
 
 export const deleteArticle = async articleId => {
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/articles/${articleId}`);
+    await axios.delete(`${baseUrl}/api/articles/${articleId}`);
     userStore.setArticles(userStore.articles.filter(article => article._id !== articleId));
   } catch (error) {
     console.error('Error deleting article:', error);

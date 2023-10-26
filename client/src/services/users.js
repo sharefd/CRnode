@@ -4,11 +4,36 @@ import userStore from '@/stores/userStore';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
+export const fetchCurrentUser = async () => {
+  const token = localStorage.getItem('CloudRoundsToken');
+  if (token) {
+    try {
+      const response = await axios.get(`${baseUrl}/api/users/me`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      localStorage.removeItem('CloudRoundsToken');
+    }
+  }
+};
+
 export const updateUser = async editedUser => {
   try {
     const response = await axios.put(`${baseUrl}/api/users/${editedUser._id}`, editedUser);
-    const updatedUser = response.data;
-    userStore.setUsers(userStore.users.map(user => (user._id === updatedUser._id ? updatedUser : user)));
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+  }
+};
+
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    const response = await axios.put(`${baseUrl}/api/users/change-password`, {
+      userId,
+      currentPassword,
+      newPassword
+    });
+    return response.data;
   } catch (error) {
     console.error('Error updating user:', error);
   }
@@ -34,8 +59,9 @@ export const loginUser = async (username, password) => {
 
 export const deleteUser = async userId => {
   try {
-    await axios.delete(`${baseUrl}/api/users/${userId}`);
+    const response = await axios.delete(`${baseUrl}/api/users/${userId}`);
     userStore.setUsers(userStore.users.filter(user => user._id !== userId));
+    return response.data;
   } catch (error) {
     console.error('Error deleting user:', error);
   }

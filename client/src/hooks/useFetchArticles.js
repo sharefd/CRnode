@@ -2,6 +2,9 @@ import { compareDates } from '@/utils/dates';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+
 export const useFetchArticles = (userStore, isUserLoaded) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -9,7 +12,7 @@ export const useFetchArticles = (userStore, isUserLoaded) => {
     const fetchArticles = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles`);
+        const response = await axios.get(`${baseUrl}/articles`);
         userStore.setPastArticles(response.data);
 
         let permittedArticles = response.data.filter(article => {

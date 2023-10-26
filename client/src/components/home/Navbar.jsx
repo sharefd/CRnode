@@ -52,6 +52,11 @@ const Navbar = observer(() => {
     navigate('/login');
   };
 
+  const handleSettingsClick = () => {
+    navigate('/settings');
+    handleClose();
+  };
+
   const navlink = (label, endpoint, index) => (
     <Link key={index} to={endpoint} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Box sx={{ py: '10px', mx: 1, borderRadius: '5px', '&:hover': { color: '#eaeaec' } }}>
@@ -117,7 +122,7 @@ const Navbar = observer(() => {
                 <ArrowDropDown />
               </IconButton>
               <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Change Password</MenuItem>
+                <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
               </Menu>
             </Box>
