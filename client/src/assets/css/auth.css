@@ -1,0 +1,75 @@
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --btn-bg-color: #0d0c22;
+  --btn-bg-color-hover: #565564;
+  --btn-text-color: #fff;
+  --btn-text-color-hover: #fff;
+  --btn-border-color: var(--btn-bg-color);
+  --btn-border-color-hover: var(--btn-bg-color-hover);
+  --btn-height: 40px;
+  --btn-padding: 20px;
+  --btn-font-size: 13px;
+  --btn-icon-size: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+div.auth {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+hr {
+  display: block;
+  unicode-bidi: isolate;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}
+
+.google-button {
+  margin: auto;
+}
+
+hr.divider {
+  height: 1px;
+  padding: 0;
+  overflow: visible;
+  border: none;
+  background-color: #e7e7e9;
+  color: #6e6d7a;
+  text-align: center;
+  width: 376px;
+  margin: 16px auto;
+}
+
+.divider {
+  border-top: 1px solid #dbdbde;
+}
+
+hr.divider.sign-in:after {
+  content: 'or';
+}
+
+hr.divider:after {
+  content: 'or';
+  display: inline-block;
+  position: relative;
+  top: -13px;
+  padding: 0 16px;
+  background: #fff;
+  font: normal 14px/14px 'Mona Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.scrollable-area {
+  max-height: calc(100vh - 370px); /* Adjust based on your needs */
+}

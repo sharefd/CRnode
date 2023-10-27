@@ -3,7 +3,10 @@ import userStore from '@/stores/userStore';
 import {
   IconButton,
   LinearProgress,
+  Menu,
+  MenuItem,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -16,15 +19,17 @@ import {
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import AccessDenied from '../auth/AccessDenied';
-import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty } from '@mui/icons-material';
-import DotsIcon from '@/assets/dots.png';
+import AccessDenied from '../admin/AccessDenied';
+import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
+import DotsIcon from '@/assets/images/dots.png';
 
 const RequestsList = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const user = userStore.user;
   const [isLoading, setIsLoading] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const { data: requests, isLoading: isRequestQueryLoading, refetch } = useQuery('requests', fetchRequests);
 
@@ -59,6 +64,7 @@ const RequestsList = observer(() => {
         refetch();
         userStore.setSubmittedRequests(updatedRequests.filter(r => r.user._id === user._id));
         setIsLoading(false);
+        handleClose();
       },
       onError: (error, variables) => {
         console.error('There was an error updating the request:', error);
@@ -68,11 +74,21 @@ const RequestsList = observer(() => {
           }
           return request;
         });
-        // setRequests(updatedRequests);
         setIsLoading(false);
+        handleClose();
       }
     }
   );
+
+  const handleClick = (event, requestId) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setOpenMenuId(requestId);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpenMenuId(null);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -118,9 +134,9 @@ const RequestsList = observer(() => {
               <TableCell sx={{ fontWeight: '700' }}>Purpose</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>User</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Actions</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Delete</TableCell>
+              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Status</TableCell>
+              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -136,43 +152,53 @@ const RequestsList = observer(() => {
                   </TableCell>
                   <TableCell>{request.message}</TableCell>
 
-                  <TableCell sx={{ textAlign: 'center' }}>
-                    {request.status === 'Denied' ? (
-                      <DoNotDisturb sx={{ opacity: '0.5' }} />
-                    ) : request.status === 'Pending' ? (
-                      <HourglassEmpty sx={{ opacity: '0.5' }} />
+                  <TableCell>
+                    {request.isApproving ? (
+                      <LinearProgress />
                     ) : (
-                      <CheckCircle sx={{ opacity: '0.5' }} />
+                      <div style={{ textAlign: 'center' }}>
+                        <IconButton onClick={e => handleClick(e, request._id)} sx={{ p: 0, m: 0 }}>
+                          <MoreHoriz />
+                        </IconButton>
+                        <Menu
+                          anchorEl={openMenuId === request._id ? anchorEl : null}
+                          keepMounted
+                          open={openMenuId === request._id}
+                          onClose={handleClose}>
+                          <MenuItem
+                            className='status-button approve'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Approved')}
+                            disabled={request.status === 'Approved'}>
+                            Approve
+                          </MenuItem>
+
+                          <MenuItem
+                            className='status-button deny'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Denied')}
+                            disabled={request.status === 'Denied'}>
+                            Deny
+                          </MenuItem>
+
+                          <MenuItem
+                            className='status-button reset'
+                            onClick={() => updateStatus(request._id, request.purpose, 'Pending')}
+                            disabled={request.status === 'Pending'}>
+                            Reset
+                          </MenuItem>
+                        </Menu>
+                      </div>
                     )}
                   </TableCell>
-                  <TableCell>
-                    <span className='status-button'>
-                      {request.isApproving ? (
-                        <LinearProgress />
-                      ) : (
-                        <>
-                          <span
-                            className='status-button approve'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Approved')}>
-                            Approve
-                          </span>
-
-                          <span
-                            className='status-button deny'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Denied')}>
-                            Deny
-                          </span>
-
-                          <span
-                            className='status-button reset'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Pending')}>
-                            Reset
-                          </span>
-                        </>
-                      )}
-                    </span>
+                  <TableCell sx={{ textAlign: 'center' }}>
+                    {request.status === 'Denied' ? (
+                      <DoNotDisturb sx={{ opacity: '0.5', color: 'indianred' }} />
+                    ) : request.status === 'Pending' ? (
+                      <HourglassEmpty sx={{ opacity: '0.5', color: 'goldenrod' }} />
+                    ) : (
+                      <CheckCircle sx={{ opacity: '0.5', color: 'green' }} />
+                    )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>
                     <IconButton onClick={() => handleDelete(request._id)} color='error'>
                       <Delete />
                     </IconButton>

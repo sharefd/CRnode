@@ -59,8 +59,8 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Modal open={open} onClose={onClose}>
-        <Paper elevation={3} sx={{ width: '60%', margin: '0 auto', mt: 2.2}}>
+      <Modal open={open} onClose={onClose} sx={{ overflow: 'scroll' }}>
+        <Paper elevation={3} sx={{ width: '60%', margin: '0 auto', mt: 2.2 }}>
           <Grid item xs={12}>
             <Typography
               variant='h5'
@@ -70,7 +70,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 color: '#fff',
                 borderTopRightRadius: '5px',
                 borderTopLeftRadius: '5px',
-                padding: '0.7rem',
+                padding: '0.7rem'
               }}>
               Create Event
             </Typography>
@@ -170,7 +170,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sx={{ textAlign: 'center'}}>
+              <Grid item xs={12} sx={{ textAlign: 'center' }}>
                 <Button type='submit' variant='contained' color='primary'>
                   Submit
                 </Button>

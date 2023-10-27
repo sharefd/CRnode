@@ -2,9 +2,8 @@ import axios from 'axios';
 import { observer } from 'mobx-react-lite';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Admin from './components/auth/Admin';
-import AuthForm from './components/auth/AuthForm';
-import UserSettings from './components/auth/UserSettings';
+import Admin from './components/admin/Admin';
+import UserSettings from './components/user/UserSettings';
 import Home from './components/home/Home';
 import Navbar from './components/home/Navbar';
 import NewRequest from './components/requests/NewRequest';
@@ -12,6 +11,7 @@ import LoadingSpinner from './components/ui/LoadingSpinner';
 import userStore from './stores/userStore';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AuthPage from './components/auth/AuthPage';
 
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
 const SuccessMessage = lazy(() => import('./components/requests/SuccessMessage'));
@@ -66,7 +66,7 @@ const App = observer(() => {
             <Route path='/articles' element={<ArticleList />} />
             <Route path='/older-articles' element={<OlderArticles />} />
             <Route path='/requests' element={<RequestsList />} />
-            <Route path='/login' element={<AuthForm />} />
+            <Route path='/login' element={<AuthPage />} />
             <Route path='/settings' element={<UserSettings />} />
             <Route path='/requests/new' element={<NewRequest />} />
             <Route path='/requests/submitted' element={<SuccessMessage />} />
