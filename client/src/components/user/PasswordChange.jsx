@@ -17,9 +17,12 @@ const PasswordChange = ({ userId, onSuccess }) => {
     try {
       await changePassword(userId, currentPassword, newPassword);
       onSuccess();
-      toast.success('Password updated successfully!');
+      toast.success('Password updated successfully!', { autoClose: 2000, pauseOnFocusLoss: false });
     } catch (error) {
-      toast.error(`Error updating password. ${error.data} Please try again.`);
+      toast.error(`Error updating password. ${error.data} Please try again.`, {
+        autoClose: 2000,
+        pauseOnFocusLoss: false
+      });
     }
   };
 

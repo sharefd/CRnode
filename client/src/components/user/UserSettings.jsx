@@ -27,8 +27,8 @@ import { formatDate } from '@/utils/dates';
 import { fetchCanReadPermissions, fetchCanWritePermissions } from '@/services/permissions';
 import { Check, Clear } from '@mui/icons-material';
 import PasswordChange from './PasswordChange';
-import { UNIVERSITY_CHOICES } from '@/utils/authForm';
-import Pencil from '@/assets/edit.png';
+import { UNIVERSITY_CHOICES } from '@/utils/constants';
+import Pencil from '@/assets/images/edit.png';
 import { useMutation, useQueryClient } from 'react-query';
 
 const UserSettings = observer(() => {
@@ -51,10 +51,13 @@ const UserSettings = observer(() => {
   const mutation = useMutation(updateUser, {
     onSuccess: data => {
       queryClient.invalidateQueries('currentUser');
-      toast.success('Field updated successfully!');
+      toast.success('Field updated successfully!', { autoClose: 2000, pauseOnFocusLoss: false });
     },
     onError: error => {
-      toast.error(error.message || 'Error updating field. Please try again.');
+      toast.error(error.message || 'Error updating field. Please try again.', {
+        autoClose: 2000,
+        pauseOnFocusLoss: false
+      });
     }
   });
 
@@ -88,7 +91,7 @@ const UserSettings = observer(() => {
     if (areFieldsValid()) {
       await handleFieldUpdate(field, tempValues[field]);
     } else {
-      toast.error(`Invalid or empty fields.`);
+      toast.error(`Invalid or empty fields.`, { autoClose: 2000, pauseOnFocusLoss: false });
     }
     setEditingField(null);
   };
@@ -105,9 +108,9 @@ const UserSettings = observer(() => {
     try {
       await deleteUser(user._id);
 
-      toast.success('Account deleted successfully!');
+      toast.success('Account deleted successfully!', { autoClose: 2000, pauseOnFocusLoss: false });
     } catch (error) {
-      toast.error('Error deleting account. Please try again.');
+      toast.error('Error deleting account. Please try again.', { autoClose: 2000, pauseOnFocusLoss: false });
     }
     setOpenDeleteDialog(false);
   };

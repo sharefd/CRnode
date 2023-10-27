@@ -1,7 +1,10 @@
-import OM1Icon from '@/assets/om1.png';
+import MACIMAHD1Icon from '@/assets/images/mcm.png';
+import MACIMAHD2Icon from '@/assets/images/mcm2.png';
+import MACIMAHD3Icon from '@/assets/images/mcm3.png';
+import OM1Icon from '@/assets/images/om1.png';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
-import { deleteArticle, fetchArticles, sortArticles, updateArticle } from '@/services/articles';
+import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
@@ -10,15 +13,11 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { Box, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import './ArticleList.css';
+import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import EditArticleModal from './actions/EditArticleModal';
 import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
-import MACIMAHD1Icon from '@/assets/mcm.png';
-import MACIMAHD2Icon from '@/assets/mcm2.png';
-import MACIMAHD3Icon from '@/assets/mcm3.png';
 
 const purposeIcons = {
   OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,

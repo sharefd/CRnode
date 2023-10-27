@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { navlinks, userlinks } from '@/utils/constants';
-import CloudLogo from '@/assets/logo.png';
+import CloudLogo from '@/assets/images/logo.png';
 import { observer } from 'mobx-react';
 import userStore from '@/stores/userStore';
 

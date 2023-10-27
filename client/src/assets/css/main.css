@@ -1,3 +1,12 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import url('./auth.css');
+@import url('./buttons.css');
+@import url('./Modal.css');
+@import url('./ArticleList.css');
+
 * {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }

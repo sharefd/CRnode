@@ -11,7 +11,6 @@ import {
   Button
 } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import './Modal.css';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LinkIcon from '@mui/icons-material/Link';

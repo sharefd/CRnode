@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './assets/main.css';
-import './assets/button.css';
-
 import { Provider } from 'mobx-react';
 import userStore from './stores/userStore.js';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import './assets/css/main.css';
 
 const queryClient = new QueryClient();
 
