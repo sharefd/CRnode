@@ -20,9 +20,17 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { grey } from '@mui/material/colors';
 
+import MACIMAHD1Icon from '@/assets/images/mcm.png';
+import MACIMAHD2Icon from '@/assets/images/mcm2.png';
+import MACIMAHD3Icon from '@/assets/images/mcm3.png';
+
 const purposeIcons = {
   OM1: <EngineeringIcon />,
-  UOFTAMR: <RocketLaunchIcon />
+  UOFTAMR: <RocketLaunchIcon />,
+  MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />
+
   // Add other purpose choices and their icons here
 };
 
@@ -123,79 +131,83 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         </Box>
       </TableCell>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent className='modal-title'>
-          {article.title}
+    <Dialog open={open} onClose={handleClose}>
+  <DialogContent className='modal-title' sx={{ padding: '20px' }}>
+    <Typography variant="h6" sx={{ marginBottom: '25px' }}>
+      {article.title}
+    </Typography>
+    <Box className='modal-info' sx={{ marginBottom: '30px' }}>
+      <p className='modal-purpose'>
+        <AccessTimeIcon />
+        {'\u00A0'}
+        {'\u00A0'}
+        {'\u00A0'}
+        {article.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'}
+        {article.time}
+      </p>
 
-          <Box className='modal-info'>
-            <p className='modal-purpose'>
-              <AccessTimeIcon />
-              {'\u00A0'}
-              {'\u00A0'}
-              {'\u00A0'}
-              {article.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'}
-              {article.time}
-            </p>
+      <p className='modal-purpose'>
+        {purposeIcons[article.purpose]} {'\u00A0'} {'\u00A0'} {article.purpose || 'None'}
+        {isCopied && <div className='copied-message'>Copied</div>}
+      </p>
+      <p className='modal-purpose'>
+        <LinkIcon /> {'\u00A0'} {'\u00A0'}
+        <Button
+          variant='outlined'
+          size='small'
+          sx={{
+            textTransform: 'none',
+            color: 'black',
+            borderColor: 'black',
+            margin: '5px', // Increase the margin
+            '&:hover': {
+              backgroundColor: '#07A24A',
+              color: 'white',
+              borderColor: 'black'
+            }
+          }}
+          onClick={() => handleCopyToClipboard(article.event_link)}>
+          <ContentCopyIcon /> {'\u00A0'} Copy Link
+        </Button>
+        {'\u00A0'} {'\u00A0'}
+        <Button
+          variant='outlined'
+          onClick={() => window.open(article.event_link, '_blank')}
+          size='small'
+          sx={{
+            textTransform: 'none',
+            color: 'black',
+            borderColor: 'black',
+            margin: '5px', // Increase the margin
+            '&:hover': { backgroundColor: '#1976d2', color: 'white', borderColor: 'black' }
+          }}>
+          <GroupsIcon /> {'\u00A0'} Join Meeting
+        </Button>
+      </p>
+      <p className='modal-purpose'>
+        <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'}{' '}
+        {'\u00A0'}
+        Passcode: {article.passcode || 'None'}
+      </p>
+    </Box>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
+        <ChevronLeft />
+      </IconButton>
+      <IconButton onClick={handleNextEvent} disabled={currentEventIndex === events.length - 1}>
+        {/* Add a badge to show event number out of the total events */}
+        {events.length > 1 && (
+          <Typography sx={{ fontSize: '14px', fontWeight: '900', color: 'black' }}>
+            {`${currentEventIndex + 1}/${events.length}`}
+          </Typography>
+        )}
 
-            <p className='modal-purpose'>
-              {purposeIcons[article.purpose]} {'\u00A0'} {'\u00A0'} {article.purpose || 'None'}
-              {isCopied && <div className='copied-message'>Copied</div>}
-            </p>
-            <p className='modal-purpose'>
-              <LinkIcon /> {'\u00A0'} {'\u00A0'}
-              <Button
-                variant='outlined'
-                size='small'
-                sx={{
-                  textTransform: 'none',
-                  color: 'black',
-                  borderColor: 'black',
-                  '&:hover': {
-                    backgroundColor: '#07A24A',
-                    color: 'white',
-                    borderColor: 'black'
-                  }
-                }}
-                onClick={() => handleCopyToClipboard(article.event_link)}>
-                <ContentCopyIcon /> {'\u00A0'} Copy Link
-              </Button>
-              {'\u00A0'} {'\u00A0'}
-              <Button
-                variant='outlined'
-                onClick={() => window.open(article.event_link, '_blank')}
-                size='small'
-                sx={{
-                  textTransform: 'none',
-                  color: 'black',
-                  borderColor: 'black',
-                  '&:hover': { backgroundColor: '#1976d2', color: 'white', borderColor: 'black' }
-                }}>
-                <GroupsIcon /> {'\u00A0'} Join Meeting
-              </Button>
-            </p>
-            <p className='modal-purpose'>
-              <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'}{' '}
-              {'\u00A0'}
-              Passcode: {article.passcode || 'None'}
-            </p>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
-              <ChevronLeft />
-            </IconButton>
-            <IconButton onClick={handleNextEvent} disabled={currentEventIndex === events.length - 1}>
-              {/* Add a badge to show event number out of the total events */}
-              {events.length > 1 && (
-                <Typography sx={{ fontSize: '14px', fontWeight: '900', color: 'black' }}>
-                  {`${currentEventIndex + 1}/${events.length}`}
-                </Typography>
-              )}
+        <ChevronRight />
+      </IconButton>
+    </Box>
+  </DialogContent>
+</Dialog>
 
-              <ChevronRight />
-            </IconButton>
-          </Box>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
