@@ -8,7 +8,7 @@ const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
 export const initPermissions = async userId => {
   try {
-    const response = await axios.post(`${baseUrl}/api/permissions/init-permissions`, userId);
+    const response = await axios.post(`${baseUrl}/api/permissions/init-permissions/${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error updating permission:', error);

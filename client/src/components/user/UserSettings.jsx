@@ -128,7 +128,7 @@ const UserSettings = observer(() => {
   const renderField = (label, field, choices) => (
     <Box
       sx={{
-        width: field === 'password' && editingField === 'password' ? '80%' : '95%',
+        width: editingField === field ? '70%' : '95%',
         marginBottom: '1rem'
       }}>
       <Typography variant='subtitle2' sx={{ color: grey[900] }}>
@@ -146,6 +146,7 @@ const UserSettings = observer(() => {
             {choices ? (
               <TextField
                 variant='standard'
+                autoFocus
                 id={label}
                 inputProps={{ id: label }}
                 name={label}
@@ -172,6 +173,7 @@ const UserSettings = observer(() => {
             ) : (
               <TextField
                 variant='standard'
+                autoFocus
                 fullWidth
                 value={tempValues[field]}
                 sx={{ border: 'none', p: '4px' }}
