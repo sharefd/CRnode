@@ -10,7 +10,7 @@ import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import { Box, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
@@ -142,12 +142,32 @@ const ArticleList = observer(() => {
                           </Typography>
                         </Box>
                         <CardActions sx={{ my: 1 }}>
-                          <button className='join-button'>Join Meeting</button>
-                          <button
-                            className={`info-button ${showDetails[article._id] ? 'active' : ''}`}
-                            onClick={() => toggleDetails(article._id)}>
-                            More Info
-                          </button>
+                         <Button
+                            variant='contained'
+                            color='primary'
+                            href={article.event_link}
+                            target='_blank'
+                            size='small'
+                            sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
+                            Join Meeting
+                          </Button>
+                            
+                            
+                            
+                          <Button
+                              variant='outlined'
+                              onClick={() => toggleDetails(article._id)}
+                              size='small'
+                              sx={{
+                                textTransform: 'none',
+                                my: 0.5,
+                                mx: 1,
+                                color: 'gray',
+                                borderColor: 'gray',
+                                '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+                              }}>
+                              More Details
+                            </Button>
                         </CardActions>
                         <Box
                           sx={{
