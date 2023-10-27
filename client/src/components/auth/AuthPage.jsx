@@ -5,7 +5,7 @@ import { loginFields, signupFields } from './fields/authFields';
 import CloudLogo from '@/assets/images/logo.png';
 
 const AuthPage = () => {
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignup, setIsSignUp] = useState(false);
   const appName = 'CloudRounds';
 
   return (
@@ -23,9 +23,9 @@ const AuthPage = () => {
           className='w-1/2 p-8 flex flex-col justify-center h-[60vh] bg-white relative overflow-y-auto'
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {isSignup ? (
-            <SignupForm fields={signupFields} setIsSignup={setIsSignup} appName={appName} />
+            <SignupForm fields={signupFields} setIsSignUp={setIsSignUp} appName={appName} />
           ) : (
-            <LoginForm fields={loginFields} setIsSignup={setIsSignup} appName={appName} />
+            <LoginForm fields={loginFields} setIsSignUp={setIsSignUp} appName={appName} />
           )}
         </div>
       </div>

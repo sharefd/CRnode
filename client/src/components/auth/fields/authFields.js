@@ -14,6 +14,7 @@ export const loginFields = [
 ];
 
 export const signupFields = [
+  { name: 'username', label: 'Username', type: 'text', required: true },
   { name: 'firstName', label: 'First Name', type: 'text', required: true },
   { name: 'lastName', label: 'Last Name', type: 'text', required: true },
   { name: 'university', label: 'University', type: 'select', required: true, choices: UNIVERSITY_CHOICES },

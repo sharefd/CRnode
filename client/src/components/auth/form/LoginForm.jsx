@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { loginUser } from '@/services/users';
 
-const LoginForm = observer(({ fields, setIsSignup, appName }) => {
+const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const initialCredentials = fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
@@ -75,13 +75,15 @@ const LoginForm = observer(({ fields, setIsSignup, appName }) => {
           )}
           <div className='pb-4 sm:pb-8 w-full text-center'>
             <div className='flex justify-center mt-8'>
-              <button type='submit' className='w-1/2 bg-blue-500 text-white p-2 rounded-full'>
-                Login
-              </button>
+              {!isLoading && (
+                <button type='submit' className='w-full bg-blue-500 text-white p-2 rounded-full hover:bg-blue-400'>
+                  Login
+                </button>
+              )}
             </div>
             <p className='mt-8 text-center'>
               New to {appName}?{' '}
-              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignup(true)}>
+              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(true)}>
                 Create account
               </span>
             </p>
