@@ -34,6 +34,7 @@ const PasswordChange = ({ userId, onSuccess, onCancel }) => {
       </IconButton>
       <TextField
         variant='standard'
+        autoFocus
         size='small'
         fullWidth
         type='password'
