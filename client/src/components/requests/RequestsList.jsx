@@ -21,7 +21,6 @@ import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import AccessDenied from '../admin/AccessDenied';
 import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
-import DotsIcon from '@/assets/images/dots.png';
 
 const RequestsList = observer(() => {
   const [page, setPage] = useState(0);
