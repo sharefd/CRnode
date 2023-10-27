@@ -1,7 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Box, AppBar, Toolbar, Typography, Button, Menu, MenuItem, IconButton, Drawer, Divider } from '@mui/material';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+  Drawer,
+  Divider,
+  Avatar
+} from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { navlinks, userlinks } from '@/utils/constants';
@@ -15,6 +27,7 @@ const Navbar = observer(() => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [links, setLinks] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const user = userStore.user;
 
@@ -57,13 +70,36 @@ const Navbar = observer(() => {
     handleClose();
   };
 
-  const navlink = (label, endpoint, index) => (
-    <Link key={index} to={endpoint} style={{ textDecoration: 'none', color: 'inherit' }}>
-      <Box sx={{ py: '10px', mx: 1, borderRadius: '5px', '&:hover': { color: '#eaeaec' } }}>
-        <Typography sx={{ ml: '3px' }}>{label}</Typography>
+  const navlink = (link, index, sidebar) => {
+    const isActive = location.pathname === link.endpoint;
+
+    return (
+      <Box
+        key={index}
+        onClick={() => navigate(link.endpoint)}
+        sx={{
+          cursor: 'pointer',
+          textDecoration: 'none',
+          color: sidebar && isActive ? 'gray' : sidebar ? '#000' : '#fff',
+          '&:hover': { color: sidebar ? '#7793b1' : 'inherit' }
+        }}
+        disabled={isActive}>
+        <Box
+          title={link.label}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            py: '10px',
+            mx: 2,
+            '&:hover': { color: sidebar && isActive ? 'gray' : '#7793b1' },
+            borderBottom: isActive && !sidebar ? '2px solid #eaeaec' : 'none'
+          }}>
+          <link.Icon sx={{ fontSize: '28px' }} />
+          {sidebar && <Typography sx={{ ml: '8px' }}>{link.label}</Typography>}
+        </Box>
       </Box>
-    </Link>
-  );
+    );
+  };
 
   const list = () => (
     <Box
@@ -77,7 +113,7 @@ const Navbar = observer(() => {
       role='presentation'
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}>
-      <div>{links.map((link, index) => navlink(link.label, link.endpoint, index))}</div>
+      <div>{links.map((link, index) => navlink(link, index, true))}</div>
       <Divider sx={{ borderWidth: '3px', backgroundColor: '#7793b1', mx: 1 }} />
       <Box
         sx={{
@@ -99,8 +135,10 @@ const Navbar = observer(() => {
     </Box>
   );
 
+  const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
+
   return (
-    <AppBar position='static' sx={{ backgroundColor: '#0066b2' }}>
+    <AppBar position='static' sx={{ backgroundColor: '#0066b2', py: '2px' }}>
       <Toolbar>
         <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }} direction='row'>
           <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -112,14 +150,24 @@ const Navbar = observer(() => {
         </Box>
         {user && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.3, justifyContent: 'space-between' }}>
-            {links.map((link, index) => navlink(link.label, link.endpoint, index))}
+            {links.map((link, index) => navlink(link, index))}
             <Box id='user' sx={{ mt: 0.1 }}>
               <IconButton
                 color='primary'
                 onClick={handleClick}
                 sx={{ ml: 1, color: '#eaeaec', textTransform: 'none', '&:hover': { color: '#fff' } }}>
-                <Typography>{user.username}</Typography>
-                <ArrowDropDown />
+                <Avatar
+                  sx={{
+                    backgroundColor: '#0066b2',
+                    color: '#fff',
+                    width: '36px',
+                    height: '36px',
+                    border: '1px solid #fff',
+                    fontSize: '14px',
+                    '&:hover': { color: 'lightgray', border: '1px solid lightgray' }
+                  }}>
+                  {initials}
+                </Avatar>
               </IconButton>
               <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>

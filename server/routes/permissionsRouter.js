@@ -40,6 +40,7 @@ router.post('/new', jwtMiddleware, async (req, res) => {
 
 router.post('/init-permissions/:userId', async (req, res) => {
   const userId = req.params.userId;
+
   if (!userId) {
     return res.status(400).json({ message: 'User ID is required' });
   }

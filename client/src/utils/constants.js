@@ -1,3 +1,15 @@
+import {
+  CalendarMonth,
+  EventAvailable,
+  AdminPanelSettings,
+  History,
+  ManageSearch,
+  AssignmentInd,
+  Key
+} from '@mui/icons-material';
+import PastCalendar from '@/assets/images/calendar/past-blue.svg';
+import Calendar from '@/assets/images/calendar/transparent.svg';
+
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',
   UOFTAMR: 'UofT Aerospace',
@@ -56,14 +68,14 @@ export const monthNames = [
 export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF'];
 
 export const navlinks = [
-  { label: 'Manage Requests', endpoint: '/requests' },
-  { label: 'My Rounds', endpoint: '/articles' },
-  { label: 'Past Rounds', endpoint: '/older-articles' },
-  { label: 'Rounds Catalog', endpoint: '/requests/new' }
+  { label: 'Manage Requests', Icon: Key, endpoint: '/requests' },
+  { label: 'My Rounds', Icon: EventAvailable, endpoint: '/articles' },
+  { label: 'Past Rounds', Icon: History, endpoint: '/older-articles' },
+  { label: 'Rounds Catalog', Icon: ManageSearch, endpoint: '/requests/new' }
 ];
 
 export const userlinks = [
-  { label: 'My Rounds', endpoint: '/articles' },
-  { label: 'Past Rounds', endpoint: '/older-articles' },
-  { label: 'Rounds Catalog', endpoint: '/requests/new' }
+  { label: 'My Rounds', Icon: EventAvailable, endpoint: '/articles' },
+  { label: 'Past Rounds', Icon: History, endpoint: '/older-articles' },
+  { label: 'Rounds Catalog', Icon: ManageSearch, endpoint: '/requests/new' }
 ];
