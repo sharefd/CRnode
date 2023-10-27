@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const articleSchema = new mongoose.Schema({
   title: { type: String, required: true, maxlength: 250 },
-  event_link: { type: String, required: true },
+  event_link: { type: String, required: false },
   dateString: { type: String, required: true },
   time: { type: String, required: true },
   purpose: { type: String, required: true, enum: ['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'] },
