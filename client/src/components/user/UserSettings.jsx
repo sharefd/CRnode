@@ -18,7 +18,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  Divider
+  Divider,
+  Paper
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { fetchCurrentUser, updateUser, deleteUser } from '@/services/users';
@@ -30,6 +31,7 @@ import PasswordChange from './PasswordChange';
 import { UNIVERSITY_CHOICES } from '@/utils/constants';
 import Pencil from '@/assets/images/edit.png';
 import { useMutation, useQueryClient } from 'react-query';
+import { grey } from '@mui/material/colors';
 
 const UserSettings = observer(() => {
   const queryClient = useQueryClient();
@@ -124,9 +126,21 @@ const UserSettings = observer(() => {
   };
 
   const renderField = (label, field, choices) => (
-    <Box sx={{ marginBottom: '1rem' }}>
-      <Typography variant='subtitle2'>{label}</Typography>
-      <Box sx={{ backgroundColor: '#F9FAFC', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
+    <Box
+      sx={{
+        width: field === 'password' && editingField === 'password' ? '80%' : '95%',
+        marginBottom: '1rem'
+      }}>
+      <Typography variant='subtitle2' sx={{ color: grey[900] }}>
+        {label}
+      </Typography>
+      <Box
+        sx={{
+          backgroundColor: '#F9FAFC',
+          borderRadius: '5px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
         {editingField === field ? (
           <>
             {choices ? (
@@ -147,6 +161,14 @@ const UserSettings = observer(() => {
                   </MenuItem>
                 ))}
               </TextField>
+            ) : editingField === 'password' ? (
+              <div style={{ width: '85%' }}>
+                <PasswordChange
+                  userId={user._id}
+                  onSuccess={() => setShowPasswordChange(false)}
+                  onCancel={handleCancel}
+                />
+              </div>
             ) : (
               <TextField
                 variant='standard'
@@ -156,25 +178,29 @@ const UserSettings = observer(() => {
                 onChange={e => handleChange(field, e)}
               />
             )}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem', alignItems: 'center' }}>
-              <IconButton onClick={() => handleSaveAll(field)}>
-                <Check sx={{ fontSize: '18px', color: 'green' }} />
-              </IconButton>
-              <IconButton onClick={handleCancel}>
-                <Clear sx={{ fontSize: '18px', color: 'red' }} />
-              </IconButton>
-            </Box>
+            {editingField !== 'password' && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem', alignItems: 'center' }}>
+                <IconButton onClick={() => handleSaveAll(field)}>
+                  <Check sx={{ fontSize: '18px', color: 'green' }} />
+                </IconButton>
+                <IconButton onClick={handleCancel}>
+                  <Clear sx={{ fontSize: '18px', color: 'red' }} />
+                </IconButton>
+              </Box>
+            )}
           </>
         ) : (
           <Box
             sx={{
-              backgroundColor: '#F9FAFC',
-              borderRadius: '5px',
               position: 'relative',
-              padding: '0.5rem',
+              padding: '0.6rem',
               width: '100%'
             }}>
-            <Typography>{user[field]}</Typography>
+            {field === 'password' ? (
+              <Typography sx={{ color: grey[900] }}>••••••••</Typography>
+            ) : (
+              <Typography sx={{ color: grey[900] }}>{user[field]}</Typography>
+            )}
             <IconButton
               onClick={() => handleEditToggle(field)}
               sx={{
@@ -202,110 +228,139 @@ const UserSettings = observer(() => {
   const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
 
   return (
-    <Box sx={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant='h4'>Account Settings</Typography>
+    <Paper sx={{ maxWidth: '600px', margin: '0 auto', mt: 3, mb: 4 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backgroundColor: '#0066b2',
+          color: 'white',
+          borderTopRightRadius: '5px',
+          borderTopLeftRadius: '5px',
+          padding: '1rem',
+          mb: 4
+        }}>
+        <Typography variant='h5' align='left'>
+          Account Settings
+        </Typography>
         <Avatar
           style={{
-            backgroundColor: '#529FF0',
-            color: 'black',
-            border: '2px solid black'
+            backgroundColor: '#fff',
+            color: '#0066b2',
+            padding: '1.3rem',
+            border: '1px solid #fff',
+            fontSize: '16px'
           }}>
           {initials}
         </Avatar>
       </Box>
-      <Box sx={{ marginTop: '1rem' }}>
-        {/* User Fields */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12}>
-            {renderField('Username', 'username')}
+
+      <Box sx={{ px: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+        <Box sx={{ marginTop: '1rem' }}>
+          <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
+            LOGIN INFORMATION
+          </Typography>
+          <Grid container spacing={1} sx={{ mt: 1 }}>
+            <Grid item xs={12} md={12}>
+              {renderField('Username', 'username')}
+            </Grid>
+            <Grid item xs={12} md={12}>
+              {renderField('Password', 'password')}
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            {renderField('First Name', 'firstName')}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {renderField('Last Name', 'lastName')}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {renderField('Email', 'email')}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
-          </Grid>
-        </Grid>
 
-        <Divider sx={{ mb: 4, mt: 2 }} />
+          <Box sx={{ marginTop: '1rem' }}>
+            <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
+              PROFILE DETAILS
+            </Typography>
+            <Grid container spacing={1} sx={{ mt: 1 }}>
+              <Grid item xs={12} md={12}>
+                {renderField('First Name', 'firstName')}
+              </Grid>
+              <Grid item xs={12} md={12}>
+                {renderField('Last Name', 'lastName')}
+              </Grid>
+              <Grid item xs={12} md={12}>
+                {renderField('Email', 'email')}
+              </Grid>
+              <Grid item xs={12} md={12}>
+                {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
+              </Grid>
+            </Grid>
+          </Box>
 
-        {/* Password Change */}
-        <Button
-          variant='contained'
-          sx={{
-            backgroundColor: showPasswordChange ? '#7182fd' : '#2877cc',
-            '&:hover': { backgroundColor: showPasswordChange ? '#7a8ade' : '#2077cc' }
-          }}
-          onClick={() => setShowPasswordChange(!showPasswordChange)}>
-          {showPasswordChange ? 'Cancel' : 'Change Password'}
-        </Button>
-        {showPasswordChange && <PasswordChange userId={user._id} onSuccess={() => setShowPasswordChange(false)} />}
+          <Box sx={{ marginTop: '1.5rem' }}>
+            <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
+              ATTENDED ARTICLES
+            </Typography>
+            <List sx={{ listStyle: 'decimal', pl: 4 }}>
+              {user.attended.map((article, index) => (
+                <ListItem key={index} sx={{ display: 'list-item' }}>
+                  {article.title}
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>({formatDate(article)})</span>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
 
-        <Divider sx={{ my: 4 }} />
+          <Box sx={{ marginTop: '1.5rem' }}>
+            <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
+              PERMISSIONS
+            </Typography>
+            {permissions && (
+              <List sx={{ listStyle: 'disc', pl: 4 }}>
+                <ListItem key='canRead' sx={{ display: 'list-item' }}>
+                  Can View:
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canRead.join(', ')}</span>
+                </ListItem>
+                <ListItem key='canWrite' sx={{ display: 'list-item' }}>
+                  Can Create:
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canWrite.join(', ')}</span>
+                </ListItem>
+              </List>
+            )}
+          </Box>
 
-        {/* Attended Articles */}
-        <Typography variant='h6' sx={{ marginTop: '2rem' }}>
-          Attended Articles
-        </Typography>
-        <List sx={{ listStyle: 'decimal', pl: 4 }}>
-          {user.attended.map((article, index) => (
-            <ListItem key={index} sx={{ display: 'list-item' }}>
-              {article.title}
-              <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>({formatDate(article)})</span>
-            </ListItem>
-          ))}
-        </List>
-
-        <Divider sx={{ my: 4 }} />
-
-        {/* User Permissions */}
-        <Typography variant='h6' sx={{ marginTop: '2rem' }}>
-          Permissions
-        </Typography>
-        {permissions && (
-          <List sx={{ listStyle: 'disc', pl: 4 }}>
-            <ListItem key='canRead' sx={{ display: 'list-item' }}>
-              Can View:
-              <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canRead.join(', ')}</span>
-            </ListItem>
-            <ListItem key='canWrite' sx={{ display: 'list-item' }}>
-              Can Create:
-              <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canWrite.join(', ')}</span>
-            </ListItem>
-          </List>
-        )}
-
-        <Divider sx={{ my: 4 }} />
-
-        {/* Delete Account */}
-        <Button variant='contained' color='secondary' onClick={handleClickOpen}>
-          Delete Account
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete your account? This action cannot be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color='primary'>
-              Cancel
-            </Button>
-            <Button onClick={handleDeleteAccount} color='primary'>
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <Box sx={{ marginTop: '2rem' }}>
+            <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
+              DANGER ZONE
+            </Typography>
+            <div>
+              <Button
+                variant='text'
+                color='primary'
+                onClick={handleClickOpen}
+                sx={{
+                  mb: 5,
+                  mt: 1,
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  '&:hover': { textDecoration: 'underline', backgroundColor: 'transparent' }
+                }}>
+                Delete Account
+              </Button>
+            </div>
+          </Box>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete your account? This action cannot be undone.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color='primary'>
+                Cancel
+              </Button>
+              <Button onClick={handleDeleteAccount} color='primary'>
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 });
 

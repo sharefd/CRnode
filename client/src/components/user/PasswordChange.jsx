@@ -1,10 +1,11 @@
 import LockIcon from '@mui/icons-material/Lock';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { changePassword } from '../../services/users';
 import { toast } from 'react-toastify';
+import { Clear } from '@mui/icons-material';
 
-const PasswordChange = ({ userId, onSuccess }) => {
+const PasswordChange = ({ userId, onSuccess, onCancel }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,41 +28,50 @@ const PasswordChange = ({ userId, onSuccess }) => {
   };
 
   return (
-    <Box sx={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
-      <Typography variant='h6' sx={{ marginBottom: '1rem' }}>
-        <LockIcon sx={{ verticalAlign: 'middle', marginRight: '10px' }} />
-        Change Password
-      </Typography>
+    <Box sx={{ px: '1rem', pb: 3, pt: 1, position: 'relative' }}>
+      <IconButton onClick={onCancel} sx={{ position: 'absolute', top: '10px', right: '-45px', zIndex: 1 }}>
+        <Clear sx={{ fontSize: '18px', color: 'red' }} />
+      </IconButton>
       <TextField
+        variant='standard'
+        size='small'
         fullWidth
         type='password'
         label='Current Password'
         value={currentPassword}
         onChange={e => setCurrentPassword(e.target.value)}
-        variant='outlined'
-        margin='normal'
+        margin='dense'
       />
       <TextField
+        variant='standard'
+        size='small'
         fullWidth
         type='password'
         label='New Password'
         value={newPassword}
         onChange={e => setNewPassword(e.target.value)}
-        variant='outlined'
-        margin='normal'
+        margin='dense'
       />
       <TextField
+        variant='standard'
+        size='small'
         fullWidth
         type='password'
         label='Confirm New Password'
         value={confirmPassword}
         onChange={e => setConfirmPassword(e.target.value)}
-        variant='outlined'
-        margin='normal'
+        margin='dense'
       />
-      <Button variant='contained' color='primary' onClick={handleChangePassword} sx={{ marginTop: '1rem' }}>
-        Submit
-      </Button>
+      <div style={{ width: '100%' }}>
+        <Button
+          variant='contained'
+          size='small'
+          color='primary'
+          onClick={handleChangePassword}
+          sx={{ marginTop: '1.5rem' }}>
+          Submit
+        </Button>
+      </div>
     </Box>
   );
 };
