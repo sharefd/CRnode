@@ -47,23 +47,21 @@ const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArtic
           handlePurposeChange={handlePurposeChange}
         />
       </Box>
-      {userCanCreate && (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: '#1976d2', // Set the background color
-            color: 'white', // Set the text color to white
-            '&:hover': {
-              backgroundColor: '#135fab' // Change the background color on hover
-            }
-          }}
-          className='button-4'
-          onClick={toggleNewArticleModal}>
-          <Add sx={{ fontSize: '1.1rem', mr: 0.5 }} />
-          Create Event
-        </Box>
-      )}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: '#1976d2', // Set the background color
+          color: 'white', // Set the text color to white
+          '&:hover': {
+            backgroundColor: '#135fab' // Change the background color on hover
+          }
+        }}
+        className='button-4'
+        onClick={toggleNewArticleModal}>
+        <Add sx={{ fontSize: '1.1rem', mr: 0.5 }} />
+        Create Event
+      </Box>
     </Box>
   );
 };
