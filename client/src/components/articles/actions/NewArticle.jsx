@@ -11,10 +11,9 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
-
 const NewArticle = ({ open, onClose, permissions, refetch }) => {
   const currentUser = userStore.user;
-    
+
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -25,8 +24,8 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     passcode: '',
     speaker: '',
     additional_details: '',
-    location: '',  
-    virtual: true, // Added toggle state
+    location: '',
+    virtual: true // Added toggle state
   });
 
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
@@ -59,11 +58,10 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
   if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
   }
-    
+
   const handleToggleChange = () => {
-  setArticle({ ...article, virtual: !article.virtual }); // Use 'virtual' here
-};
-  
+    setArticle({ ...article, virtual: !article.virtual }); // Use 'virtual' here
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -81,15 +79,8 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 padding: '0.7rem'
               }}>
               Create Event
-                
-                
             </Typography>
-              
-              
-              
           </Grid>
-            
-            
 
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2} sx={{ padding: 4 }}>
@@ -102,20 +93,15 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   onChange={e => setArticle({ ...article, title: e.target.value })}
                 />
               </Grid>
-                
-                    <Grid item xs={3}>
+
+              <Grid item xs={3}>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      checked={article.virtual}
-                      onChange={handleToggleChange}
-                      name='virtual'
-                    />
-                  }
+                  control={<Switch checked={article.virtual} onChange={handleToggleChange} name='virtual' />}
                   label={article.virtual ? 'Virtual Meeting' : 'In-Person Meeting'}
-                defaultChecked color="warning" />
+                  defaultChecked
+                  color='warning'
+                />
               </Grid>
-                
 
               <Grid item xs={6}>
                 <TextField
@@ -125,8 +111,8 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   fullWidth
                   value={article.purpose}
                   onChange={e => setArticle({ ...article, purpose: e.target.value })}>
-                  {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                    <MenuItem key={index} value={key} disabled={!allowedPurposes.includes(key)}>
+                  {allowedPurposes.map((key, index) => (
+                    <MenuItem key={index} value={key}>
                       {PURPOSE_CHOICES[key]}
                     </MenuItem>
                   ))}
@@ -161,14 +147,14 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   sx={{ overflow: 'hidden', width: '100%' }}
                 />
               </Grid>
-                {article.virtual ? (
+              {article.virtual ? (
                 <Grid item xs={12}>
                   <TextField
                     label='Event Link (Virtual Meeting)'
                     required
                     fullWidth
                     value={article.event_link}
-                    onChange={(e) => setArticle({ ...article, event_link: e.target.value })}
+                    onChange={e => setArticle({ ...article, event_link: e.target.value })}
                   />
                 </Grid>
               ) : (
@@ -178,31 +164,26 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                     required
                     fullWidth
                     value={article.location}
-                    onChange={(e) => setArticle({ ...article, location: e.target.value })}
+                    onChange={e => setArticle({ ...article, location: e.target.value })}
                   />
                 </Grid>
               )}
 
-
-
-
-
-
               {article.virtual && (
                 <Grid item xs={6}>
                   <TextField
-                    label="Meeting ID"
+                    label='Meeting ID'
                     fullWidth
                     value={article.meeting_id}
                     onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
                   />
                 </Grid>
               )}
-                
-             {article.virtual && (
+
+              {article.virtual && (
                 <Grid item xs={6}>
                   <TextField
-                    label="Passcode"
+                    label='Passcode'
                     fullWidth
                     value={article.passcode}
                     onChange={e => setArticle({ ...article, passcode: e.target.value })}
