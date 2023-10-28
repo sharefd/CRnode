@@ -146,7 +146,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         {article.time}
       </p>
 
-      <p className='modal-purpose'>
+      <p className='modal-purpose' >
         {purposeIcons[article.purpose]} {'\u00A0'} {'\u00A0'} {article.purpose || 'None'}
         {isCopied && <div className='copied-message'>Copied</div>}
       </p>

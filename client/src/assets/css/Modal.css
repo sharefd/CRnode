@@ -42,10 +42,9 @@
 .modal-info {
   width: 100%;
   min-width: 370px;
-    
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0px;
+    padding: 10px;
   
 }
 

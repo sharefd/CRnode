@@ -3,7 +3,7 @@ import { createArticle } from '@/services/articles';
 import { fetchCanWritePermissions } from '@/services/permissions';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
-import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography, FormControlLabel, Switch } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -11,9 +11,10 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
+
 const NewArticle = ({ open, onClose, permissions, refetch }) => {
   const currentUser = userStore.user;
-
+    
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -23,7 +24,9 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     meeting_id: '',
     passcode: '',
     speaker: '',
-    additional_details: ''
+    additional_details: '',
+    location: '',  
+    virtual: true, // Added toggle state
   });
 
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
@@ -56,6 +59,11 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
   if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
   }
+    
+  const handleToggleChange = () => {
+  setArticle({ ...article, virtual: !article.virtual }); // Use 'virtual' here
+};
+  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -73,12 +81,19 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 padding: '0.7rem'
               }}>
               Create Event
+                
+                
             </Typography>
+              
+              
+              
           </Grid>
+            
+            
 
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2} sx={{ padding: 4 }}>
-              <Grid item xs={12}>
+              <Grid item xs={9}>
                 <TextField
                   label='Title'
                   required
@@ -87,6 +102,20 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   onChange={e => setArticle({ ...article, title: e.target.value })}
                 />
               </Grid>
+                
+                    <Grid item xs={3}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={article.virtual}
+                      onChange={handleToggleChange}
+                      name='virtual'
+                    />
+                  }
+                  label={article.virtual ? 'Virtual Meeting' : 'In-Person Meeting'}
+                defaultChecked color="warning" />
+              </Grid>
+                
 
               <Grid item xs={6}>
                 <TextField
@@ -132,32 +161,54 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   sx={{ overflow: 'hidden', width: '100%' }}
                 />
               </Grid>
+                {article.virtual ? (
+                <Grid item xs={12}>
+                  <TextField
+                    label='Event Link (Virtual Meeting)'
+                    required
+                    fullWidth
+                    value={article.event_link}
+                    onChange={(e) => setArticle({ ...article, event_link: e.target.value })}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12}>
+                  <TextField
+                    label='Location (In-Person Meeting)'
+                    required
+                    fullWidth
+                    value={article.location}
+                    onChange={(e) => setArticle({ ...article, location: e.target.value })}
+                  />
+                </Grid>
+              )}
 
-              <Grid item xs={12}>
-                <TextField
-                  label='Event Link'
-                  required
-                  fullWidth
-                  value={article.event_link}
-                  onChange={e => setArticle({ ...article, event_link: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label='Meeting ID'
-                  fullWidth
-                  value={article.meeting_id}
-                  onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label='Passcode'
-                  fullWidth
-                  value={article.passcode}
-                  onChange={e => setArticle({ ...article, passcode: e.target.value })}
-                />
-              </Grid>
+
+
+
+
+
+              {article.virtual && (
+                <Grid item xs={6}>
+                  <TextField
+                    label="Meeting ID"
+                    fullWidth
+                    value={article.meeting_id}
+                    onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
+                  />
+                </Grid>
+              )}
+                
+             {article.virtual && (
+                <Grid item xs={6}>
+                  <TextField
+                    label="Passcode"
+                    fullWidth
+                    value={article.passcode}
+                    onChange={e => setArticle({ ...article, passcode: e.target.value })}
+                  />
+                </Grid>
+              )}
 
               <Grid item xs={12}>
                 <TextField
