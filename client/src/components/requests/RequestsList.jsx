@@ -1,12 +1,14 @@
-import { fetchRequests, updateRequest, deleteRequest } from '@/services/requests';
+import { useAllowedRequests } from '@/hooks/useAllowedRequests';
+import { deleteRequest, updateRequest } from '@/services/requests';
 import userStore from '@/stores/userStore';
+import { canCreate } from '@/utils/checkPermissions';
+import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
 import {
   IconButton,
   LinearProgress,
   Menu,
   MenuItem,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,11 +20,8 @@ import {
 } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import AccessDenied from '../admin/AccessDenied';
-import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
-import { canCreate } from '@/utils/checkPermissions';
-import { useAllowedRequests } from '@/hooks/useAllowedRequests';
 
 const RequestsList = observer(() => {
   const [page, setPage] = useState(0);

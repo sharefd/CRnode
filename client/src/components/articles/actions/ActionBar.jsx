@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ArticleFilters } from './ArticleFilters';
 import { Add } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
+import { canCreate } from '../../../utils/checkPermissions';
 
 const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArticleModal }) => {
   const now = new Date();
@@ -13,6 +14,7 @@ const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArtic
   });
 
   const [currentTime, setCurrentTime] = useState(formattedTime);
+  const userCanCreate = canCreate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,26 +47,22 @@ const ActionBar = ({ user, selectedPurposes, handlePurposeChange, toggleNewArtic
           handlePurposeChange={handlePurposeChange}
         />
       </Box>
-      {user.isAdmin && (
-               <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#1976d2', // Set the background color
-                    color: 'white', // Set the text color to white
-                    '&:hover': {
-                      backgroundColor: '#135fab', // Change the background color on hover
-                    },
-                
-
-                  }}
-                  className='button-4'
-                  onClick={toggleNewArticleModal}
-                >
+      {userCanCreate && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#1976d2', // Set the background color
+            color: 'white', // Set the text color to white
+            '&:hover': {
+              backgroundColor: '#135fab' // Change the background color on hover
+            }
+          }}
+          className='button-4'
+          onClick={toggleNewArticleModal}>
           <Add sx={{ fontSize: '1.1rem', mr: 0.5 }} />
           Create Event
-                </Box>
-
+        </Box>
       )}
     </Box>
   );
