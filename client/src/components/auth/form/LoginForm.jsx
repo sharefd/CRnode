@@ -37,7 +37,9 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
     userStore.setFeedbacks(feedbacks);
 
     try {
-      await fetchUserPermissions(response.user._id);
+      const permissions = await fetchUserPermissions(response.user._id);
+      userStore.setPermissions(permissions);
+      console.log(permissions);
     } catch (error) {
       toast.error(`Error fetching permissions: ${error}`, { autoClose: 2000, pauseOnFocusLoss: false });
     }

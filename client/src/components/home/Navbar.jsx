@@ -14,12 +14,12 @@ import {
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { navlinks, userlinks } from '@/utils/constants';
 import CloudLogo from '@/assets/images/logo.png';
 import { observer } from 'mobx-react';
 import userStore from '@/stores/userStore';
+import { canCreate } from '@/utils/checkPermissions';
 
 const Navbar = observer(() => {
   const isSmallScreen = useMediaQuery('(max-width:950px)');
@@ -33,10 +33,10 @@ const Navbar = observer(() => {
 
   useEffect(() => {
     if (user) {
-      const permittedLinks = user.isAdmin ? navlinks : userlinks;
+      const permittedLinks = user.isAdmin || canCreate() ? navlinks : userlinks;
       setLinks(permittedLinks);
     }
-  }, [user]);
+  }, [user, userStore.permissions]);
 
   const handleClick = event => {
     event.stopPropagation();

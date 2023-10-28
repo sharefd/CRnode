@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Typography, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
+import { fetchCanReadPermissions, fetchUserPermissions } from '@/services/permissions';
 import { PURPOSE_CHOICES } from '@/utils/constants';
+import { Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useQuery } from 'react-query';
-import { fetchUserPermissions, fetchCanReadPermissions } from '@/services/permissions';
 
 export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }) => {
   const { data: permissions, isLoading } = useQuery(['permissions', userId], () => fetchUserPermissions(userId), {

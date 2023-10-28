@@ -21,16 +21,18 @@ import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import AccessDenied from '../admin/AccessDenied';
 import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
+import { canCreate } from '@/utils/checkPermissions';
+import { useAllowedRequests } from '@/hooks/useAllowedRequests';
 
 const RequestsList = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const user = userStore.user;
-  const [isLoading, setIsLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data: requests, isLoading: isRequestQueryLoading, refetch } = useQuery('requests', fetchRequests);
+  const { allowedRequests, isLoading: isRequestsLoading, refetch } = useAllowedRequests();
 
   const deleteMutation = useMutation(deleteRequest, {
     onSuccess: (data, variables) => {
@@ -102,10 +104,10 @@ const RequestsList = observer(() => {
     updateStatusMutation.mutate({ id, purpose, status });
   };
 
-  if (!user || isRequestQueryLoading) {
+  if (!user || isRequestsLoading) {
     return <LinearProgress />;
   } else {
-    if (!user.isAdmin) {
+    if (!canCreate()) {
       return <AccessDenied />;
     }
   }
@@ -139,79 +141,80 @@ const RequestsList = observer(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0 ? requests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : requests).map(
-              request => (
-                <TableRow key={request._id}>
-                  <TableCell>{request.purpose}</TableCell>
-                  <TableCell>
-                    <div>
-                      <p style={{ padding: 0, margin: 0, fontSize: '12px' }}>{request.user.username}</p>
-                      <span style={{ padding: 0, margin: 0, fontSize: '12px', color: 'blue' }}>{request.email}</span>
+            {(rowsPerPage > 0
+              ? allowedRequests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : allowedRequests
+            ).map(request => (
+              <TableRow key={request._id}>
+                <TableCell>{request.purpose}</TableCell>
+                <TableCell>
+                  <div>
+                    <p style={{ padding: 0, margin: 0, fontSize: '12px' }}>{request.user.username}</p>
+                    <span style={{ padding: 0, margin: 0, fontSize: '12px', color: 'blue' }}>{request.email}</span>
+                  </div>
+                </TableCell>
+                <TableCell>{request.message}</TableCell>
+
+                <TableCell>
+                  {request.isApproving ? (
+                    <LinearProgress />
+                  ) : (
+                    <div style={{ textAlign: 'center' }}>
+                      <IconButton onClick={e => handleClick(e, request._id)} sx={{ p: 0, m: 0 }}>
+                        <MoreHoriz />
+                      </IconButton>
+                      <Menu
+                        anchorEl={openMenuId === request._id ? anchorEl : null}
+                        keepMounted
+                        open={openMenuId === request._id}
+                        onClose={handleClose}>
+                        <MenuItem
+                          className='status-button approve'
+                          onClick={() => updateStatus(request._id, request.purpose, 'Approved')}
+                          disabled={request.status === 'Approved'}>
+                          Approve
+                        </MenuItem>
+
+                        <MenuItem
+                          className='status-button deny'
+                          onClick={() => updateStatus(request._id, request.purpose, 'Denied')}
+                          disabled={request.status === 'Denied'}>
+                          Deny
+                        </MenuItem>
+
+                        <MenuItem
+                          className='status-button reset'
+                          onClick={() => updateStatus(request._id, request.purpose, 'Pending')}
+                          disabled={request.status === 'Pending'}>
+                          Reset
+                        </MenuItem>
+                      </Menu>
                     </div>
-                  </TableCell>
-                  <TableCell>{request.message}</TableCell>
-
-                  <TableCell>
-                    {request.isApproving ? (
-                      <LinearProgress />
-                    ) : (
-                      <div style={{ textAlign: 'center' }}>
-                        <IconButton onClick={e => handleClick(e, request._id)} sx={{ p: 0, m: 0 }}>
-                          <MoreHoriz />
-                        </IconButton>
-                        <Menu
-                          anchorEl={openMenuId === request._id ? anchorEl : null}
-                          keepMounted
-                          open={openMenuId === request._id}
-                          onClose={handleClose}>
-                          <MenuItem
-                            className='status-button approve'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Approved')}
-                            disabled={request.status === 'Approved'}>
-                            Approve
-                          </MenuItem>
-
-                          <MenuItem
-                            className='status-button deny'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Denied')}
-                            disabled={request.status === 'Denied'}>
-                            Deny
-                          </MenuItem>
-
-                          <MenuItem
-                            className='status-button reset'
-                            onClick={() => updateStatus(request._id, request.purpose, 'Pending')}
-                            disabled={request.status === 'Pending'}>
-                            Reset
-                          </MenuItem>
-                        </Menu>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: 'center' }}>
-                    {request.status === 'Denied' ? (
-                      <DoNotDisturb sx={{ opacity: '0.5', color: 'indianred' }} />
-                    ) : request.status === 'Pending' ? (
-                      <HourglassEmpty sx={{ opacity: '0.5', color: 'goldenrod' }} />
-                    ) : (
-                      <CheckCircle sx={{ opacity: '0.5', color: 'green' }} />
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: 'center' }}>
-                    <IconButton onClick={() => handleDelete(request._id)} color='error'>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              )
-            )}
+                  )}
+                </TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
+                  {request.status === 'Denied' ? (
+                    <DoNotDisturb sx={{ opacity: '0.5', color: 'indianred' }} />
+                  ) : request.status === 'Pending' ? (
+                    <HourglassEmpty sx={{ opacity: '0.5', color: 'goldenrod' }} />
+                  ) : (
+                    <CheckCircle sx={{ opacity: '0.5', color: 'green' }} />
+                  )}
+                </TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
+                  <IconButton onClick={() => handleDelete(request._id)} color='error'>
+                    <Delete />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[25, 50, 100]}
         component='div'
-        count={requests.length}
+        count={allowedRequests.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

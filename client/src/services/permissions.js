@@ -59,7 +59,6 @@ export const fetchUserPermissions = async userId => {
   try {
     const response = await axios.get(`${baseUrl}/api/permissions/user/${userId}`);
     const permissions = response.data;
-    userStore.setPermissions(permissions);
     return permissions;
   } catch (error) {
     console.error('Error updating permission:', error);

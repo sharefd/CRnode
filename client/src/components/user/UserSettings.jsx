@@ -18,7 +18,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  Divider,
   Paper
 } from '@mui/material';
 import { useEffect, useState } from 'react';
