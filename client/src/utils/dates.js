@@ -45,3 +45,16 @@ export function formatDateToReadable(dateString) {
 
   return `${month} ${day}, ${year}`;
 }
+
+export function convertTo24Hour(timeStr) {
+  const [time, period] = timeStr.split(' ');
+  let [hours, minutes] = time.split(':');
+
+  if (period.toLowerCase() === 'pm' && parseInt(hours) !== 12) {
+    hours = parseInt(hours) + 12;
+  } else if (period.toLowerCase() === 'am' && parseInt(hours) === 12) {
+    hours = '00';
+  }
+
+  return `${hours}:${minutes}`;
+}

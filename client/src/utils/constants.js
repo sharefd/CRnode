@@ -1,14 +1,4 @@
-import {
-  CalendarMonth,
-  EventAvailable,
-  AdminPanelSettings,
-  History,
-  ManageSearch,
-  AssignmentInd,
-  Key
-} from '@mui/icons-material';
-import PastCalendar from '@/assets/images/calendar/past-blue.svg';
-import Calendar from '@/assets/images/calendar/transparent.svg';
+import { EventAvailable, History, Key, ManageSearch } from '@mui/icons-material';
 
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',

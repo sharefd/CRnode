@@ -1,7 +1,3 @@
-import MACIMAHD1Icon from '@/assets/images/mcm.png';
-import MACIMAHD2Icon from '@/assets/images/mcm2.png';
-import MACIMAHD3Icon from '@/assets/images/mcm3.png';
-import OM1Icon from '@/assets/images/om1.png';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
@@ -9,7 +5,6 @@ import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
@@ -18,16 +13,7 @@ import ActionBar from './actions/ActionBar';
 import EditArticleModal from './actions/EditArticleModal';
 import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
-
-const purposeIcons = {
-  OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  UOFTAMR: <RocketLaunchIcon sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
-  MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />
-
-  // Add other purpose choices and their icons here
-};
+import { purposeIcons } from '@/components/ui/PurposeIcons';
 
 const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -142,7 +128,7 @@ const ArticleList = observer(() => {
                           </Typography>
                         </Box>
                         <CardActions sx={{ my: 1 }}>
-                         <Button
+                          <Button
                             variant='contained'
                             color='primary'
                             href={article.event_link}
@@ -151,23 +137,21 @@ const ArticleList = observer(() => {
                             sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
                             Join Meeting
                           </Button>
-                            
-                            
-                            
+
                           <Button
-                              variant='outlined'
-                              onClick={() => toggleDetails(article._id)}
-                              size='small'
-                              sx={{
-                                textTransform: 'none',
-                                my: 0.5,
-                                mx: 1,
-                                color: 'gray',
-                                borderColor: 'gray',
-                                '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                              }}>
-                              More Details
-                            </Button>
+                            variant='outlined'
+                            onClick={() => toggleDetails(article._id)}
+                            size='small'
+                            sx={{
+                              textTransform: 'none',
+                              my: 0.5,
+                              mx: 1,
+                              color: 'gray',
+                              borderColor: 'gray',
+                              '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
+                            }}>
+                            More Details
+                          </Button>
                         </CardActions>
                         <Box
                           sx={{

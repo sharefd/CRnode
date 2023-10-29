@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   university: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
+  organization: { type: String },
   attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }]
 });
 
