@@ -128,7 +128,7 @@ const ArticleList = observer(() => {
                   <CardContent>
                     <Grid container spacing={2} >
                      <Grid item xs={3} >
-                          <Typography variant='h6' color='textSecondary'>
+                          <Typography variant='subtitle1' color='textSecondary'>
                             {formatDateToReadable(article.dateString)}
                           </Typography>
                           <Typography variant='subtitle1' color='textSecondary'>
