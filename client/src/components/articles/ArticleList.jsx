@@ -134,6 +134,11 @@ const ArticleList = observer(() => {
                         <Typography variant='caption' color='textSecondary'>
                           {article.time}
                         </Typography>
+                          
+                          <Typography variant='caption' color='textSecondary'>
+                          {article.duration}
+                        </Typography>
+                          
                       </Grid>
                       <Grid item xs={9}>
                         <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>

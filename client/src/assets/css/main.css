@@ -23,7 +23,7 @@ p.MuiTypography-root {
 
 #calendar-header {
   width: 100%;
-  min-width: 290px;
+  min-width: 4290px;
   display: flex;
   justify-content: space-between;
   align-items: center;

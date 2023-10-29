@@ -11,7 +11,8 @@ const articleSchema = new mongoose.Schema({
   passcode: { type: String, maxlength: 50 },
   speaker: { type: String },
   location: { type: String },
-  additional_details: { type: String, maxlength: 1000 }
+  additional_details: { type: String, maxlength: 1000 },
+  duration: {type: String}
 });
 
 module.exports = mongoose.model('Article', articleSchema);

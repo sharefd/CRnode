@@ -25,10 +25,19 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     speaker: '',
     additional_details: '',
     location: '',
-    virtual: true // Added toggle state
+    virtual: true, // Added toggle state
+    duration: '',  
   });
 
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
+    
+  const [eventDuration, setEventDuration] = useState(30); // Initial duration: 30 minutes
+    
+  const handleDurationChange = (e) => {
+  setEventDuration(e.target.value);
+};
+    
+    
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
@@ -38,22 +47,30 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     }
   });
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const formattedTime = article.time.format('hh:mm A'); // Output will be like "02:30 PM"
-    const payload = {
-      ...article,
-      time: formattedTime,
-      organizer: currentUser._id
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      let eventLink = article.event_link;
+      if (!eventLink.startsWith('https://')) {
+        eventLink = `https://${eventLink}`;
+      }
+
+      const formattedTime = article.time.format('hh:mm A');
+      const payload = {
+        ...article,
+        time: formattedTime,
+        organizer: currentUser._id,
+        event_link: eventLink, // Update the event_link with the corrected URL
+      };
+
+      if (!payload.title) {
+        console.error('Title is required');
+        return;
+      }
+
+      createMutation.mutate(payload);
     };
 
-    if (!payload.title) {
-      console.error('Title is required');
-      return;
-    }
-
-    createMutation.mutate(payload);
-  };
 
   if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
@@ -128,7 +145,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <TextField
                   type='date'
                   fullWidth
@@ -137,7 +154,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <TimePicker
                   value={article.time}
                   onChange={newValue => {
@@ -147,6 +164,26 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   sx={{ overflow: 'hidden', width: '100%' }}
                 />
               </Grid>
+                
+                
+                
+                <Grid item xs={4}>
+                  <TextField
+                    select
+                    label="Event Duration"
+                    fullWidth
+                    value={article.duration}
+                    onChange={handleDurationChange}
+                  >
+                    <MenuItem value={15}>15 minutes</MenuItem>
+                    <MenuItem value={30}>30 minutes</MenuItem>
+                    <MenuItem value={60}>1 hour</MenuItem>
+                    <MenuItem value={120}>2 hours</MenuItem>
+                    <MenuItem value={180}>3 hours</MenuItem>
+                  </TextField>
+                </Grid>
+
+                
               {article.virtual ? (
                 <Grid item xs={12}>
                   <TextField
