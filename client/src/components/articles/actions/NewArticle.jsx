@@ -34,9 +34,12 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
   const [eventDuration, setEventDuration] = useState(30); // Initial duration: 30 minutes
     
   const handleDurationChange = (e) => {
-  setEventDuration(e.target.value);
+  setArticle({
+    ...article,
+    duration: e.target.value, // Update the duration property
+  });
 };
-    
+
     
 
   const createMutation = useMutation(createArticle, {
@@ -175,11 +178,11 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                     value={article.duration}
                     onChange={handleDurationChange}
                   >
-                    <MenuItem value={15}>15 minutes</MenuItem>
-                    <MenuItem value={30}>30 minutes</MenuItem>
-                    <MenuItem value={60}>1 hour</MenuItem>
-                    <MenuItem value={120}>2 hours</MenuItem>
-                    <MenuItem value={180}>3 hours</MenuItem>
+                    <MenuItem value={'15 minutes'}>15 minutes</MenuItem>
+                    <MenuItem value={'30 minutes'}>30 minutes</MenuItem>
+                    <MenuItem value={'1 hour'}>1 hour</MenuItem>
+                    <MenuItem value={'2 hours'}>2 hours</MenuItem>
+                    <MenuItem value={'3 hours'}>3 hours</MenuItem>
                   </TextField>
                 </Grid>
 

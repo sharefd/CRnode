@@ -121,25 +121,24 @@ const ArticleList = observer(() => {
       />
       <Box px={2}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={7} >
             {filteredArticles.map((article, index) => {
               return (
                 <Card key={index} variant='outlined' sx={{ marginBottom: '20px', position: 'relative' }}>
                   <CardContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={3}>
-                        <Typography variant='body2' color='textSecondary'>
-                          {formatDateToReadable(article.dateString)}
-                        </Typography>
-                        <Typography variant='caption' color='textSecondary'>
-                          {article.time}
-                        </Typography>
-                          
-                          <Typography variant='caption' color='textSecondary'>
-                          {article.duration}
-                        </Typography>
-                          
-                      </Grid>
+                    <Grid container spacing={2} >
+                     <Grid item xs={3} >
+                          <Typography variant='h6' color='textSecondary'>
+                            {formatDateToReadable(article.dateString)}
+                          </Typography>
+                          <Typography variant='subtitle1' color='textSecondary'>
+                            {article.time}
+                          </Typography>
+                          <Typography variant='subtitle2' color='textSecondary'>
+                            {article.duration}
+                          </Typography>
+                        </Grid>
+
                       <Grid item xs={9}>
                         <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>
                           <Typography variant='h7' sx={{ fontWeight: '700' }}>
