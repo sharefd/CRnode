@@ -16,7 +16,6 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
   const [currentArticle, setCurrentArticle] = useState(events[currentEventIndex].resource);
   const [isCopied, setIsCopied] = useState(false);
 
-  console.log({ initialIndex });
   useEffect(() => {
     setCurrentEventIndex(initialIndex);
   }, [initialIndex]);
