@@ -14,6 +14,7 @@ import EditArticleModal from './actions/EditArticleModal';
 import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
+import { formatDuration, formatDuration12Hour } from '@/utils/calendar';
 
 const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -107,23 +108,21 @@ const ArticleList = observer(() => {
       />
       <Box px={2}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={7} >
+          <Grid item xs={12} md={7}>
             {filteredArticles.map((article, index) => {
               return (
                 <Card key={index} variant='outlined' sx={{ marginBottom: '20px', position: 'relative' }}>
                   <CardContent>
-                    <Grid container spacing={2} >
-                     <Grid item xs={3} >
-                          <Typography variant='subtitle1' color='textSecondary'>
-                            {formatDateToReadable(article.dateString)}
-                          </Typography>
-                          <Typography variant='subtitle1' color='textSecondary'>
-                            {article.time}
-                          </Typography>
-                          <Typography variant='subtitle2' color='textSecondary'>
-                            {article.duration}
-                          </Typography>
-                        </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item xs={3}>
+                        <Typography variant='subtitle1' color='textSecondary'>
+                          {formatDateToReadable(article.dateString)}
+                        </Typography>
+
+                        <Typography variant='caption' color='textSecondary'>
+                          {formatDuration12Hour(article)}
+                        </Typography>
+                      </Grid>
 
                       <Grid item xs={9}>
                         <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>

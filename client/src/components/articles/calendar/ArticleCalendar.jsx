@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import CalendarCell from './CalendarCell';
-import { monthNames } from '../../../utils/constants';
+import { monthNames } from '@/utils/constants';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
@@ -79,8 +79,7 @@ const ArticleCalendar = ({ articles }) => {
           backgroundColor: '#1976d2', // Background color
           borderRadius: '20px', // Adjust the value to your desired level of rounding
           color: 'white',
-            minWidth: '420px' // Set the minimum width you desire, e.g., 200px
-          
+          minWidth: '420px' // Set the minimum width you desire, e.g., 200px
         }}>
         <Button id='prev-month' onClick={() => changeMonth(-1)} style={{}}>
           <ChevronLeft />

@@ -39,20 +39,10 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     speaker: '',
     additional_details: '',
     location: '',
-    virtual: true, // Added toggle state
-    duration: ''
+    virtual: true
   });
 
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
-
-  const [eventDuration, setEventDuration] = useState(30); // Initial duration: 30 minutes
-
-  const handleDurationChange = e => {
-    setArticle({
-      ...article,
-      duration: e.target.value // Update the duration property
-    });
-  };
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
@@ -108,7 +98,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose} sx={{ overflow: 'scroll' }}>
-        <Paper elevation={3} sx={{ width: '60%', margin: '0 auto', mt: 2.2 }}>
+        <Paper elevation={3} sx={{ width: '60%', margin: 'auto', mt: 2.2 }}>
           <Grid item xs={12}>
             <Typography
               variant='h5'

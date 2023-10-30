@@ -8,14 +8,14 @@ import {
   Https as HttpsIcon,
   Link as LinkIcon
 } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDate } from '@/utils/dates';
 
 const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticle }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(initialIndex);
-  const [currentArticle, setCurrentArticle] = useState(selectedArticle);
+  const [currentArticle, setCurrentArticle] = useState(selectedArticle || events[0]);
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyToClipboard = text => {
@@ -57,7 +57,7 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticl
         <Box className='modal-info' sx={{ marginBottom: '30px' }}>
           <Box className='modal-purpose'>
             <AccessTimeIcon sx={{ mr: 2 }} />
-            <span className='modal-purpose-date'>{formatDate(selectedArticle)}</span>
+            <span className='modal-purpose-date'>{formatDate(currentArticle)}</span>
             <span className='modal-purpose-at'>@</span>
             <span className='modal-purpose-time'>{currentArticle.time}</span>
           </Box>
@@ -105,7 +105,7 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticl
           <Box className='modal-purpose' style={{ marginBottom: 0 }}>
             <HttpsIcon sx={{ mr: 1 }} />
             <span>Meeting ID: {currentArticle.meeting_id || 'None'}</span>
-            <span className='modal-purpose-at'>@</span>
+            <span className='modal-purpose-at'>|</span>
             <span>Passcode: {currentArticle.passcode || 'None'}</span>
           </Box>
         </Box>

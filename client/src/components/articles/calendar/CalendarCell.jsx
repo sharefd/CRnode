@@ -6,6 +6,8 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import HttpsIcon from '@mui/icons-material/Https';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { formatDate } from '@/utils/dates';
+import { PURPOSE_CHOICES } from '@/utils/constants';
 
 import { purposeIcons } from '@/components/ui/PurposeIcons';
 
@@ -106,27 +108,28 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         </Box>
       </TableCell>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent className='modal-title' sx={{ padding: '20px' }}>
-          <Typography variant='h6' sx={{ marginBottom: '25px' }}>
+      <Dialog open={open} onClose={handleClose} sx={{ overflow: 'hidden' }}>
+        <DialogContent className='modal-title' sx={{ padding: '20px', overflow: 'hidden' }}>
+          <Typography variant='h6' sx={{ marginBottom: '20px' }}>
             {article.title}
           </Typography>
-          <Box className='modal-info' sx={{ marginBottom: '30px' }}>
-            <p className='modal-purpose'>
-              <AccessTimeIcon />
-              {'\u00A0'}
-              {'\u00A0'}
-              {'\u00A0'}
-              {article.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'}
-              {article.time}
-            </p>
+          <Box className='modal-purpose'>
+            <Box className='event-purpose-badge'>
+              {purposeIcons[article.purpose]}
+              <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[article.purpose]}</span>
+            </Box>
+          </Box>
+          <Box className='modal-info'>
+            <Box className='modal-purpose'>
+              <AccessTimeIcon sx={{ mr: 2 }} />
+              <span className='modal-purpose-date'>{formatDate(article)}</span>
+              <span className='modal-purpose-at'>@</span>
+              <span className='modal-purpose-time'>{article.time}</span>
+            </Box>
 
-            <p className='modal-purpose'>
-              {purposeIcons[article.purpose]} {'\u00A0'} {'\u00A0'} {article.purpose || 'None'}
-              {isCopied && <div className='copied-message'>Copied</div>}
-            </p>
-            <p className='modal-purpose'>
-              <LinkIcon /> {'\u00A0'} {'\u00A0'}
+            {isCopied && <div className='copied-message'>Copied</div>}
+            <Box className='modal-purpose'>
+              <LinkIcon sx={{ mr: 1 }} />
               <Button
                 variant='outlined'
                 size='small'
@@ -134,7 +137,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
                   textTransform: 'none',
                   color: 'black',
                   borderColor: 'black',
-                  margin: '5px', // Increase the margin
+                  margin: '5px',
                   '&:hover': {
                     backgroundColor: '#07A24A',
                     color: 'white',
@@ -142,9 +145,8 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
                   }
                 }}
                 onClick={() => handleCopyToClipboard(article.event_link)}>
-                <ContentCopyIcon /> {'\u00A0'} Copy Link
+                <ContentCopyIcon sx={{ mr: 1 }} /> Copy Link
               </Button>
-              {'\u00A0'} {'\u00A0'}
               <Button
                 variant='outlined'
                 onClick={() => window.open(article.event_link, '_blank')}
@@ -153,19 +155,20 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
                   textTransform: 'none',
                   color: 'black',
                   borderColor: 'black',
-                  margin: '5px', // Increase the margin
+                  margin: '5px',
                   '&:hover': { backgroundColor: '#1976d2', color: 'white', borderColor: 'black' }
                 }}>
-                <GroupsIcon /> {'\u00A0'} Join Meeting
+                <GroupsIcon sx={{ mr: 1 }} /> Join Meeting
               </Button>
-            </p>
-            <p className='modal-purpose'>
-              <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {article.meeting_id || 'None'} {'\u00A0'} | {'\u00A0'}{' '}
-              {'\u00A0'}
-              Passcode: {article.passcode || 'None'}
-            </p>
+            </Box>
+            <Box className='modal-purpose' style={{ marginBottom: 0 }}>
+              <HttpsIcon sx={{ mr: 1 }} />
+              <span>Meeting ID: {article.meeting_id || 'None'}</span>
+              <span className='modal-purpose-at'>|</span>
+              <span>Passcode: {article.passcode || 'None'}</span>
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
               <ChevronLeft />
             </IconButton>
