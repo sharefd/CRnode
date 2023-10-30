@@ -101,8 +101,8 @@ const BigCalendar = observer(() => {
     const article = selectedEvent.resource;
     setSelectedArticle(article);
     setSelectedDate(selectedEvent.start);
-    const index = events.findIndex(event => event.resource._id === selectedEvent.resource._id);
-    setSelectedEventIndex(index);
+    const index = filteredEvents.findIndex(event => event.resource._id === selectedEvent.resource._id);
+    setSelectedEventIndex(index >= 0 ? index : 0);
     setOpen(true);
   };
 

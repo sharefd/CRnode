@@ -13,7 +13,9 @@ import { purposeIcons } from '@/components/ui/PurposeIcons';
 
 const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(initialIndex);
-  const [currentArticle, setCurrentArticle] = useState(events[currentEventIndex].resource);
+  const currentEvent = events[currentEventIndex];
+  const [currentArticle, setCurrentArticle] = useState(currentEvent ? currentEvent.resource : null);
+
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
