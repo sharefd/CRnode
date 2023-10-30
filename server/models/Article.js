@@ -5,6 +5,7 @@ const articleSchema = new mongoose.Schema({
   event_link: { type: String, required: false },
   dateString: { type: String, required: true },
   time: { type: String, required: true },
+  duration: { type: Number },
   purpose: { type: String, required: true, enum: ['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'] },
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   meeting_id: { type: String, maxlength: 50 },

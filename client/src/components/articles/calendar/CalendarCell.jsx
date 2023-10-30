@@ -1,38 +1,13 @@
 import React, { useState } from 'react';
-import {
-  TableCell,
-  Badge,
-  Typography,
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Button
-} from '@mui/material';
+import { TableCell, Badge, Typography, Box, Dialog, DialogContent, IconButton, Button } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LinkIcon from '@mui/icons-material/Link';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import HttpsIcon from '@mui/icons-material/Https';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { grey } from '@mui/material/colors';
 
-import MACIMAHD1Icon from '@/assets/images/mcm.png';
-import MACIMAHD2Icon from '@/assets/images/mcm2.png';
-import MACIMAHD3Icon from '@/assets/images/mcm3.png';
-
-const purposeIcons = {
-  OM1: <EngineeringIcon />,
-  UOFTAMR: <RocketLaunchIcon />,
-  MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />
-
-  // Add other purpose choices and their icons here
-};
+import { purposeIcons } from '@/components/ui/PurposeIcons';
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);

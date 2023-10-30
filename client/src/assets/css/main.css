@@ -128,6 +128,7 @@ p.MuiTypography-root {
   grid-column: span 2;
   color: #383d41;
   font-style: italic;
+  margin-bottom: 12px;
 }
 
 .modal-info {
@@ -253,4 +254,16 @@ span.request-status.approved {
 span.request-status.denied {
   background-color: indianred;
   border-color: black;
+}
+
+.slot-without-event {
+  display: none;
+}
+
+.rbc-timeslot-group {
+  display: none;
+}
+
+.rbc-event {
+  display: block !important;
 }

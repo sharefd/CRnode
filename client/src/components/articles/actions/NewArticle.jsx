@@ -3,7 +3,23 @@ import { createArticle } from '@/services/articles';
 import { fetchCanWritePermissions } from '@/services/permissions';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
-import { Button, Grid, MenuItem, Modal, Paper, TextField, Typography, FormControlLabel, Switch } from '@mui/material';
+import { AccessTime } from '@mui/icons-material';
+import {
+  Button,
+  Grid,
+  MenuItem,
+  Modal,
+  Paper,
+  TextField,
+  Typography,
+  FormControlLabel,
+  Switch,
+  Slider,
+  ToggleButton,
+  ToggleButtonGroup,
+  Box,
+  Input
+} from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -20,6 +36,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     dateString: '',
     time: dayjs('2022-04-17T15:30'),
     purpose: '',
+    duration: 60,
     meeting_id: '',
     passcode: '',
     speaker: '',
@@ -83,6 +100,17 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     setArticle({ ...article, virtual: !article.virtual }); // Use 'virtual' here
   };
 
+  const formatDuration = duration => {
+    const hours = Math.floor(duration / 60);
+    const mins = duration % 60;
+
+    if (mins === 0) {
+      return `${hours}h`;
+    }
+
+    return `${hours}h ${mins}m`;
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose} sx={{ overflow: 'scroll' }}>
@@ -103,23 +131,14 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
           </Grid>
 
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={2} sx={{ padding: 4 }}>
-              <Grid item xs={9}>
+            <Grid container spacing={2} sx={{ padding: 4, maxWidth: '705px' }}>
+              <Grid item xs={12}>
                 <TextField
                   label='Title'
                   required
                   fullWidth
                   value={article.title}
                   onChange={e => setArticle({ ...article, title: e.target.value })}
-                />
-              </Grid>
-
-              <Grid item xs={3}>
-                <FormControlLabel
-                  control={<Switch checked={article.virtual} onChange={handleToggleChange} name='virtual' />}
-                  label={article.virtual ? 'Virtual Meeting' : 'In-Person Meeting'}
-                  defaultChecked
-                  color='warning'
                 />
               </Grid>
 
@@ -167,26 +186,49 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                   sx={{ overflow: 'hidden', width: '100%' }}
                 />
               </Grid>
-                
-                
-                
-                <Grid item xs={4}>
-                  <TextField
-                    select
-                    label="Event Duration"
-                    fullWidth
-                    value={article.duration}
-                    onChange={handleDurationChange}
-                  >
-                    <MenuItem value={'15 minutes'}>15 minutes</MenuItem>
-                    <MenuItem value={'30 minutes'}>30 minutes</MenuItem>
-                    <MenuItem value={'1 hour'}>1 hour</MenuItem>
-                    <MenuItem value={'2 hours'}>2 hours</MenuItem>
-                    <MenuItem value={'3 hours'}>3 hours</MenuItem>
-                  </TextField>
+              <Grid container spacing={2} sx={{ paddingX: 3, my: 1, alignItems: 'center' }}>
+                <Grid item xs={7}>
+                  <Box sx={{ width: 350 }}>
+                    <Typography id='duration-slider' gutterBottom sx={{ mb: 1.5 }}>
+                      Duration
+                    </Typography>
+                    <Grid container spacing={2} alignItems='center'>
+                      <Grid item xs={1} sx={{ mb: '8px', mr: '6px' }}>
+                        <AccessTime />
+                      </Grid>
+                      <Grid item xs={7}>
+                        <Slider
+                          value={article.duration}
+                          onChange={(e, newValue) => setArticle({ ...article, duration: newValue })}
+                          step={15}
+                          min={15}
+                          max={240}
+                          aria-labelledby='input-slider'
+                        />
+                      </Grid>
+                      <Grid item xs={2.5} sx={{ mb: '8px' }}>
+                        <Typography sx={{ fontSize: '14px' }}>{formatDuration(article.duration)}</Typography>
+                      </Grid>
+                    </Grid>
+                  </Box>
                 </Grid>
+                <Grid item xs={5} sx={{ mt: 2 }}>
+                  <ToggleButtonGroup
+                    value={article.virtual}
+                    exclusive
+                    onChange={handleToggleChange}
+                    aria-label='meeting type'
+                    size='small'>
+                    <ToggleButton value={true} aria-label='virtual'>
+                      Virtual Meeting
+                    </ToggleButton>
+                    <ToggleButton value={false} aria-label='in-person'>
+                      In-Person Meeting
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+              </Grid>
 
-                
               {article.virtual ? (
                 <Grid item xs={12}>
                   <TextField
