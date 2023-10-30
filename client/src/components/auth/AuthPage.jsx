@@ -15,7 +15,7 @@ const AuthPage = () => {
         <div className='w-1/2 bg-blue-500 p-8 flex flex-col justify-center items-center text-white'>
           <img src={CloudLogo} width={120} alt='App Logo' className='mb-4' />
           <h1 className='text-4xl mb-4'>Welcome to {appName}</h1>
-          <p>Your tagline or some welcoming text.</p>
+          <p></p>
         </div>
 
         {/* Right Column */}

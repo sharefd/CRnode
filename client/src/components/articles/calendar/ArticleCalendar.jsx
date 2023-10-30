@@ -78,7 +78,9 @@ const ArticleCalendar = ({ articles }) => {
           justifyContent: 'space-between',
           backgroundColor: '#1976d2', // Background color
           borderRadius: '20px', // Adjust the value to your desired level of rounding
-          color: 'white'
+          color: 'white',
+            minWidth: '420px' // Set the minimum width you desire, e.g., 200px
+          
         }}>
         <Button id='prev-month' onClick={() => changeMonth(-1)} style={{}}>
           <ChevronLeft />
