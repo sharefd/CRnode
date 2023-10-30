@@ -26,7 +26,7 @@ const navlinks = [
     label: 'Past Rounds',
     Icon: History,
     endpoint: '/older-articles',
-    description: 'Review past articles and provide optional feedback.'
+    description: 'Review past events and provide optional feedback.'
   },
   {
     label: 'Rounds Catalog',
@@ -49,7 +49,7 @@ const Home = observer(() => {
       {user ? (
         <>
           <Typography variant='h6'>Welcome, {user ? user.firstName : 'None'}.</Typography>
-          <Typography>To get started, click Rounds Catalog and request access to rounds.</Typography>
+          <Typography></Typography>
           <Grid container spacing={2} sx={{ mt: 4, px: 8 }}>
             {navlinks.map((navlink, index) => (
               <Grid key={index} item xs={6}>
