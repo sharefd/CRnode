@@ -1,66 +1,54 @@
-import { observer } from 'mobx-react';
-import ActionBar from '../actions/ActionBar';
-import { useState } from 'react';
-import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import { Typography, Box, Dialog, DialogContent, IconButton, Button, CircularProgress } from '@mui/material';
-import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import { deleteArticle, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { observer } from 'mobx-react';
+import moment from 'moment';
+import { useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useMutation } from 'react-query';
-import {
-  AccessTime as AccessTimeIcon,
-  ChevronLeft,
-  ChevronRight,
-  ContentCopy as ContentCopyIcon,
-  Groups as GroupsIcon,
-  Https as HttpsIcon,
-  Link as LinkIcon
-} from '@mui/icons-material';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import ActionBar from '../actions/ActionBar';
 import { convertTo24Hour } from '@/utils/dates';
+import EditArticleModal from '../actions/EditArticleModal';
+import NewArticle from '../actions/NewArticle';
+import EventsDialog from './EventsDialog';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
 const BigCalendar = observer(() => {
   const user = userStore.user;
-  const [selected, setSelected] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState({});
+  const [selectedArticle, setSelectedArticle] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [openEditArticleModal, setOpenEditArticleModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [selectedEventIndex, setSelectedEventIndex] = useState(null);
 
-  const { allowedArticles, isLoading } = useAllowedArticles();
+  const { allowedArticles, permissions, isLoading, refetch } = useAllowedArticles();
 
   const events = allowedArticles.map(article => {
     const startTime24 = convertTo24Hour(article.time);
+    const startDate = new Date(`${article.dateString}T${startTime24}`);
+
+    const duration = article.duration || 60;
+    const endDate = new Date(startDate);
+    endDate.setMinutes(startDate.getMinutes() + duration);
+    const endTime24 = `${endDate.getHours().toString().padStart(2, '0')}:${endDate
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}`;
+
     return {
       title: article.purpose,
       start: new Date(`${article.dateString}T${startTime24}`),
-      end: new Date(`${article.dateString}T${startTime24}`),
+      end: new Date(`${article.dateString}T${endTime24}`),
       allDay: false,
       resource: article
     };
   });
-
-  console.log(events);
-
-  const handleClose = () => {
-    setOpen(false);
-    setCurrentEventIndex(0);
-  };
-
-  const handleNextEvent = () => {
-    setCurrentEventIndex(prevIndex => Math.min(prevIndex + 1, events.length - 1));
-  };
-
-  const handlePrevEvent = () => {
-    setCurrentEventIndex(prevIndex => Math.max(prevIndex - 1, 0));
-  };
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
@@ -109,22 +97,51 @@ const BigCalendar = observer(() => {
     }));
   };
 
-  const toggleNewArticleModal = () => {
-    setOpenNewArticleModal(!openNewArticleModal);
+  const handleEventClick = selectedEvent => {
+    const article = selectedEvent.resource;
+    setSelectedArticle(article);
+    setSelectedDate(selectedEvent.start);
+    const index = events.findIndex(event => event.id === selectedEvent.id);
+    setSelectedEventIndex(index);
+    setOpen(true);
   };
 
-  const handleCopyToClipboard = text => {
-    navigator.clipboard.writeText(text).then(
-      function () {
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 600); // Reset the state after 2 seconds
-        console.log('Link copied to clipboard');
-      },
-      function (err) {
-        console.error('Failed to copy link to clipboard', err);
+  const getVisibleHours = events => {
+    const visibleHours = [];
+    events.forEach(event => {
+      const startHour = event.start.getHours();
+      const endHour = event.end.getHours();
+      for (let i = startHour; i < endHour; i++) {
+        if (!visibleHours.includes(i)) {
+          visibleHours.push(i);
+        }
       }
-    );
+    });
+    return visibleHours.sort((a, b) => a - b);
   };
+
+  const visibleHours = getVisibleHours(events);
+
+  const getMaxHour = () => {
+    const maxHour = (visibleHours[visibleHours.length - 1] || 0) + 1;
+    const max = new Date(2022, 0, 1, maxHour > 23 ? 23 : maxHour);
+    return max;
+  };
+
+  const filterEventsForDay = dateString => {
+    const eventDate = new Date(dateString);
+    const filtered = events.filter(event => {
+      return (
+        eventDate.getDate() === event.start.getDate() &&
+        eventDate.getMonth() === event.start.getMonth() &&
+        eventDate.getFullYear() === event.start.getFullYear()
+      );
+    });
+
+    setFilteredEvents(filtered);
+    return filtered;
+  };
+
   if (isLoading) {
     return <CircularProgress />;
   }
@@ -134,7 +151,7 @@ const BigCalendar = observer(() => {
         user={user}
         selectedPurposes={selectedPurposes}
         handlePurposeChange={handlePurposeChange}
-        toggleNewArticleModal={toggleNewArticleModal}
+        toggleNewArticleModal={() => setOpenNewArticleModal(!openNewArticleModal)}
       />
       <Box px={2}>
         <Calendar
@@ -142,90 +159,33 @@ const BigCalendar = observer(() => {
           events={events}
           startAccessor='start'
           endAccessor='end'
-          style={{ height: 500 }}
+          timeslots={1}
+          style={{ height: 600 }}
+          min={new Date(2022, 0, 1, visibleHours[0] || 0)}
+          max={getMaxHour()}
           onSelectEvent={event => {
-            const article = event.resource;
-            setSelectedArticle(article);
-            if (events.length === 0) return;
-            setOpen(true);
+            const filteredEvents = filterEventsForDay(event.start);
+            if (filteredEvents.length === 0) return;
+            handleEventClick(event);
           }}
         />
       </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent className='modal-title' sx={{ padding: '20px' }}>
-          <Typography variant='h6' sx={{ marginBottom: '25px' }}>
-            {selectedArticle.title}
-          </Typography>
-          <Box className='modal-info' sx={{ marginBottom: '30px' }}>
-            <p className='modal-purpose'>
-              <AccessTimeIcon />
-              {'\u00A0'}
-              {'\u00A0'}
-              {'\u00A0'}
-              {selectedArticle.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'}
-              {selectedArticle.time}
-            </p>
-
-            <p className='modal-purpose'>
-              {purposeIcons[selectedArticle.purpose]} {'\u00A0'} {'\u00A0'} {selectedArticle.purpose || 'None'}
-              {isCopied && <div className='copied-message'>Copied</div>}
-            </p>
-            <p className='modal-purpose'>
-              <LinkIcon /> {'\u00A0'} {'\u00A0'}
-              <Button
-                variant='outlined'
-                size='small'
-                sx={{
-                  textTransform: 'none',
-                  color: 'black',
-                  borderColor: 'black',
-                  margin: '5px',
-                  '&:hover': {
-                    backgroundColor: '#07A24A',
-                    color: 'white',
-                    borderColor: 'black'
-                  }
-                }}
-                onClick={() => handleCopyToClipboard(selectedArticle.event_link)}>
-                <ContentCopyIcon /> {'\u00A0'} Copy Link
-              </Button>
-              {'\u00A0'} {'\u00A0'}
-              <Button
-                variant='outlined'
-                onClick={() => window.open(selectedArticle.event_link, '_blank')}
-                size='small'
-                sx={{
-                  textTransform: 'none',
-                  color: 'black',
-                  borderColor: 'black',
-                  margin: '5px',
-                  '&:hover': { backgroundColor: '#1976d2', color: 'white', borderColor: 'black' }
-                }}>
-                <GroupsIcon /> {'\u00A0'} Join Meeting
-              </Button>
-            </p>
-            <p className='modal-purpose'>
-              <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {selectedArticle.meeting_id || 'None'} {'\u00A0'} |{' '}
-              {'\u00A0'} {'\u00A0'}
-              Passcode: {selectedArticle.passcode || 'None'}
-            </p>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
-              <ChevronLeft />
-            </IconButton>
-            <IconButton onClick={handleNextEvent} disabled={currentEventIndex === events.length - 1}>
-              {events.length > 1 && (
-                <Typography sx={{ fontSize: '14px', fontWeight: '900', color: 'black' }}>
-                  {`${currentEventIndex + 1}/${events.length}`}
-                </Typography>
-              )}
-
-              <ChevronRight />
-            </IconButton>
-          </Box>
-        </DialogContent>
-      </Dialog>
+      {filteredEvents.length > 0 && selectedDate && (
+        <EventsDialog open={open} setOpen={setOpen} events={filteredEvents} initialIndex={selectedEventIndex} />
+      )}
+      <NewArticle
+        open={openNewArticleModal}
+        onClose={() => setOpenNewArticleModal(!openNewArticleModal)}
+        permissions={permissions}
+        refetch={refetch}
+      />
+      <EditArticleModal
+        open={openEditArticleModal}
+        onClose={() => setOpenEditArticleModal(false)}
+        article={selectedArticle}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </div>
   );
 });
