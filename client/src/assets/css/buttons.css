@@ -224,6 +224,19 @@
   font-size: 0.7rem;
 }
 
+.event-purpose-badge {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  background-color: #f1f8ff;
+  padding: 8px;
+  padding-inline: 10px;
+  border: none;
+  border-color: #4285f4;
+  color: #4285f4;
+  font-size: 0.7rem;
+}
+
 .btn2 {
   --btn-height: 40px;
   --btn-font-size: 13px;

@@ -8,11 +8,11 @@ import { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useMutation } from 'react-query';
 import ActionBar from '../actions/ActionBar';
-import { convertTo24Hour } from '@/utils/dates';
 import EditArticleModal from '../actions/EditArticleModal';
 import NewArticle from '../actions/NewArticle';
 import EventsDialog from './EventsDialog';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { getVisibleHours, getMaxHour, formatArticlesToEvents } from '@/utils/calendar';
 
 const localizer = momentLocalizer(moment);
 
@@ -29,26 +29,7 @@ const BigCalendar = observer(() => {
 
   const { allowedArticles, permissions, isLoading, refetch } = useAllowedArticles();
 
-  const events = allowedArticles.map(article => {
-    const startTime24 = convertTo24Hour(article.time);
-    const startDate = new Date(`${article.dateString}T${startTime24}`);
-
-    const duration = article.duration || 60;
-    const endDate = new Date(startDate);
-    endDate.setMinutes(startDate.getMinutes() + duration);
-    const endTime24 = `${endDate.getHours().toString().padStart(2, '0')}:${endDate
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`;
-
-    return {
-      title: article.purpose,
-      start: new Date(`${article.dateString}T${startTime24}`),
-      end: new Date(`${article.dateString}T${endTime24}`),
-      allDay: false,
-      resource: article
-    };
-  });
+  const events = formatArticlesToEvents(allowedArticles);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
@@ -97,39 +78,9 @@ const BigCalendar = observer(() => {
     }));
   };
 
-  const handleEventClick = selectedEvent => {
-    const article = selectedEvent.resource;
-    setSelectedArticle(article);
-    setSelectedDate(selectedEvent.start);
-    const index = filteredEvents.findIndex(event => event.resource._id === selectedEvent.resource._id);
-    setSelectedEventIndex(index >= 0 ? index : 0);
-    setOpen(true);
-  };
-
-  const getVisibleHours = events => {
-    const visibleHours = [];
-    events.forEach(event => {
-      const startHour = event.start.getHours();
-      const endHour = event.end.getHours();
-      for (let i = startHour; i < endHour; i++) {
-        if (!visibleHours.includes(i)) {
-          visibleHours.push(i);
-        }
-      }
-    });
-    return visibleHours.sort((a, b) => a - b);
-  };
-
   const visibleHours = getVisibleHours(events);
 
-  const getMaxHour = () => {
-    const maxHour = (visibleHours[visibleHours.length - 1] || 0) + 1;
-    const max = new Date(2022, 0, 1, maxHour > 23 ? 23 : maxHour);
-    return max;
-  };
-
-  const filterEventsForDay = dateString => {
-    const eventDate = new Date(dateString);
+  const filterEventsForDay = eventDate => {
     const filtered = events.filter(event => {
       return (
         eventDate.getDate() === event.start.getDate() &&
@@ -138,7 +89,6 @@ const BigCalendar = observer(() => {
       );
     });
 
-    setFilteredEvents(filtered);
     return filtered;
   };
 
@@ -162,16 +112,30 @@ const BigCalendar = observer(() => {
           timeslots={1}
           style={{ height: 600 }}
           min={new Date(2022, 0, 1, visibleHours[0] || 0)}
-          max={getMaxHour()}
+          max={getMaxHour(visibleHours)}
           onSelectEvent={event => {
-            const filteredEvents = filterEventsForDay(event.start);
-            if (filteredEvents.length === 0) return;
-            handleEventClick(event);
+            const article = event.resource;
+            setSelectedDate(event.start);
+            const eventsForDay = filterEventsForDay(event.start);
+            setFilteredEvents(eventsForDay);
+            if (eventsForDay.length === 0) return;
+
+            const index = eventsForDay.findIndex(e => e.resource._id === article._id);
+            setSelectedEventIndex(index >= 0 ? index : 0);
+            setSelectedArticle(eventsForDay[index].resource);
+            setOpen(true);
           }}
         />
       </Box>
       {filteredEvents.length > 0 && selectedDate && (
-        <EventsDialog open={open} setOpen={setOpen} events={filteredEvents} initialIndex={selectedEventIndex} />
+        <EventsDialog
+          open={open}
+          setOpen={setOpen}
+          events={filteredEvents}
+          initialIndex={selectedEventIndex}
+          selectedArticle={selectedArticle}
+          setSelectedArticle={setSelectedArticle}
+        />
       )}
       <NewArticle
         open={openNewArticleModal}

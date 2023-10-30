@@ -125,10 +125,27 @@ p.MuiTypography-root {
 }
 
 .modal-purpose {
+  font-family: 'Lato';
   grid-column: span 2;
   color: #383d41;
-  font-style: italic;
   margin-bottom: 12px;
+}
+
+.modal-purpose-date {
+  font-weight: 700;
+  font-style: bold;
+}
+
+.modal-purpose-time {
+  font-weight: 700;
+  font-style: bold;
+}
+
+.modal-purpose-at {
+  grid-column: span 2;
+  color: #383d41;
+  font-weight: 700;
+  margin-inline: 6px;
 }
 
 .modal-info {

@@ -10,17 +10,13 @@ import {
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
+import { PURPOSE_CHOICES } from '@/utils/constants';
+import { formatDate } from '@/utils/dates';
 
-const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
+const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticle }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(initialIndex);
-  const currentEvent = events[currentEventIndex];
-  const [currentArticle, setCurrentArticle] = useState(currentEvent ? currentEvent.resource : null);
-
+  const [currentArticle, setCurrentArticle] = useState(selectedArticle);
   const [isCopied, setIsCopied] = useState(false);
-
-  useEffect(() => {
-    setCurrentEventIndex(initialIndex);
-  }, [initialIndex]);
 
   const handleCopyToClipboard = text => {
     navigator.clipboard.writeText(text).then(
@@ -59,21 +55,22 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
           {currentArticle.title}
         </Typography>
         <Box className='modal-info' sx={{ marginBottom: '30px' }}>
-          <p className='modal-purpose'>
-            <AccessTimeIcon />
-            {'\u00A0'}
-            {'\u00A0'}
-            {'\u00A0'}
-            {currentArticle.dateString} {'\u00A0'} |{'\u00A0'} {'\u00A0'}
-            {currentArticle.time}
-          </p>
+          <Box className='modal-purpose'>
+            <AccessTimeIcon sx={{ mr: 2 }} />
+            <span className='modal-purpose-date'>{formatDate(selectedArticle)}</span>
+            <span className='modal-purpose-at'>@</span>
+            <span className='modal-purpose-time'>{currentArticle.time}</span>
+          </Box>
 
-          <p className='modal-purpose'>
-            {purposeIcons[currentArticle.purpose]} {'\u00A0'} {'\u00A0'} {currentArticle.purpose || 'None'}
+          <Box className='modal-purpose'>
+            <Box className='event-purpose-badge'>
+              {purposeIcons[currentArticle.purpose]}
+              <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[currentArticle.purpose]}</span>
+            </Box>
             {isCopied && <div className='copied-message'>Copied</div>}
-          </p>
-          <p className='modal-purpose'>
-            <LinkIcon /> {'\u00A0'} {'\u00A0'}
+          </Box>
+          <Box className='modal-purpose'>
+            <LinkIcon sx={{ mr: 1 }} />
             <Button
               variant='outlined'
               size='small'
@@ -89,9 +86,8 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
                 }
               }}
               onClick={() => handleCopyToClipboard(currentArticle.event_link)}>
-              <ContentCopyIcon /> {'\u00A0'} Copy Link
+              <ContentCopyIcon sx={{ mr: 1 }} /> Copy Link
             </Button>
-            {'\u00A0'} {'\u00A0'}
             <Button
               variant='outlined'
               onClick={() => window.open(currentArticle.event_link, '_blank')}
@@ -103,14 +99,15 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex = 0 }) => {
                 margin: '5px',
                 '&:hover': { backgroundColor: '#1976d2', color: 'white', borderColor: 'black' }
               }}>
-              <GroupsIcon /> {'\u00A0'} Join Meeting
+              <GroupsIcon sx={{ mr: 1 }} /> Join Meeting
             </Button>
-          </p>
-          <p className='modal-purpose' style={{ marginBottom: 0 }}>
-            <HttpsIcon /> {'\u00A0'} {'\u00A0'} Meeting ID: {currentArticle.meeting_id || 'None'} {'\u00A0'} |{' '}
-            {'\u00A0'} {'\u00A0'}
-            Passcode: {currentArticle.passcode || 'None'}
-          </p>
+          </Box>
+          <Box className='modal-purpose' style={{ marginBottom: 0 }}>
+            <HttpsIcon sx={{ mr: 1 }} />
+            <span>Meeting ID: {currentArticle.meeting_id || 'None'}</span>
+            <span className='modal-purpose-at'>@</span>
+            <span>Passcode: {currentArticle.passcode || 'None'}</span>
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <IconButton onClick={handlePrevEvent} disabled={currentEventIndex === 0}>
