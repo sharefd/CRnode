@@ -12,13 +12,10 @@ import {
   Paper,
   TextField,
   Typography,
-  FormControlLabel,
-  Switch,
   Slider,
   ToggleButton,
   ToggleButtonGroup,
-  Box,
-  Input
+  Box
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -43,21 +40,19 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     additional_details: '',
     location: '',
     virtual: true, // Added toggle state
-    duration: '',  
+    duration: ''
   });
 
   const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
-    
-  const [eventDuration, setEventDuration] = useState(30); // Initial duration: 30 minutes
-    
-  const handleDurationChange = (e) => {
-  setArticle({
-    ...article,
-    duration: e.target.value, // Update the duration property
-  });
-};
 
-    
+  const [eventDuration, setEventDuration] = useState(30); // Initial duration: 30 minutes
+
+  const handleDurationChange = e => {
+    setArticle({
+      ...article,
+      duration: e.target.value // Update the duration property
+    });
+  };
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
@@ -67,30 +62,29 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     }
   });
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault();
 
-      let eventLink = article.event_link;
-      if (!eventLink.startsWith('https://')) {
-        eventLink = `https://${eventLink}`;
-      }
+    let eventLink = article.event_link;
+    if (!eventLink.startsWith('https://')) {
+      eventLink = `https://${eventLink}`;
+    }
 
-      const formattedTime = article.time.format('hh:mm A');
-      const payload = {
-        ...article,
-        time: formattedTime,
-        organizer: currentUser._id,
-        event_link: eventLink, // Update the event_link with the corrected URL
-      };
-
-      if (!payload.title) {
-        console.error('Title is required');
-        return;
-      }
-
-      createMutation.mutate(payload);
+    const formattedTime = article.time.format('hh:mm A');
+    const payload = {
+      ...article,
+      time: formattedTime,
+      organizer: currentUser._id,
+      event_link: eventLink // Update the event_link with the corrected URL
     };
 
+    if (!payload.title) {
+      console.error('Title is required');
+      return;
+    }
+
+    createMutation.mutate(payload);
+  };
 
   if (!currentUser || !allowedPurposes) {
     return <LoadingSpinner />;
@@ -198,7 +192,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                       </Grid>
                       <Grid item xs={7}>
                         <Slider
-                          value={article.duration}
+                          value={article.duration || 60}
                           onChange={(e, newValue) => setArticle({ ...article, duration: newValue })}
                           step={15}
                           min={15}
