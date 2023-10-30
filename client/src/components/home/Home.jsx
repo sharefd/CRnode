@@ -54,7 +54,14 @@ const Home = observer(() => {
             {navlinks.map((navlink, index) => (
               <Grid key={index} item xs={6}>
                 <Link href={navlink.endpoint} style={{ textDecoration: 'none' }}>
-                  <Paper elevation={3} style={{ padding: '16px', textAlign: 'center' }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      padding: '16px',
+                      textAlign: 'center',
+                      transition: 'background-color 0.3s',
+                      '&:hover': { backgroundColor: '#EBF5FB' }
+                    }}>
                     <navlink.Icon fontSize='large' />
                     <Typography variant='subtitle1'>{navlink.label}</Typography>
                     <Typography variant='body2' style={{ marginTop: '8px' }}>
