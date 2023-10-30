@@ -151,7 +151,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <TextField
                   type='date'
                   fullWidth
@@ -160,7 +160,7 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <TimePicker
                   value={article.time}
                   onChange={newValue => {
