@@ -1,6 +1,5 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { createArticle } from '@/services/articles';
-import { fetchCanWritePermissions } from '@/services/permissions';
+import { createArticle, sortArticles } from '@/services/articles';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { AccessTime } from '@mui/icons-material';
@@ -24,7 +23,7 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
-const NewArticle = ({ open, onClose, allowedPurposes, refetch }) => {
+const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles }) => {
   const currentUser = userStore.user;
 
   const [article, setArticle] = useState({
@@ -45,6 +44,8 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch }) => {
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
       userStore.setArticles([...userStore.articles, newArticle]);
+      const newArticles = [...userStore.articles, newArticle];
+      setLocalArticles(sortArticles(newArticles));
       refetch();
       onClose();
     }
