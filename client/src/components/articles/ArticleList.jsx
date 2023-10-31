@@ -6,7 +6,7 @@ import { formatDateToReadable } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import EditArticleModal from './actions/EditArticleModal';
@@ -22,12 +22,18 @@ const ArticleList = observer(() => {
   const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
+  const [localArticles, setLocalArticles] = useState([]);
 
   const user = userStore.user;
 
   const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user._id);
 
-  const sortedArticles = sortArticles(allowedArticles);
+  useEffect(() => {
+    if (isLoading) return;
+
+    const sortedArticles = sortArticles(allowedArticles);
+    setLocalArticles(sortedArticles);
+  }, [isLoading, allowedArticles]);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
@@ -94,8 +100,8 @@ const ArticleList = observer(() => {
   }
 
   const filteredArticles = selectedPurposes.includes('Show All')
-    ? sortedArticles.filter(isArticleAfterCurrentDate)
-    : sortedArticles.filter(article => selectedPurposes.includes(article.purpose)).filter(isArticleAfterCurrentDate);
+    ? localArticles.filter(isArticleAfterCurrentDate)
+    : localArticles.filter(article => selectedPurposes.includes(article.purpose)).filter(isArticleAfterCurrentDate);
 
   return (
     <div>
@@ -203,13 +209,14 @@ const ArticleList = observer(() => {
             })}
           </Grid>
           <Grid item xs={6} md={5} style={{ position: 'relative', marginTop: '-20px' }}>
-            <ArticleCalendar articles={sortedArticles} />
+            <ArticleCalendar articles={localArticles} />
           </Grid>
         </Grid>
       </Box>
       <NewArticle
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
+        setLocalArticles={setLocalArticles}
         allowedPurposes={canWritePurposes.map(p => p.name)}
         refetch={refetchArticles}
       />
