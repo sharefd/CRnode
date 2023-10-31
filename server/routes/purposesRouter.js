@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { jwtMiddleware } = require('../middleware/permissions');
-const Permission = require('../models/Permission');
 const Purpose = require('../models/Purpose');
 const User = require('../models/User'); // Assume you have a User model
 
@@ -30,22 +29,27 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+router.get('/:purposeId', async (req, res) => {
+  try {
+    const purposeId = req.params.purposeId;
+    const purpose = await Purpose.findById(purposeId).populate('canReadMembers').populate('canWriteMembers');
+
+    res.status(200).json(purpose);
+  } catch (err) {
+    console.error('There was an error fetching the purpose:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.post('/new', jwtMiddleware, async (req, res) => {
   try {
     const { userId, purpose } = req.body;
-    const newPurpose = new Purpose({ purpose });
+    purpose.canReadMembers.push(userId.toString());
+    purpose.canWriteMembers.push(userId.toString());
+    purpose.creator = userId;
+
+    const newPurpose = new Purpose(purpose);
     await newPurpose.save();
-
-    const users = await User.find();
-
-    const newPermissions = users.map(user => ({
-      userId: user._id,
-      purpose: newPurpose._id,
-      canRead: user._id.toString() === userId.toString(),
-      canWrite: user._id.toString() === userId.toString()
-    }));
-
-    await Permission.insertMany(newPermissions);
 
     res.status(201).json(newPurpose);
   } catch (err) {
@@ -104,6 +108,27 @@ router.put('/update/:id', jwtMiddleware, async (req, res) => {
     res.status(200).json(updatedPurpose);
   } catch (err) {
     console.error('Error updating purpose:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.delete('/:purposeId/user/:userId', jwtMiddleware, async (req, res) => {
+  try {
+    const { purposeId, userId } = req.params;
+    const purpose = await Purpose.findById(purposeId);
+
+    if (!purpose) {
+      return res.status(404).send('Purpose not found');
+    }
+
+    purpose.canReadMembers = purpose.canReadMembers.filter(id => id.toString() !== userId);
+    purpose.canWriteMembers = purpose.canWriteMembers.filter(id => id.toString() !== userId);
+
+    await purpose.save();
+
+    res.status(200).json(purpose);
+  } catch (err) {
+    console.error('Error deleting user from purpose:', err);
     res.status(500).send('Internal Server Error');
   }
 });

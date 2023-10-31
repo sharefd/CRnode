@@ -17,14 +17,15 @@ import {
   DialogTitle,
   LinearProgress
 } from '@mui/material';
-import { createPurpose, updatePurpose } from '@/services/purposes';
+import { updatePurpose } from '@/services/purposes';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
-
-import MemberList from './MemberList';
 import NewPurpose from './NewPurpose';
+import EditMemberList from './EditMemberList';
 
 const PurposesList = observer(() => {
   const [open, setOpen] = useState(false);
+  const [openMemberList, setOpenMemberList] = useState(false);
+
   const [openNewPurpose, setOpenNewPurpose] = useState(false);
 
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
@@ -37,6 +38,11 @@ const PurposesList = observer(() => {
     setOpen(true);
   };
 
+  const handleOpenMemberList = purpose => {
+    setSelectedPurpose(purpose);
+    setOpenMemberList(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
     setNewPurpose('');
@@ -44,11 +50,7 @@ const PurposesList = observer(() => {
   };
 
   const handleSave = async () => {
-    if (selectedPurpose) {
-      await updatePurpose({ ...selectedPurpose, name: newPurpose });
-    } else {
-      await createPurpose(user._id, newPurpose);
-    }
+    await updatePurpose(selectedPurpose._id.toString(), { ...selectedPurpose, newPurpose });
     await refetchPurposes();
     handleClose();
   };
@@ -79,8 +81,10 @@ const PurposesList = observer(() => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Purpose Name</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
+              <TableCell>Edit Members</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,11 +92,17 @@ const PurposesList = observer(() => {
               purposes.map(purpose => (
                 <TableRow key={purpose._id}>
                   <TableCell>{purpose.name}</TableCell>
+                  <TableCell>{purpose.description}</TableCell>
+
                   <TableCell>
                     <Button variant='outlined' color='primary' onClick={() => handleOpen(purpose)}>
                       Edit
                     </Button>
-                    {/* add more actions like Delete, Add Members, etc. */}
+                  </TableCell>
+                  <TableCell>
+                    <Button variant='outlined' color='secondary' onClick={() => handleOpenMemberList(purpose)}>
+                      Edit Members
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -120,7 +130,6 @@ const PurposesList = observer(() => {
             value={(selectedPurpose && selectedPurpose.description) || ''}
             onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
           />
-          {selectedPurpose && <MemberList selectedPurpose={selectedPurpose} />}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>
@@ -134,6 +143,13 @@ const PurposesList = observer(() => {
       <NewPurpose
         open={openNewPurpose}
         handleClose={() => setOpenNewPurpose(false)}
+        refetchPurposes={refetchPurposes}
+        user={user}
+      />
+      <EditMemberList
+        open={openMemberList}
+        handleClose={() => setOpenMemberList(false)}
+        selectedPurpose={selectedPurpose}
         refetchPurposes={refetchPurposes}
         user={user}
       />

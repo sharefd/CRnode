@@ -11,26 +11,31 @@ import {
   Chip,
   LinearProgress
 } from '@mui/material';
-import { createPurpose } from '@/services/purposes';
+import { updatePurpose } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
+import MemberList from './MemberList';
 
-const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
-  const [newPurpose, setNewPurpose] = useState({ name: '', description: '', canReadMembers: [], canWriteMembers: [] });
+const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
+  const [newMembers, setNewMembers] = useState({ canReadMembers: [], canWriteMembers: [] });
 
   const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
 
   const handleAddMember = (type, newValue) => {
-    setNewPurpose(prevState => ({
+    setNewMembers(prevState => ({
       ...prevState,
       [type]: newValue.map(user => user._id)
     }));
   };
 
   const handleSave = async () => {
-    console.log(newPurpose);
-    await createPurpose(user._id, newPurpose);
-    await refetchPurposes();
+    const updatedPurpose = {
+      ...selectedPurpose,
+      canReadMembers: [...selectedPurpose.canReadMembers, ...newMembers.canReadMembers],
+      canWriteMembers: [...selectedPurpose.canWriteMembers, ...newMembers.canWriteMembers]
+    };
+    await updatePurpose(selectedPurpose._id.toString(), updatedPurpose);
+    refetchPurposes();
     handleClose();
   };
 
@@ -38,31 +43,20 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
     return <LinearProgress />;
   }
 
-  const users = data.filter(u => u._id !== user._id);
+  const canReadUsers = data.filter(u => !selectedPurpose.canReadMembers.includes(u._id));
+  const canWriteUsers = data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id));
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create New Purpose</DialogTitle>
+      <DialogTitle sx={{ fontStyle: 'italic', fontFamily: 'Inter' }}>
+        {selectedPurpose && selectedPurpose.name}
+      </DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin='dense'
-          label='Purpose Name'
-          fullWidth
-          onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
-        />
-        <TextField
-          autoFocus
-          margin='dense'
-          label='Purpose Description'
-          fullWidth
-          onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
-        />
         <Stack sx={{ my: 2 }} spacing={3}>
           <Autocomplete
             multiple
             id='canReadMembers'
-            options={users || []}
+            options={canReadUsers || []}
             getOptionLabel={option => `${option.username} (${option.email})`}
             filterOptions={(options, { inputValue }) => {
               if (inputValue.length >= 2) {
@@ -86,7 +80,7 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
           <Autocomplete
             multiple
             id='canWriteMembers'
-            options={users || []}
+            options={canWriteUsers || []}
             getOptionLabel={option => `${option.username} (${option.email})`}
             filterOptions={(options, { inputValue }) => {
               if (inputValue.length >= 2) {
@@ -107,6 +101,7 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
             noOptionsText='Type more to see options'
             renderInput={params => <TextField {...params} label='Can Write Members' />}
           />
+          <MemberList selectedPurpose={selectedPurpose} />
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -121,4 +116,4 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
   );
 };
 
-export default NewPurpose;
+export default EditMemberList;
