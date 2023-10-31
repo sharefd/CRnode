@@ -26,7 +26,7 @@ const ArticleList = observer(() => {
 
   const user = userStore.user;
 
-  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user?._id);
+  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions();
 
   useEffect(() => {
     if (isLoading) return;

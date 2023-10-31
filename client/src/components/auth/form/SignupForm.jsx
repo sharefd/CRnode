@@ -1,4 +1,3 @@
-import { initPermissions } from '@/services/purposes';
 import { createUser } from '@/services/users';
 import userStore from '@/stores/userStore';
 import { CircularProgress, Grid } from '@mui/material';
@@ -32,9 +31,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     try {
       const user = await createUser(credentials);
 
-      userStore.setUser(user);
       console.log(user);
-      await initPermissions(user._id);
 
       setTimeout(() => {
         setIsLoading(false);
