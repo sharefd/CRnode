@@ -2,7 +2,7 @@
 import { makeAutoObservable } from 'mobx';
 
 class ResourceStore {
-  permissions = [];
+  purposes = [];
   requests = [];
   users = [];
 
@@ -10,8 +10,8 @@ class ResourceStore {
     makeAutoObservable(this);
   }
 
-  setPermissions(permissions) {
-    this.permissions = permissions;
+  setPurposes(purposes) {
+    this.purposes = purposes;
   }
 
   setRequests(requests) {

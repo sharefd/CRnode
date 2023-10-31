@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchArticles } from '@/services/articles';
+import resourceStore from '@/stores/resourceStore';
 
 const useArticlePermissions = userId => {
   const [canWritePurposes, setCanWritePurposes] = useState([]);
@@ -25,6 +26,8 @@ const useArticlePermissions = userId => {
     if (isLoading) {
       return;
     }
+
+    resourceStore.setPurposes(data);
 
     const filterData = async () => {
       const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(userId.toString())) || [];

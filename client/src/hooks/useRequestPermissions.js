@@ -4,14 +4,17 @@ import { useQuery } from 'react-query';
 import { fetchRequests } from '@/services/requests';
 
 const useRequestPermissions = userId => {
-  const [canWritePurposes, setCanWritePurposes] = useState([]);
+  const [canWritePurposes, setCanWritePurposes] = useState(null);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
   const [allowedRequests, setAllowedRequests] = useState([]);
 
-  const queryKey = userId ? ['userPurposes', userId] : 'purposes';
-  const fetchFunction = () => fetchPurposes(userId);
-
-  const { data, isLoading, isError, error, refetch: refetchPurposes } = useQuery(queryKey, fetchFunction);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch: refetchPurposes
+  } = useQuery(['userPurposes', userId], () => fetchPurposes(userId));
 
   const {
     data: requests,
@@ -29,6 +32,7 @@ const useRequestPermissions = userId => {
     const filterData = async () => {
       const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(userId.toString())) || [];
       setCanWritePurposes(canWrite);
+      console.log(canWrite);
 
       const canRead = data?.filter(purpose => purpose.canReadMembers.includes(userId.toString())) || [];
       setCanReadPurposes(canRead);
@@ -40,22 +44,22 @@ const useRequestPermissions = userId => {
   }, [isLoading]);
 
   useEffect(() => {
-    if (isRequestsLoading || !canReadPurposes.length) {
+    if (isRequestsLoading || !canWritePurposes) {
       return;
     }
 
-    const allowedPurposes = canReadPurposes.map(p => p.name);
+    const allowedPurposes = canWritePurposes.map(p => p.name);
     const canWriteRequests = requests ? requests.filter(request => allowedPurposes.includes(request.purpose)) : [];
 
     setAllowedRequests(canWriteRequests);
-  }, [isRequestsLoading, canReadPurposes]);
+  }, [isRequestsLoading, canWritePurposes]);
 
   return {
     purposes: data,
     canWritePurposes,
     canReadPurposes,
     allowedRequests,
-    isLoading,
+    isLoading: isRequestsLoading || isLoading,
     refetch,
     refetchPurposes,
     isError,

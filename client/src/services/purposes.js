@@ -68,3 +68,11 @@ export const initPermissions = async (userId, purposes) => {
     console.error('Error updating permission:', error);
   }
 };
+
+export const getCanReadPermissions = (purposes, userId) => {
+  return purposes.filter(purpose => purpose.canReadMembers.includes(userId));
+};
+
+export const getCanWritePermissions = (purposes, userId) => {
+  return purposes.filter(purpose => purpose.canWriteMembers.includes(userId));
+};
