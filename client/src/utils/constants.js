@@ -1,5 +1,4 @@
-import { EventAvailable, History, Key, ManageSearch, MedicalServices, MoveToInbox } from '@mui/icons-material';
-import PurposeIcon from '@/assets/images/purpose.svg';
+import { EventAvailable, History, Key, ManageSearch } from '@mui/icons-material';
 import { FaBookMedical } from 'react-icons/fa';
 
 export const PURPOSE_CHOICES = {

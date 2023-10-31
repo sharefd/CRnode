@@ -16,21 +16,19 @@ import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
 
 const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
-  const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
-  const [canReadMembers, setCanReadMembers] = useState([]);
-  const [canWriteMembers, setCanWriteMembers] = useState([]);
+  const [newPurpose, setNewPurpose] = useState({ name: '', description: '', canReadMembers: [], canWriteMembers: [] });
 
-  const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
+  const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
 
   const handleAddMember = (type, newValue) => {
-    if (type === 'canReadMembers') {
-      setCanReadMembers([...canReadMembers, ...newValue]);
-    } else {
-      setCanWriteMembers([...canWriteMembers, ...newValue]);
-    }
+    setNewPurpose(prevState => ({
+      ...prevState,
+      [type]: newValue.map(user => user._id)
+    }));
   };
 
   const handleSave = async () => {
+    console.log(newPurpose);
     await createPurpose(user._id, newPurpose);
     await refetchPurposes();
     handleClose();
@@ -39,6 +37,8 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
   if (isLoadingUsers) {
     return <LinearProgress />;
   }
+
+  const users = data.filter(u => u._id !== user._id);
 
   return (
     <Dialog open={open} onClose={handleClose}>
