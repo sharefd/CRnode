@@ -5,9 +5,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { PURPOSE_CHOICES } from '../../../utils/constants';
 
-const EditArticleModal = ({ open, onClose, article, onSave, onDelete, setLocalArticles }) => {
+const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPurposes, setLocalArticles }) => {
   const [editedArticle, setEditedArticle] = useState(article);
 
   useEffect(() => {
@@ -68,9 +67,9 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete, setLocalAr
                   fullWidth
                   value={editedArticle.purpose}
                   onChange={e => setEditedArticle({ ...editedArticle, purpose: e.target.value })}>
-                  {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                    <MenuItem key={index} value={key}>
-                      {PURPOSE_CHOICES[key]}
+                  {allowedPurposes.map((purpose, index) => (
+                    <MenuItem key={index} value={purpose.name}>
+                      {purpose.description}
                     </MenuItem>
                   ))}
                 </TextField>

@@ -1,4 +1,3 @@
-import { PURPOSE_CHOICES } from '@/utils/constants';
 import { Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 

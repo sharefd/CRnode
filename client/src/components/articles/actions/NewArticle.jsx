@@ -1,7 +1,6 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { createArticle, sortArticles } from '@/services/articles';
 import userStore from '@/stores/userStore';
-import { PURPOSE_CHOICES } from '@/utils/constants';
 import { AccessTime } from '@mui/icons-material';
 import {
   Button,

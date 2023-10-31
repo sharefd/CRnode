@@ -1,7 +1,6 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
-import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDateToReadable } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
@@ -190,8 +189,8 @@ const ArticleList = observer(() => {
                         {/* BEGINNING OF card footer */}
                         <Box sx={{ mt: 2 }}>
                           <Box className='purpose-badge'>
-                            {purposeIcons[article.purpose]}
-                            <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[article.purpose]}</span>
+                            {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
+                            <span style={{ fontSize: '13px' }}>{article.purpose}</span>
                           </Box>
                           <button
                             className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
@@ -225,6 +224,7 @@ const ArticleList = observer(() => {
         open={!!selectedArticle}
         onClose={() => setSelectedArticle(null)}
         setLocalArticles={setLocalArticles}
+        allowedPurposes={canWritePurposes}
         article={selectedArticle}
         onSave={handleSave}
         onDelete={handleDelete}

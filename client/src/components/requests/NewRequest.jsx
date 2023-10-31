@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userStore from '@/stores/userStore';
-import { PURPOSE_CHOICES, YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
+import { YEAR_OF_STUDY_CHOICES } from '@/utils/constants';
 import { CheckCircle } from '@mui/icons-material';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -27,13 +27,7 @@ const NewRequest = observer(() => {
 
   const { data: requests, isLoading: isQueryLoading, refetch } = useQuery('requests', fetchRequests);
 
-  let purposePermissions = {};
-
-  if (user && user._id) {
-    purposePermissions = useArticlePermissions(user._id);
-  }
-
-  const { purposes, isLoading: isPurposesLoading, canReadPurposes, canWritePurposes } = purposePermissions;
+  const { purposes, isLoading: isPurposesLoading, canReadPurposes, canWritePurposes } = useArticlePermissions();
 
   const handleFeedbackSubmit = async currentArticle => {
     try {
@@ -136,12 +130,15 @@ const NewRequest = observer(() => {
                 fullWidth
                 value={purpose}
                 onChange={e => setPurpose(e.target.value)}>
-                {Object.keys(PURPOSE_CHOICES).map((key, index) => (
-                  <MenuItem key={index} value={key} disabled={isPurposeAllowed(key) || isRequestPending(key)}>
-                    {PURPOSE_CHOICES[key]}
-                    {isPurposeAllowed(key) ? (
+                {purposes.map((purpose, index) => (
+                  <MenuItem
+                    key={index}
+                    value={purpose.description}
+                    disabled={isPurposeAllowed(purpose.name) || isRequestPending(purpose.name)}>
+                    {purpose.description}
+                    {isPurposeAllowed(purpose.name) ? (
                       <CheckCircle style={{ color: 'green', marginLeft: '10px' }} />
-                    ) : isRequestPending(key) ? (
+                    ) : isRequestPending(purpose.name) ? (
                       <ErrorOutlineIcon style={{ color: 'goldenrod', marginLeft: '10px' }} />
                     ) : null}
                   </MenuItem>

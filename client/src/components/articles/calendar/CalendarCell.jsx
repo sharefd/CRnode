@@ -7,7 +7,6 @@ import HttpsIcon from '@mui/icons-material/Https';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { formatDate } from '@/utils/dates';
-import { PURPOSE_CHOICES } from '@/utils/constants';
 
 import { purposeIcons } from '@/components/ui/PurposeIcons';
 
@@ -115,8 +114,8 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
           </Typography>
           <Box className='modal-purpose'>
             <Box className='event-purpose-badge'>
-              {purposeIcons[article.purpose]}
-              <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[article.purpose]}</span>
+              {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
+              <span style={{ fontSize: '13px' }}>{article.purpose}</span>
             </Box>
           </Box>
           <Box className='modal-info'>

@@ -10,7 +10,6 @@ import {
 } from '@mui/icons-material';
 import { useState } from 'react';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
-import { PURPOSE_CHOICES } from '@/utils/constants';
 import { formatDate } from '@/utils/dates';
 
 const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticle }) => {
@@ -64,8 +63,8 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticl
 
           <Box className='modal-purpose'>
             <Box className='event-purpose-badge'>
-              {purposeIcons[currentArticle.purpose]}
-              <span style={{ fontSize: '13px' }}>{PURPOSE_CHOICES[currentArticle.purpose]}</span>
+              {purposeIcons[currentArticle.purpose] || purposeIcons.DEFAULT}
+              <span style={{ fontSize: '13px' }}>{currentArticle.purpose}</span>
             </Box>
             {isCopied && <div className='copied-message'>Copied</div>}
           </Box>

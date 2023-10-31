@@ -1,13 +1,5 @@
 import { EventAvailable, History, Key, ManageSearch, PeopleAlt } from '@mui/icons-material';
 
-export const PURPOSE_CHOICES = {
-  OM1: 'OM Half-day',
-  UOFTAMR: 'UofT Aerospace',
-  MACIMAHD1: 'McMaster IM PGY-1 AHD',
-  MACIMAHD2: 'McMaster IM PGY-2 AHD',
-  MACIMAHD3: 'McMaster IM PGY-3 AHD'
-};
-
 export const UNIVERSITY_CHOICES = [
   { value: '', label: 'Select University' },
   { value: 'McMaster', label: 'McMaster University' },
@@ -17,12 +9,6 @@ export const UNIVERSITY_CHOICES = [
   { value: 'Queens', label: "Queen's University" },
   { value: 'Other', label: 'Other' }
 ];
-
-export const initialPermissions = Object.keys(PURPOSE_CHOICES).map(purpose => ({
-  purpose,
-  canRead: false,
-  canWrite: false
-}));
 
 export const YEAR_OF_STUDY_CHOICES = [
   'PGY1',
