@@ -13,9 +13,9 @@ router.get('/', jwtMiddleware, async (req, res) => {
     const token = authHeader && authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!decoded.isAdmin) {
-      return res.status(403).send('Access forbidden: Only admins can access this endpoint');
-    }
+    // if (!decoded.isAdmin) {
+    //   return res.status(403).send('Access forbidden: Only admins can access this endpoint');
+    // }
 
     const users = await User.find().select('-password');
     res.status(200).json(users);
