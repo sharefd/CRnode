@@ -14,26 +14,18 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+  LinearProgress
 } from '@mui/material';
-import userStore from '@/stores/userStore';
-import { createPurpose, fetchPurposes, updatePurpose } from '@/services/purposes';
+import { createPurpose, updatePurpose } from '@/services/purposes';
+import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 
 const PurposesList = observer(() => {
-  const user = userStore.user;
-
-  const [purposes, setPurposes] = useState([]);
   const [open, setOpen] = useState(false);
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchPurposes();
-      setPurposes(data);
-    };
-    fetchData();
-  }, []);
+  const { user, purposes, isLoading, userLoading, refetchPurposes } = useSettingsPermissions();
 
   const handleOpen = (purpose = null) => {
     setSelectedPurpose(purpose);
@@ -52,10 +44,15 @@ const PurposesList = observer(() => {
     } else {
       await createPurpose(user._id, newPurpose);
     }
+    await refetchPurposes();
     handleClose();
-    const updatedPurposes = await fetchPurposes();
-    setPurposes(updatedPurposes);
   };
+
+  if (userLoading || isLoading) {
+    return <LinearProgress />;
+  }
+
+  console.log(selectedPurpose);
 
   return (
     <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
@@ -84,17 +81,18 @@ const PurposesList = observer(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {purposes.map(purpose => (
-              <TableRow key={purpose._id}>
-                <TableCell>{purpose.name}</TableCell>
-                <TableCell>
-                  <Button variant='outlined' color='primary' onClick={() => handleOpen(purpose)}>
-                    Edit
-                  </Button>
-                  {/* Add more actions like Delete, Add Members, etc. */}
-                </TableCell>
-              </TableRow>
-            ))}
+            {purposes &&
+              purposes.map(purpose => (
+                <TableRow key={purpose._id}>
+                  <TableCell>{purpose.name}</TableCell>
+                  <TableCell>
+                    <Button variant='outlined' color='primary' onClick={() => handleOpen(purpose)}>
+                      Edit
+                    </Button>
+                    {/* Add more actions like Delete, Add Members, etc. */}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -134,11 +132,13 @@ const PurposesList = observer(() => {
               </TableHead>
               <TableBody>
                 {selectedPurpose &&
-                  selectedPurpose.canReadMembers.map((memberId, index) => (
+                  selectedPurpose.canReadMembers.map((member, index) => (
                     <TableRow key={index}>
-                      <TableCell>{memberId}</TableCell>
+                      <TableCell>{member.username}</TableCell>
                       <TableCell>Yes</TableCell>
-                      <TableCell>{selectedPurpose.canWriteMembers.includes(memberId) ? 'Yes' : 'No'}</TableCell>
+                      <TableCell>
+                        {selectedPurpose.canWriteMembers.find(m => m._id === member._id.toString()) ? 'Yes' : 'No'}
+                      </TableCell>
                       <TableCell>
                         <Button variant='outlined' color='primary' onClick={() => handleEditMembers(selectedPurpose)}>
                           Edit
