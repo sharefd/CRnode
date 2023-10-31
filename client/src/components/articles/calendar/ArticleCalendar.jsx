@@ -11,9 +11,8 @@ const ArticleCalendar = ({ articles }) => {
   const changeMonth = offset => {
     const newDate = new Date(date);
     newDate.setHours(0, 0, 0, 0);
-
+    newDate.setDate(1);
     newDate.setMonth(newDate.getMonth() + offset);
-
     setDate(newDate);
   };
 
@@ -21,7 +20,7 @@ const ArticleCalendar = ({ articles }) => {
     const newDate = new Date();
     newDate.setHours(0, 0, 0, 0);
     setDate(newDate);
-    setSelected(false); // Clear the selected date
+    setSelected(false);
   };
 
   const month = date.getMonth();
