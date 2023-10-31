@@ -57,39 +57,42 @@ export const formatDuration24Hour = article => {
   return `${startTime24}-${endTime24}`;
 };
 
-export const convertTo12Hour = time24 => {
-  const [hour, minute] = time24.split(':').map(Number);
-  let period = 'AM';
-  let hour12 = hour;
-
-  if (hour >= 12) {
-    period = 'PM';
-    if (hour > 12) {
-      hour12 = hour - 12;
-    }
-  } else if (hour === 0) {
-    hour12 = 12;
-  }
-
-  return `${hour12.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${period}`;
-};
-
 export const formatDuration12Hour = article => {
-  const startTime24 = convertTo24Hour(article.time);
-  const startDate = new Date(`${article.dateString}T${startTime24}`);
+  const startTime = convertStringToTime(article.time);
   const duration = article.duration || 60;
-  const endDate = new Date(startDate);
-  endDate.setMinutes(startDate.getMinutes() + duration);
+  const endTime = new Date(startTime.getTime() + duration * 60000);
 
-  const endTime24 = `${endDate.getHours().toString().padStart(2, '0')}:${endDate
-    .getMinutes()
-    .toString()
-    .padStart(2, '0')}`;
-
-  const startTime12 = convertTo12Hour(startTime24);
-  const endTime12 = convertTo12Hour(endTime24);
+  const startTime12 = convertTo12Hour(startTime);
+  const endTime12 = convertTo12Hour(endTime);
 
   return `${startTime12}-${endTime12}`;
+};
+
+const convertStringToTime = timeStr => {
+  const [time, meridiem] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':').map(Number);
+
+  const date = new Date();
+  date.setHours(meridiem === 'AM' ? hours : hours + 12);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
+  return date;
+};
+
+const convertTo12Hour = date => {
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const meridiem = hours >= 12 ? 'PM' : 'AM';
+
+  if (hours > 12) hours -= 12;
+  if (hours === 0) hours = 12;
+
+  const zeroPaddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${hours}:${zeroPaddedMinutes} ${meridiem}`;
 };
 
 export const formatDuration = duration => {

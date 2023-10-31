@@ -10,12 +10,17 @@ const ArticleCalendar = ({ articles }) => {
 
   const changeMonth = offset => {
     const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+
     newDate.setMonth(newDate.getMonth() + offset);
+
     setDate(newDate);
   };
 
   const goToToday = () => {
-    setDate(new Date()); // Set the date to the current date
+    const newDate = new Date();
+    newDate.setHours(0, 0, 0, 0);
+    setDate(newDate);
     setSelected(false); // Clear the selected date
   };
 
