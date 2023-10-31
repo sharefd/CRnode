@@ -22,9 +22,7 @@ router.get('/user/:userId', async (req, res) => {
     const userId = req.params.userId;
     const purposes = await Purpose.find({
       $or: [{ canReadMembers: userId }, { canWriteMembers: userId }]
-    })
-      .populate('canReadMembers')
-      .populate('canWriteMembers');
+    });
     res.status(200).json(purposes);
   } catch (err) {
     console.error('There was an error fetching purposes:', err);

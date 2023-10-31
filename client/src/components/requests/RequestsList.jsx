@@ -19,7 +19,6 @@ import {
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-import AccessDenied from '../admin/AccessDenied';
 import useRequestPermissions from '@/hooks/useRequestPermissions';
 
 const RequestsList = observer(() => {
@@ -30,7 +29,7 @@ const RequestsList = observer(() => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { allowedRequests, canWritePurposes, isLoading: isQueryLoading } = useRequestPermissions(user && user._id);
+  const { allowedRequests, purposes, canWritePurposes, isLoading: isQueryLoading } = useRequestPermissions(user._id);
 
   const deleteMutation = useMutation(deleteRequest, {
     onSuccess: (data, variables) => {
@@ -54,7 +53,7 @@ const RequestsList = observer(() => {
     },
     {
       onSuccess: (data, variables) => {
-        const updatedRequests = requests.map(request => {
+        const updatedRequests = allowedRequests.map(request => {
           if (request._id === variables.id) {
             return { ...request, status: variables.status, isApproving: false };
           }
@@ -67,12 +66,6 @@ const RequestsList = observer(() => {
       },
       onError: (error, variables) => {
         console.error('There was an error updating the request:', error);
-        const updatedRequests = requests.map(request => {
-          if (request._id === variables.id) {
-            return { ...request, isApproving: false };
-          }
-          return request;
-        });
         setIsLoading(false);
         handleClose();
       }
@@ -104,10 +97,6 @@ const RequestsList = observer(() => {
 
   if (!user || isQueryLoading || isLoading) {
     return <LinearProgress />;
-  } else {
-    if (canWritePurposes.length === 0) {
-      return <AccessDenied />;
-    }
   }
 
   return (

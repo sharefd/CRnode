@@ -32,6 +32,7 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
     const response = await loginUser(credentials.username, credentials.password);
     userStore.setUser(response.user);
     localStorage.setItem('CloudRoundsToken', response.token);
+    localStorage.setItem('CloudRoundsUser', JSON.stringify(response.user));
 
     const feedbacks = await fetchUserFeedbacks(response.user._id);
     userStore.setFeedbacks(feedbacks);

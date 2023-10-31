@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react';
 import {
   Paper,
@@ -20,8 +20,13 @@ import {
 import { createPurpose, updatePurpose } from '@/services/purposes';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 
+import MemberList from './MemberList';
+import NewPurpose from './NewPurpose';
+
 const PurposesList = observer(() => {
   const [open, setOpen] = useState(false);
+  const [openNewPurpose, setOpenNewPurpose] = useState(false);
+
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
 
@@ -52,8 +57,6 @@ const PurposesList = observer(() => {
     return <LinearProgress />;
   }
 
-  console.log(selectedPurpose);
-
   return (
     <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
       <TableContainer>
@@ -70,7 +73,7 @@ const PurposesList = observer(() => {
           }}>
           Purposes
         </Typography>
-        <Button variant='contained' color='primary' onClick={() => handleOpen()}>
+        <Button variant='contained' color='primary' onClick={() => setOpenNewPurpose(true)}>
           Create New Purpose
         </Button>
         <Table>
@@ -89,7 +92,7 @@ const PurposesList = observer(() => {
                     <Button variant='outlined' color='primary' onClick={() => handleOpen(purpose)}>
                       Edit
                     </Button>
-                    {/* Add more actions like Delete, Add Members, etc. */}
+                    {/* add more actions like Delete, Add Members, etc. */}
                   </TableCell>
                 </TableRow>
               ))}
@@ -97,9 +100,9 @@ const PurposesList = observer(() => {
         </Table>
       </TableContainer>
 
-      {/* Dialog for creating/editing purpose */}
+      {/* Dialog for editing purpose */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{selectedPurpose ? 'Edit Purpose' : 'Create New Purpose'}</DialogTitle>
+        <DialogTitle>Edit Purpose</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -117,38 +120,7 @@ const PurposesList = observer(() => {
             value={(selectedPurpose && selectedPurpose.description) || ''}
             onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
           />
-          <TableContainer>
-            <Typography variant='h5' align='left' sx={{ padding: '1rem', mb: 2 }}>
-              Members
-            </Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Member</TableCell>
-                  <TableCell>Can View</TableCell>
-                  <TableCell>Can Write</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {selectedPurpose &&
-                  selectedPurpose.canReadMembers.map((member, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{member.username}</TableCell>
-                      <TableCell>Yes</TableCell>
-                      <TableCell>
-                        {selectedPurpose.canWriteMembers.find(m => m._id === member._id.toString()) ? 'Yes' : 'No'}
-                      </TableCell>
-                      <TableCell>
-                        <Button variant='outlined' color='primary' onClick={() => handleEditMembers(selectedPurpose)}>
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {selectedPurpose && <MemberList selectedPurpose={selectedPurpose} />}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>
@@ -159,6 +131,12 @@ const PurposesList = observer(() => {
           </Button>
         </DialogActions>
       </Dialog>
+      <NewPurpose
+        open={openNewPurpose}
+        handleClose={() => setOpenNewPurpose(false)}
+        refetchPurposes={refetchPurposes}
+        user={user}
+      />
     </Paper>
   );
 });

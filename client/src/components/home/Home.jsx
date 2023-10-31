@@ -1,13 +1,14 @@
-import React from 'react';
-import { Box, Typography, Grid, Paper, Link } from '@mui/material';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { fetchPurposes, getCanReadPermissions, getCanWritePermissions } from '@/services/purposes';
 import userStore from '@/stores/userStore';
-import { observer } from 'mobx-react';
-import Key from '@mui/icons-material/VpnKey';
 import EventAvailable from '@mui/icons-material/EventAvailable';
 import History from '@mui/icons-material/History';
 import ManageSearch from '@mui/icons-material/ManageSearch';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import useArticlePermissions from '@/hooks/useArticlePermissions';
+import Key from '@mui/icons-material/VpnKey';
+import { Box, Grid, Link, Paper, Typography } from '@mui/material';
+import { observer } from 'mobx-react';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 const navlinks = [
   {
@@ -37,9 +38,29 @@ const navlinks = [
 ];
 
 const Home = observer(() => {
-  const user = userStore.user;
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
 
-  const { purposes, canReadPurposes, canWritePurposes, isLoading } = useArticlePermissions(userStore.user?._id || '');
+  const {
+    data: purposes,
+    isLoading,
+    refetch
+  } = useQuery(['userPurposes', user._id], () => fetchPurposes(user._id), {
+    enabled: !!user._id
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    userStore.setUser(user);
+
+    const canReadPurposes = getCanReadPermissions(purposes, user._id).map(p => p.name);
+    userStore.setCanRead(canReadPurposes);
+
+    const canWritePurposes = getCanWritePermissions(purposes, user._id).map(p => p.name);
+    userStore.setCanWrite(canWritePurposes);
+  }, [isLoading]);
 
   if (isLoading) {
     return <LoadingSpinner />;
