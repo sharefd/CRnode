@@ -224,7 +224,7 @@ const ArticleList = observer(() => {
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
         setLocalArticles={setLocalArticles}
-        canWritePurposes={canWritePurposes}
+        allowedPurposes={canWritePurposes}
         refetch={refetchArticles}
         refetchPurposes={refetchPurposes}
       />

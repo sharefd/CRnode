@@ -29,9 +29,11 @@ import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { createPurpose } from '@/services/purposes';
 
-const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles, refetchPurposes }) => {
-  const currentUser = userStore.user;
-  const [allowedPurposes, setAllowedPurposes] = useState(canWritePurposes.map(p => p.name));
+const localUser = localStorage.getItem('CloudRoundsUser');
+const currentUser = JSON.parse(localUser);
+
+const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles, refetchPurposes }) => {
+  const [purposes, setPurposes] = useState(allowedPurposes);
 
   const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
@@ -66,11 +68,10 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
       canReadMembers: [],
       canWriteMembers: []
     };
-    await createPurpose(currentUser._id, purposeData);
-    setAllowedPurposes([...allowedPurposes, newPurpose.name]);
+    const createdPurpose = await createPurpose(currentUser._id, purposeData);
+    setPurposes([...allowedPurposes, createdPurpose]);
     setNewPurpose({ name: '', description: '' });
     setShowAddPurposeModal(false);
-    refetchPurposes();
   };
 
   const handleSubmit = async e => {
@@ -156,12 +157,12 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
                   fullWidth
                   value={article.purpose}
                   onChange={e => setArticle({ ...article, purpose: e.target.value })}>
-                  {canWritePurposes.map((purpose, index) => (
+                  {purposes.map((purpose, index) => (
                     <MenuItem key={index} value={purpose.name}>
                       {purpose.description}
                     </MenuItem>
                   ))}
-                  <MenuItem key='add-new-purpose' value='null' onClick={() => setShowAddPurposeModal(true)}>
+                  <MenuItem key='add-new-purpose' onClick={() => setShowAddPurposeModal(true)}>
                     + Add New Purpose
                   </MenuItem>
                 </TextField>
