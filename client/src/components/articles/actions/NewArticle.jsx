@@ -98,7 +98,7 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose} sx={{ overflow: 'scroll' }}>
-        <Paper elevation={3} sx={{ width: '60%', margin: 'auto', mt: 2.2 }}>
+        <Paper elevation={3} sx={{ maxWidth: '600px', margin: 'auto', mt: 2.2 }}>
           <Grid item xs={12}>
             <Typography
               variant='h5'
