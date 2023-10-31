@@ -27,6 +27,8 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
   const allowedPurposes = canWritePurposes.map(p => p.name);
 
   const currentUser = userStore.user;
+  const localUser = JSON.parse(localStorage.getItem('CloudRoundsUser'));
+
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -45,8 +47,8 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
       newArticle.organizer = {
-        _id: currentUser._id,
-        username: currentUser.username
+        _id: currentUser ? currentUser._id : localUser._id,
+        username: currentUser ? currentUser.username : localUser.username
       };
 
       userStore.setArticles([...userStore.articles, newArticle]);
