@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchArticles } from '@/services/articles';
-import resourceStore from '@/stores/resourceStore';
 
-const useArticlePermissions = userId => {
+const useArticlePermissions = () => {
   const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
   const [allowedArticles, setAllowedArticles] = useState([]);
 
-  const queryKey = userId ? ['userPurposes', userId] : 'purposes';
-  const fetchFunction = () => fetchPurposes(userId);
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
+  const queryKey = ['userPurposes', user._id];
+  const fetchFunction = () => fetchPurposes(user._id);
 
   const { data, isLoading, isError, error, refetch } = useQuery(queryKey, fetchFunction);
 
@@ -27,17 +29,15 @@ const useArticlePermissions = userId => {
       return;
     }
 
-    resourceStore.setPurposes(data);
-
     const filterData = async () => {
-      const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(userId.toString())) || [];
+      const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())) || [];
       setCanWritePurposes(canWrite);
 
-      const canRead = data?.filter(purpose => purpose.canReadMembers.includes(userId.toString())) || [];
+      const canRead = data?.filter(purpose => purpose.canReadMembers.includes(user._id.toString())) || [];
       setCanReadPurposes(canRead);
     };
 
-    if (userId) {
+    if (user._id) {
       filterData();
     }
   }, [isLoading]);
