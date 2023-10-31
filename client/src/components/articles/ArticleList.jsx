@@ -58,6 +58,7 @@ const ArticleList = observer(() => {
 
   const handleSave = async editedArticle => {
     await updateArticle(editedArticle);
+    setLocalArticles(localArticles.map(article => (article._id === editedArticle._id ? editedArticle : article)));
     setSelectedArticle(null);
     updateMutation.mutate(editedArticle);
   };
@@ -223,7 +224,6 @@ const ArticleList = observer(() => {
       <EditArticleModal
         open={!!selectedArticle}
         onClose={() => setSelectedArticle(null)}
-        setLocalArticles={setLocalArticles}
         allowedPurposes={canWritePurposes}
         article={selectedArticle}
         onSave={handleSave}

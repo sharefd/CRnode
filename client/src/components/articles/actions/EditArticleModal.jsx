@@ -6,7 +6,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
-const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPurposes, setLocalArticles }) => {
+const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPurposes }) => {
   const [editedArticle, setEditedArticle] = useState(article);
 
   useEffect(() => {
