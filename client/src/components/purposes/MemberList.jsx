@@ -70,8 +70,8 @@ const MemberList = ({ selectedPurpose }) => {
         <TableHead>
           <TableRow>
             <TableCell>Member</TableCell>
-            <TableCell>Can View</TableCell>
-            <TableCell>Can Write</TableCell>
+            <TableCell>View Events</TableCell>
+            <TableCell>Create Events</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>

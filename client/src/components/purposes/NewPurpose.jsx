@@ -52,9 +52,8 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
           onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
         />
         <TextField
-          autoFocus
           margin='dense'
-          label='Purpose Description'
+          label='Description'
           fullWidth
           onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
         />
@@ -80,8 +79,8 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
                 <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
               ))
             }
-            noOptionsText='Type more to see options'
-            renderInput={params => <TextField {...params} label='Can Read Members' />}
+            noOptionsText='Type to find people'
+            renderInput={params => <TextField {...params} label='Viewer Permissions' />}
           />
           <Autocomplete
             multiple
@@ -104,8 +103,8 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
                 <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
               ))
             }
-            noOptionsText='Type more to see options'
-            renderInput={params => <TextField {...params} label='Can Write Members' />}
+            noOptionsText='Type to find people'
+            renderInput={params => <TextField {...params} label='Author Permissions' />}
           />
         </Stack>
       </DialogContent>

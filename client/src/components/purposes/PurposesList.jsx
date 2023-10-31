@@ -75,8 +75,9 @@ const PurposesList = observer(() => {
           }}>
           Purposes
         </Typography>
-        <Button variant='contained' color='primary' onClick={() => setOpenNewPurpose(true)}>
-          Create New Purpose
+        <Button variant='contained' color='primary' sx={{ marginLeft: '10px' }} // Adjust the margin value as needed
+ onClick={() => setOpenNewPurpose(true)}>
+         + Create New Event Purpose
         </Button>
         <Table>
           <TableHead>

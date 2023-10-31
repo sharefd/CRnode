@@ -73,8 +73,8 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
                 <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
               ))
             }
-            noOptionsText='Type more to see options'
-            renderInput={params => <TextField {...params} label='Can Read Members' />}
+            noOptionsText='Type to find people'
+            renderInput={params => <TextField {...params} label='Viewer Permissions' />}
           />
           <Autocomplete
             multiple
@@ -97,8 +97,8 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
                 <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
               ))
             }
-            noOptionsText='Type more to see options'
-            renderInput={params => <TextField {...params} label='Can Write Members' />}
+            noOptionsText='Type to find people'
+            renderInput={params => <TextField {...params} label='Author Permissions' />}
           />
           <MemberList selectedPurpose={selectedPurpose} />
         </Stack>
