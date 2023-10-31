@@ -25,7 +25,13 @@ const ArticleList = observer(() => {
 
   const user = userStore.user;
 
-  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions();
+  const {
+    allowedArticles,
+    canWritePurposes,
+    isLoading,
+    refetchArticles,
+    refetch: refetchPurposes
+  } = useArticlePermissions();
 
   useEffect(() => {
     if (isLoading) return;
@@ -220,6 +226,7 @@ const ArticleList = observer(() => {
         setLocalArticles={setLocalArticles}
         canWritePurposes={canWritePurposes}
         refetch={refetchArticles}
+        refetchPurposes={refetchPurposes}
       />
       <EditArticleModal
         open={!!selectedArticle}

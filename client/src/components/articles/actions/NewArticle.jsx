@@ -13,20 +13,28 @@ import {
   Slider,
   ToggleButton,
   ToggleButtonGroup,
-  Box
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
+import { createPurpose } from '@/services/purposes';
 
-const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles }) => {
-  const allowedPurposes = canWritePurposes.map(p => p.name);
-
+const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles, refetchPurposes }) => {
   const currentUser = userStore.user;
+  const [allowedPurposes, setAllowedPurposes] = useState(canWritePurposes.map(p => p.name));
 
+  const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
+  const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -50,6 +58,20 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
       onClose();
     }
   });
+
+  const handleAddPurpose = async () => {
+    const purposeData = {
+      name: newPurpose.name,
+      description: newPurpose.description,
+      canReadMembers: [],
+      canWriteMembers: []
+    };
+    await createPurpose(currentUser._id, purposeData);
+    setAllowedPurposes([...allowedPurposes, newPurpose.name]);
+    setNewPurpose({ name: '', description: '' });
+    setShowAddPurposeModal(false);
+    refetchPurposes();
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -139,6 +161,9 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
                       {purpose.description}
                     </MenuItem>
                   ))}
+                  <MenuItem key='add-new-purpose' value='null' onClick={() => setShowAddPurposeModal(true)}>
+                    + Add New Purpose
+                  </MenuItem>
                 </TextField>
               </Grid>
 
@@ -277,6 +302,35 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
           </form>
         </Paper>
       </Modal>
+      <Dialog open={showAddPurposeModal} onClose={() => setShowAddPurposeModal(false)}>
+        <DialogTitle>Add New Purpose</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Provide a name and description for the new purpose.</DialogContentText>
+          <TextField
+            autoFocus
+            margin='dense'
+            label='Purpose Name'
+            fullWidth
+            value={newPurpose.name}
+            onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
+          />
+          <TextField
+            margin='dense'
+            label='Description'
+            fullWidth
+            value={newPurpose.description}
+            onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowAddPurposeModal(false)} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={handleAddPurpose} color='primary'>
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </LocalizationProvider>
   );
 };

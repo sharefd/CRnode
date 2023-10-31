@@ -30,14 +30,15 @@ import { useMutation, useQuery } from 'react-query';
 import { sortArticlesDescending } from '@/services/articles';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
+
 const OlderArticles = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState('');
   const [currentArticle, setCurrentArticle] = useState(null);
-
-  const user = userStore.user;
 
   const {
     data: feedbacks,
@@ -47,7 +48,7 @@ const OlderArticles = observer(() => {
     enabled: !!user
   });
 
-  const { allowedArticles, canReadPurposes, isLoading: isPurposesLoading } = useArticlePermissions(user && user._id);
+  const { allowedArticles, canReadPurposes, isLoading: isPurposesLoading } = useArticlePermissions();
 
   const sortedArticles = sortArticlesDescending(allowedArticles);
 

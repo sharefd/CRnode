@@ -49,6 +49,8 @@ const Home = observer(() => {
                   <Paper
                     elevation={3}
                     sx={{
+                      width: '100%',
+                      height: '150px',
                       padding: '16px',
                       textAlign: 'center',
                       transition: 'background-color 0.3s',
