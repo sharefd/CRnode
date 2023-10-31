@@ -1,4 +1,6 @@
-import { EventAvailable, History, Key, ManageSearch } from '@mui/icons-material';
+import { EventAvailable, History, Key, ManageSearch, MedicalServices, MoveToInbox } from '@mui/icons-material';
+import PurposeIcon from '@/assets/images/purpose.svg';
+import { FaBookMedical } from 'react-icons/fa';
 
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',
@@ -58,8 +60,35 @@ export const monthNames = [
 export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF'];
 
 export const navlinks = [
-  { label: 'Manage Requests', Icon: Key, endpoint: '/requests' },
-  { label: 'My Rounds', Icon: EventAvailable, endpoint: '/articles' },
-  { label: 'Past Rounds', Icon: History, endpoint: '/older-articles' },
-  { label: 'Rounds Catalog', Icon: ManageSearch, endpoint: '/requests/new' }
+  {
+    label: 'Manage Purposes',
+    type: 'fa',
+    Icon: FaBookMedical,
+    endpoint: '/purposes',
+    description: 'Create, manage and view purposes permissions.'
+  },
+  {
+    label: 'Manage Requests',
+    Icon: Key,
+    endpoint: '/requests',
+    description: 'View and manage incoming permission requests.'
+  },
+  {
+    label: 'My Rounds',
+    Icon: EventAvailable,
+    endpoint: '/articles',
+    description: 'Access your articles and events. Includes a calendar view.'
+  },
+  {
+    label: 'Past Rounds',
+    Icon: History,
+    endpoint: '/older-articles',
+    description: 'Review past articles and provide optional feedback.'
+  },
+  {
+    label: 'Rounds Catalog',
+    Icon: ManageSearch,
+    endpoint: '/requests/new',
+    description: 'Explore public events and request access.'
+  }
 ];

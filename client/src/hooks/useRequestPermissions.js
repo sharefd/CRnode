@@ -32,7 +32,6 @@ const useRequestPermissions = userId => {
     const filterData = async () => {
       const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(userId.toString())) || [];
       setCanWritePurposes(canWrite);
-      console.log(canWrite);
 
       const canRead = data?.filter(purpose => purpose.canReadMembers.includes(userId.toString())) || [];
       setCanReadPurposes(canRead);
