@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { PURPOSE_CHOICES } from '../../../utils/constants';
 
-const EditArticleModal = ({ open, onClose, article, onSave, onDelete }) => {
+const EditArticleModal = ({ open, onClose, article, onSave, onDelete, setLocalArticles }) => {
   const [editedArticle, setEditedArticle] = useState(article);
 
   useEffect(() => {
