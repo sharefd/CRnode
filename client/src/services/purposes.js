@@ -17,6 +17,15 @@ export const fetchPurposes = async userId => {
   }
 };
 
+export const fetchAndPopulatePurpose = async purposeId => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/purposes/${purposeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching purposes:', error);
+  }
+};
+
 export const bulkUpdatePurposes = async purposesToUpdate => {
   try {
     const response = await axios.put(
@@ -37,14 +46,10 @@ export const fetchCanReadPurposes = purposes => {
   return purposes.filter(purpose => purpose.canReadMembers.includes(userStore.user._id));
 };
 
-export const updatePurpose = async editedPurpose => {
+export const updatePurpose = async (purposeId, editedPurpose) => {
   try {
-    const response = await axios.put(`${baseUrl}/api/articles/${editedPurpose._id}`, editedPurpose);
-    const updatedPurpose = response.data;
-    userStore.setPurposes(
-      userStore.purposes.map(purpose => (purpose._id === updatedPurpose._id ? updatedArticle : purpose))
-    );
-    return updatedPurpose;
+    const response = await axios.put(`${baseUrl}/api/purposes/update/${purposeId}`, editedPurpose);
+    return response.data;
   } catch (error) {
     console.error('Error updating purpose:', error);
   }
@@ -57,6 +62,15 @@ export const createPurpose = async (userId, purpose) => {
     return response.data;
   } catch (error) {
     console.error('Error creating purpose:', error);
+  }
+};
+
+export const deleteUserFromPurpose = async (userId, purposeId) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/purposes/${purposeId}/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting user from purpose:', error);
   }
 };
 
