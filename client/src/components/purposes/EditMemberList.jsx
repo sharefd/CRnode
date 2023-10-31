@@ -18,7 +18,6 @@ import MemberList from './MemberList';
 
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
   const [newMembers, setNewMembers] = useState({ canReadMembers: [], canWriteMembers: [] });
-
   const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
 
   const handleAddMember = (type, newValue) => {
@@ -43,8 +42,8 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     return <LinearProgress />;
   }
 
-  const canReadUsers = data.filter(u => !selectedPurpose.canReadMembers.includes(u._id));
-  const canWriteUsers = data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id));
+  const canReadUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canReadMembers.includes(u._id)) : [];
+  const canWriteUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id)) : [];
 
   return (
     <Dialog open={open} onClose={handleClose}>
