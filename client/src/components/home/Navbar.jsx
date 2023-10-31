@@ -51,7 +51,11 @@ const Navbar = observer(() => {
     userStore.setSubmittedRequests([]);
     userStore.setFeedbacks([]);
     userStore.setPermissions([]);
+    userStore.setCanRead([]);
+    userStore.setCanWrite([]);
     localStorage.removeItem('CloudRoundsToken');
+    localStorage.removeItem('CloudRoundsUser');
+
     handleClose();
     navigate('/login');
   };
@@ -85,7 +89,8 @@ const Navbar = observer(() => {
             '&:hover': { color: sidebar && isActive ? 'gray' : '#7793b1' },
             borderBottom: isActive && !sidebar ? '2px solid #eaeaec' : 'none'
           }}>
-          <link.Icon sx={{ fontSize: '28px' }} />
+          {!link.type && <link.Icon sx={{ fontSize: '28px' }} />}
+          {link.type && <link.Icon size={20} />}
           {sidebar && <Typography sx={{ ml: '8px' }}>{link.label}</Typography>}
         </Box>
       </Box>
