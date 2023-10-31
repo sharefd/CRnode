@@ -50,6 +50,7 @@ router.get('/me', jwtMiddleware, async (req, res) => {
       university: user.university,
       email: user.email,
       isAdmin: user.isAdmin,
+      purposes: user.purposes,
       attended: user.attended
     };
 

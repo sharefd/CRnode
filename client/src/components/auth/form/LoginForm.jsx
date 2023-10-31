@@ -3,7 +3,7 @@ import InputField from '../fields/InputField';
 import GoogleButton from '../buttons/GoogleButton';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/userStore';
-import { fetchUserPermissions } from '@/services/permissions';
+import { fetchPurposes } from '@/services/purposes';
 import { fetchUserFeedbacks } from '@/services/feedbacks';
 import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
@@ -35,13 +35,6 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
 
     const feedbacks = await fetchUserFeedbacks(response.user._id);
     userStore.setFeedbacks(feedbacks);
-
-    try {
-      const permissions = await fetchUserPermissions(response.user._id);
-      userStore.setPermissions(permissions);
-    } catch (error) {
-      toast.error(`Error fetching permissions: ${error}`, { autoClose: 2000, pauseOnFocusLoss: false });
-    }
 
     setTimeout(() => {
       setIsLoading(false);

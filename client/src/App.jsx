@@ -12,6 +12,7 @@ import userStore from './stores/userStore';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthPage from './components/auth/AuthPage';
+import PurposesList from './components/purposes/PurposesList';
 
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
 const SuccessMessage = lazy(() => import('./components/requests/SuccessMessage'));
@@ -65,6 +66,7 @@ const App = observer(() => {
             <Route path='/' element={<Home />} />
             <Route path='/admin' element={<Admin />} />
             <Route path='/articles' element={<ArticleList />} />
+            <Route path='/purposes' element={<PurposesList />} />
             <Route path='/older-articles' element={<OlderArticles />} />
             <Route path='/requests' element={<RequestsList />} />
             <Route path='/login' element={<AuthPage />} />

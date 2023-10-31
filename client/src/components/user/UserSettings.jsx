@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query';
-import { fetchUserPermissions } from '@/services/permissions';
 import { observer } from 'mobx-react';
 import {
   Avatar,
@@ -21,16 +19,16 @@ import {
   Paper
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { fetchCurrentUser, updateUser, deleteUser } from '@/services/users';
+import { updateUser, deleteUser } from '@/services/users';
 import { toast } from 'react-toastify';
 import { formatDate } from '@/utils/dates';
-import { fetchCanReadPermissions, fetchCanWritePermissions } from '@/services/permissions';
 import { Check, Clear } from '@mui/icons-material';
 import PasswordChange from './PasswordChange';
 import { UNIVERSITY_CHOICES } from '@/utils/constants';
 import Pencil from '@/assets/images/edit.png';
 import { useMutation, useQueryClient } from 'react-query';
 import { grey } from '@mui/material/colors';
+import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 
 const UserSettings = observer(() => {
   const queryClient = useQueryClient();
@@ -39,15 +37,8 @@ const UserSettings = observer(() => {
   const [editingField, setEditingField] = useState(null);
   const [tempValues, setTempValues] = useState({});
   const [showPasswordChange, setShowPasswordChange] = useState(false);
-  const { data: user, isLoading: userLoading } = useQuery('currentUser', fetchCurrentUser);
 
-  const { data: permissions, isLoading: permissionsLoading } = useQuery(
-    ['userPermissions', user?._id],
-    () => fetchUserPermissions(user._id),
-    {
-      enabled: !userLoading && !!user
-    }
-  );
+  const { user, purposes, canWritePurposes, canReadPurposes, isLoading, userLoading } = useSettingsPermissions();
 
   const mutation = useMutation(updateUser, {
     onSuccess: data => {
@@ -63,12 +54,14 @@ const UserSettings = observer(() => {
   });
 
   useEffect(() => {
-    if (user) {
+    if (user && purposes) {
       setTempValues({
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        canRead: canReadPurposes,
+        canWrite: canWritePurposes,
         university: user.university
       });
     }
@@ -219,12 +212,9 @@ const UserSettings = observer(() => {
     </Box>
   );
 
-  if (userLoading || permissionsLoading) {
+  if (isLoading || userLoading || !user) {
     return <LinearProgress />;
   }
-
-  const canRead = fetchCanReadPermissions(permissions);
-  const canWrite = fetchCanWritePermissions(permissions);
 
   const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
 
@@ -288,6 +278,9 @@ const UserSettings = observer(() => {
               <Grid item xs={12} md={12}>
                 {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
               </Grid>
+              <Grid item xs={12} md={12}>
+                {renderField('Purposes', 'purposes')}
+              </Grid>
             </Grid>
           </Box>
 
@@ -309,15 +302,19 @@ const UserSettings = observer(() => {
             <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
               PERMISSIONS
             </Typography>
-            {permissions && (
+            {user && (
               <List sx={{ listStyle: 'disc', pl: 4 }}>
                 <ListItem key='canRead' sx={{ display: 'list-item' }}>
                   Can View:
-                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canRead.join(', ')}</span>
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
+                    {canReadPurposes && canReadPurposes.map(p => p.name).join(', ')}
+                  </span>
                 </ListItem>
                 <ListItem key='canWrite' sx={{ display: 'list-item' }}>
                   Can Create:
-                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>{canWrite.join(', ')}</span>
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
+                    {canWritePurposes && canWritePurposes.map(p => p.name).join(', ')}
+                  </span>
                 </ListItem>
               </List>
             )}

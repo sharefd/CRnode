@@ -1,4 +1,4 @@
-import { initPermissions } from '@/services/permissions';
+import { initPermissions } from '@/services/purposes';
 import { createUser } from '@/services/users';
 import userStore from '@/stores/userStore';
 import { CircularProgress, Grid } from '@mui/material';

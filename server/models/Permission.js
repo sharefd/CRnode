@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PermissionSchema = new mongoose.Schema({
-  purpose: { type: String, required: true },
+  purpose: { type: mongoose.Schema.Types.ObjectId, ref: 'Purpose', required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   canRead: { type: Boolean, default: false },
   canWrite: { type: Boolean, default: false }

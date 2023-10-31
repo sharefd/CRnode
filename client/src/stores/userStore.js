@@ -6,6 +6,8 @@ class UserStore {
   submittedRequests = [];
   feedbacks = [];
   permissions = [];
+  canRead = [];
+  canWrite = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -13,6 +15,10 @@ class UserStore {
 
   setUser(user) {
     this.user = user;
+  }
+
+  setPurposes(purposes) {
+    this.purposes = purposes;
   }
 
   setArticles(articles) {
@@ -29,6 +35,14 @@ class UserStore {
 
   setPermissions(permissions) {
     this.permissions = permissions;
+  }
+
+  setCanRead(canRead) {
+    this.canRead = canRead;
+  }
+
+  setCanWrite(canWrite) {
+    this.canWrite = canWrite;
   }
 }
 
