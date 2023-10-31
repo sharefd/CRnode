@@ -31,7 +31,7 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPur
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose} sx={{ overflow: 'scroll' }}>
-        <Paper elevation={3} sx={{ width: '60%', margin: '0 auto', mt: 2.2 }}>
+        <Paper elevation={3} sx={{ maxWidth: '600px', margin: '0 auto', mt: 2.2 }}>
           <Grid item xs={12}>
             <Typography
               variant='h5'
