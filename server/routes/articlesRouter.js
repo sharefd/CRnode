@@ -18,7 +18,10 @@ router.post('/new', jwtMiddleware, async (req, res) => {
   try {
     const newArticle = new Article(req.body);
     await newArticle.save();
-    res.json(newArticle);
+
+    const populatedArticle = await Article.findById(newArticle._id).populate('organizer', 'username');
+
+    res.json(populatedArticle);
   } catch (err) {
     console.error('Error creating article:', err);
     res.status(500).send('Internal Server Error');

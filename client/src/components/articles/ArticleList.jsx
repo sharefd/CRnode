@@ -27,6 +27,7 @@ const ArticleList = observer(() => {
   const user = userStore.user;
 
   const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user?._id);
+
   useEffect(() => {
     if (isLoading) return;
 
@@ -91,7 +92,7 @@ const ArticleList = observer(() => {
   eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
 
   const isArticleAfterCurrentDate = article => {
-    const articleDate = new Date(article.dateString);
+    const articleDate = new Date(article ? article.dateString : '');
     return articleDate >= eightHoursAgo;
   };
 

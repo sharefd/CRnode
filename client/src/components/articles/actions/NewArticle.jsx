@@ -46,21 +46,16 @@ const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
-      newArticle.organizer = {
-        _id: currentUser ? currentUser._id : localUser._id,
-        username: currentUser ? currentUser.username : localUser.username
-      };
-
       userStore.setArticles([...userStore.articles, newArticle]);
-      const newArticles = [...userStore.articles, newArticle];
-      setLocalArticles(sortArticles(newArticles));
-      refetch();
+      const updatedArticles = [...userStore.articles, newArticle];
+      setLocalArticles(sortArticles(updatedArticles));
       onClose();
     }
   });
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log(article);
 
     let eventLink = article.event_link;
     if (!eventLink.startsWith('https://')) {

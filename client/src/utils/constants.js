@@ -1,5 +1,4 @@
-import { EventAvailable, History, Key, ManageSearch } from '@mui/icons-material';
-import { FaBookMedical } from 'react-icons/fa';
+import { EventAvailable, History, Key, ManageSearch, PeopleAlt } from '@mui/icons-material';
 
 export const PURPOSE_CHOICES = {
   OM1: 'OM Half-day',
@@ -62,7 +61,7 @@ export const navlinks = [
   {
     label: 'Manage Purposes',
     type: 'fa',
-    Icon: FaBookMedical,
+    Icon: PeopleAlt,
     endpoint: '/purposes',
     description: 'Create, manage and view purposes permissions.'
   },
