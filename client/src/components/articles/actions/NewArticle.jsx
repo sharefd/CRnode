@@ -23,9 +23,10 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
-const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles }) => {
-  const currentUser = userStore.user;
+const NewArticle = ({ open, onClose, canWritePurposes, refetch, setLocalArticles }) => {
+  const allowedPurposes = canWritePurposes.map(p => p.name);
 
+  const currentUser = userStore.user;
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
@@ -43,6 +44,11 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles 
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
+      newArticle.organizer = {
+        _id: currentUser._id,
+        username: currentUser.username
+      };
+
       userStore.setArticles([...userStore.articles, newArticle]);
       const newArticles = [...userStore.articles, newArticle];
       setLocalArticles(sortArticles(newArticles));
@@ -133,9 +139,9 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles 
                   fullWidth
                   value={article.purpose}
                   onChange={e => setArticle({ ...article, purpose: e.target.value })}>
-                  {allowedPurposes.map((key, index) => (
-                    <MenuItem key={index} value={key}>
-                      {PURPOSE_CHOICES[key]}
+                  {canWritePurposes.map((purpose, index) => (
+                    <MenuItem key={index} value={purpose.name}>
+                      {purpose.description}
                     </MenuItem>
                   ))}
                 </TextField>

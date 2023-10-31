@@ -13,7 +13,7 @@ import EditArticleModal from './actions/EditArticleModal';
 import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
-import { formatDuration, formatDuration12Hour } from '@/utils/calendar';
+import { formatDuration12Hour } from '@/utils/calendar';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const ArticleList = observer(() => {
@@ -26,8 +26,7 @@ const ArticleList = observer(() => {
 
   const user = userStore.user;
 
-  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user._id);
-
+  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user?._id);
   useEffect(() => {
     if (isLoading) return;
 
@@ -37,6 +36,7 @@ const ArticleList = observer(() => {
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
+      setLocalArticles(localArticles.filter(article => article._id !== variables));
       refetchArticles();
     }
   });
@@ -217,12 +217,13 @@ const ArticleList = observer(() => {
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
         setLocalArticles={setLocalArticles}
-        allowedPurposes={canWritePurposes.map(p => p.name)}
+        canWritePurposes={canWritePurposes}
         refetch={refetchArticles}
       />
       <EditArticleModal
         open={!!selectedArticle}
         onClose={() => setSelectedArticle(null)}
+        setLocalArticles={setLocalArticles}
         article={selectedArticle}
         onSave={handleSave}
         onDelete={handleDelete}
