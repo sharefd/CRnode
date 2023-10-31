@@ -63,9 +63,3 @@ export const navlinks = [
   { label: 'Past Rounds', Icon: History, endpoint: '/older-articles' },
   { label: 'Rounds Catalog', Icon: ManageSearch, endpoint: '/requests/new' }
 ];
-
-export const userlinks = [
-  { label: 'My Rounds', Icon: EventAvailable, endpoint: '/articles' },
-  { label: 'Past Rounds', Icon: History, endpoint: '/older-articles' },
-  { label: 'Rounds Catalog', Icon: ManageSearch, endpoint: '/requests/new' }
-];

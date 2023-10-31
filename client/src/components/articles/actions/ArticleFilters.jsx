@@ -1,14 +1,11 @@
-import { fetchCanReadPermissions, fetchUserPermissions } from '@/services/permissions';
 import { PURPOSE_CHOICES } from '@/utils/constants';
 import { Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useQuery } from 'react-query';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }) => {
-  const { data: permissions, isLoading } = useQuery(['permissions', userId], () => fetchUserPermissions(userId), {
-    enabled: !!userId
-  });
+  const { purposes, canReadPurposes: allowedPurposes, isLoading } = useArticlePermissions(userId);
 
-  const allowedPurposes = permissions ? fetchCanReadPermissions(permissions) : [];
+  const purposeChoices = allowedPurposes.map(p => p.name);
 
   const handleToggle = (event, newPurposes) => {
     if (newPurposes.length === 0) {
@@ -33,10 +30,10 @@ export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }
         <ToggleButton value='Show All' aria-label='Show All' className='button-4'>
           Show All
         </ToggleButton>
-        {allowedPurposes.map(purpose => (
+        {purposeChoices.map(purpose => (
           <ToggleButton
             key={purpose}
-            value={PURPOSE_CHOICES[purpose]}
+            value={purpose}
             aria-label={purpose}
             sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
             {purpose}

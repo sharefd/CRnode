@@ -1,18 +1,18 @@
-import { useAllowedArticles } from '@/hooks/useAllowedArticles';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 import { deleteArticle, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { formatArticlesToEvents, getMaxHour, getVisibleHours } from '@/utils/calendar';
+import { Box, CircularProgress } from '@mui/material';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useMutation } from 'react-query';
 import ActionBar from '../actions/ActionBar';
 import EditArticleModal from '../actions/EditArticleModal';
 import NewArticle from '../actions/NewArticle';
 import EventsDialog from './EventsDialog';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { getVisibleHours, getMaxHour, formatArticlesToEvents } from '@/utils/calendar';
 
 const localizer = momentLocalizer(moment);
 
@@ -27,7 +27,7 @@ const BigCalendar = observer(() => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
 
-  const { allowedArticles, permissions, isLoading, refetch } = useAllowedArticles();
+  const { allowedArticles, permissions, isLoading, refetch } = useArticlePermissions(user._id);
 
   const events = formatArticlesToEvents(allowedArticles);
 

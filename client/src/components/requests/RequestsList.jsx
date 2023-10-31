@@ -1,7 +1,5 @@
-import { useAllowedRequests } from '@/hooks/useAllowedRequests';
 import { deleteRequest, updateRequest } from '@/services/requests';
 import userStore from '@/stores/userStore';
-import { canCreate } from '@/utils/checkPermissions';
 import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
 import {
   IconButton,
@@ -22,16 +20,17 @@ import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import AccessDenied from '../admin/AccessDenied';
+import useRequestPermissions from '@/hooks/useRequestPermissions';
 
 const RequestsList = observer(() => {
+  const user = userStore.user;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
-  const user = userStore.user;
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { allowedRequests, isLoading: isRequestsLoading, refetch } = useAllowedRequests();
+  const { allowedRequests, canWritePurposes, isLoading: isQueryLoading } = useRequestPermissions(user && user._id);
 
   const deleteMutation = useMutation(deleteRequest, {
     onSuccess: (data, variables) => {
@@ -103,10 +102,10 @@ const RequestsList = observer(() => {
     updateStatusMutation.mutate({ id, purpose, status });
   };
 
-  if (!user || isRequestsLoading) {
+  if (!user || isQueryLoading || isLoading) {
     return <LinearProgress />;
   } else {
-    if (!canCreate()) {
+    if (canWritePurposes.length === 0) {
       return <AccessDenied />;
     }
   }

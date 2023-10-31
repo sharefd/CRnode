@@ -1,35 +1,48 @@
-import { savePermissions } from '@/services/permissions';
+import { bulkUpdatePurposes } from '@/services/purposes';
 import { Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import { useMutation } from 'react-query';
 
-const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
-  const mutation = useMutation(savePermissions, {
-    onSuccess: () => {
-      console.log('Permissions updated successfully');
+const EditPermissions = ({ purposes, userPermissions, setUser, closeModal, setUsersPermissions }) => {
+  const mutation = useMutation(bulkUpdatePurposes, {
+    onSuccess: async () => {
+      console.log('Purposes/permissions updated successfully');
       closeModal();
     },
     onError: error => {
-      console.error('Error updating permissions:', error);
+      console.error('Error updating purposes/permissions:', error);
     }
   });
 
-  const handlePermissionChange = (event, purpose) => {
-    const { name, checked } = event.target;
-    let updatedPermissions = [...userPermissions.permissions];
-
-    const permissionIndex = updatedPermissions.findIndex(p => p.purpose === purpose);
-    if (permissionIndex !== -1) {
-      updatedPermissions[permissionIndex][name] = checked;
-    }
-
-    setUser({
-      ...userPermissions,
-      permissions: updatedPermissions
-    });
-  };
-
   const handleSavePermissions = () => {
     mutation.mutate(userPermissions);
+  };
+
+  const handlePermissionChange = (e, purposeName) => {
+    const { name, checked } = e.target;
+
+    let updatedPermissions = [...userPermissions[name]];
+
+    if (checked) {
+      updatedPermissions = [...updatedPermissions, purposeName];
+    } else {
+      updatedPermissions = updatedPermissions.filter(p => p !== purposeName);
+    }
+
+    const updatedUserPermissions = {
+      ...userPermissions,
+      [name]: updatedPermissions
+    };
+
+    setUser(updatedUserPermissions);
+
+    setUsersPermissions(prevUsersPermissions => {
+      return prevUsersPermissions.map(userPerm => {
+        if (userPerm.user._id === updatedUserPermissions.user._id) {
+          return updatedUserPermissions;
+        }
+        return userPerm;
+      });
+    });
   };
 
   return (
@@ -49,16 +62,16 @@ const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
         Edit Permissions for {user?.username}
       </Typography>
       <form noValidate autoComplete='off'>
-        {userPermissions &&
-          userPermissions.permissions.map(permission => (
-            <Box key={permission.purpose}>
-              <Typography>{permission.purpose}</Typography>
+        {purposes &&
+          purposes.map(purpose => (
+            <Box key={purpose.name}>
+              <Typography>{purpose.name}</Typography>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={permission.canRead}
-                    onChange={e => handlePermissionChange(e, permission.purpose)}
-                    name='canRead'
+                    checked={userPermissions.canReadPermissions.includes(purpose.name)}
+                    onChange={e => handlePermissionChange(e, purpose.name)}
+                    name='canReadPermissions'
                   />
                 }
                 label='Read'
@@ -66,9 +79,9 @@ const EditPermissions = ({ userPermissions, setUser, closeModal }) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={permission.canWrite}
-                    onChange={e => handlePermissionChange(e, permission.purpose)}
-                    name='canWrite'
+                    checked={userPermissions.canWritePermissions.includes(purpose.name)}
+                    onChange={e => handlePermissionChange(e, purpose.name)}
+                    name='canWritePermissions'
                   />
                 }
                 label='Write'

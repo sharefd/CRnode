@@ -1,5 +1,4 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useAllowedArticles } from '@/hooks/useAllowedArticles';
 import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
 import { PURPOSE_CHOICES } from '@/utils/constants';
@@ -15,6 +14,7 @@ import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { formatDuration, formatDuration12Hour } from '@/utils/calendar';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -25,18 +25,19 @@ const ArticleList = observer(() => {
 
   const user = userStore.user;
 
-  const { allowedArticles, permissions, isLoading, refetch } = useAllowedArticles();
+  const { allowedArticles, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions(user._id);
+
   const sortedArticles = sortArticles(allowedArticles);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
-      refetch();
+      refetchArticles();
     }
   });
 
   const updateMutation = useMutation(updateArticle, {
     onSuccess: () => {
-      refetch();
+      refetchArticles();
     }
   });
 
@@ -94,9 +95,7 @@ const ArticleList = observer(() => {
 
   const filteredArticles = selectedPurposes.includes('Show All')
     ? sortedArticles.filter(isArticleAfterCurrentDate)
-    : sortedArticles
-        .filter(article => selectedPurposes.includes(PURPOSE_CHOICES[article.purpose]))
-        .filter(isArticleAfterCurrentDate);
+    : sortedArticles.filter(article => selectedPurposes.includes(article.purpose)).filter(isArticleAfterCurrentDate);
 
   return (
     <div>
@@ -211,8 +210,8 @@ const ArticleList = observer(() => {
       <NewArticle
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
-        permissions={permissions}
-        refetch={refetch}
+        allowedPurposes={canWritePurposes.map(p => p.name)}
+        refetch={refetchArticles}
       />
       <EditArticleModal
         open={!!selectedArticle}

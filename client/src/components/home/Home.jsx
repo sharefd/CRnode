@@ -6,8 +6,8 @@ import Key from '@mui/icons-material/VpnKey';
 import EventAvailable from '@mui/icons-material/EventAvailable';
 import History from '@mui/icons-material/History';
 import ManageSearch from '@mui/icons-material/ManageSearch';
-import usePermissions from '../../hooks/usePermissions';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const navlinks = [
   {
@@ -38,7 +38,8 @@ const navlinks = [
 
 const Home = observer(() => {
   const user = userStore.user;
-  const { permissions, isLoading } = usePermissions();
+
+  const { purposes, canReadPurposes, canWritePurposes, isLoading } = useArticlePermissions(userStore.user?._id || '');
 
   if (isLoading) {
     return <LoadingSpinner />;

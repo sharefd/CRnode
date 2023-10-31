@@ -10,8 +10,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequests, createRequest } from '@/services/requests';
-import { fetchUserPermissions } from '@/services/permissions';
-import { fetchCanReadPermissions } from '../../services/permissions';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
@@ -25,18 +24,16 @@ const NewRequest = observer(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = userStore.user;
+
   const { data: requests, isLoading: isQueryLoading, refetch } = useQuery('requests', fetchRequests);
 
-  const {
-    data: permissions,
-    isLoading: isPermissionsLoading,
-    isError
-  } = useQuery(['permissions', user?._id], () => fetchUserPermissions(user._id), {
-    enabled: !!user,
-    onSuccess: data => {
-      userStore.setPermissions(data);
-    }
-  });
+  let purposePermissions = {};
+
+  if (user && user._id) {
+    purposePermissions = useArticlePermissions(user._id);
+  }
+
+  const { purposes, isLoading: isPurposesLoading, canReadPurposes, canWritePurposes } = purposePermissions;
 
   const handleFeedbackSubmit = async currentArticle => {
     try {
@@ -94,19 +91,18 @@ const NewRequest = observer(() => {
   };
 
   const isPurposeAllowed = purpose => {
-    if (!user || isPermissionsLoading) return false;
-    const canReadPermissions = fetchCanReadPermissions(permissions);
-    return canReadPermissions.includes(purpose);
+    if (!user || isPurposesLoading) return false;
+    return canReadPurposes.map(p => p.name).includes(purpose);
   };
 
   const isRequestPending = purpose => {
-    if (!user || isPermissionsLoading) return false;
+    if (!user || isPurposesLoading) return false;
 
     const request = userStore.submittedRequests.find(r => r.purpose === purpose);
     return request && request.status === 'Pending';
   };
 
-  if (isLoading || isPermissionsLoading) return <LoadingSpinner />;
+  if (isLoading || isPurposesLoading) return <LoadingSpinner />;
 
   return (
     <Paper elevation={3} sx={{ width: '40%', margin: '0 auto', mt: 8 }}>

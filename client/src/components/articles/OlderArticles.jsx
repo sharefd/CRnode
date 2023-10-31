@@ -1,6 +1,4 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useAllowedArticles } from '@/hooks/useAllowedArticles';
-import { fetchArticles } from '@/services/articles';
 import { createFeedback, fetchUserFeedbacks } from '@/services/feedbacks';
 import { toggleAttending } from '@/services/users';
 import userStore from '@/stores/userStore';
@@ -29,7 +27,8 @@ import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { sortArticlesDescending } from '../../services/articles';
+import { sortArticlesDescending } from '@/services/articles';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const OlderArticles = observer(() => {
   const [page, setPage] = useState(0);
@@ -48,7 +47,8 @@ const OlderArticles = observer(() => {
     enabled: !!user
   });
 
-  const { allowedArticles, permissions, isLoading } = useAllowedArticles();
+  const { allowedArticles, canReadPurposes, isLoading: isPurposesLoading } = useArticlePermissions(user && user._id);
+
   const sortedArticles = sortArticlesDescending(allowedArticles);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const OlderArticles = observer(() => {
     setOpen(false);
   };
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isPurposesLoading) return <LoadingSpinner />;
 
   return (
     <Container>

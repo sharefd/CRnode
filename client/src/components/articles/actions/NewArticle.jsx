@@ -24,7 +24,7 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
-const NewArticle = ({ open, onClose, permissions, refetch }) => {
+const NewArticle = ({ open, onClose, allowedPurposes, refetch }) => {
   const currentUser = userStore.user;
 
   const [article, setArticle] = useState({
@@ -41,8 +41,6 @@ const NewArticle = ({ open, onClose, permissions, refetch }) => {
     location: '',
     virtual: true
   });
-
-  const allowedPurposes = permissions ? fetchCanWritePermissions(permissions) : [];
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {

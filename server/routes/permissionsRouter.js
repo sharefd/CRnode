@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { jwtMiddleware } = require('../middleware/permissions');
 const Permission = require('../models/Permission');
+const Purpose = require('../models/Purpose');
 
 router.get('/', async (req, res) => {
   try {
-    const permissions = await Permission.find();
+    const permissions = await Permission.find().populate('purpose');
     res.status(200).json(permissions);
   } catch (err) {
     console.error('There was an error fetching permissions:', err);
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:userId', jwtMiddleware, async (req, res) => {
   const { userId } = req.params;
   try {
-    const userPermissions = await Permission.find({ userId });
+    const userPermissions = await Permission.find({ userId }).populate('purpose');
     if (!userPermissions || userPermissions.length === 0) {
       return res.status(404).json({ message: `No permissions found for user ${userId}` });
     }
@@ -45,9 +46,10 @@ router.post('/init-permissions/:userId', async (req, res) => {
     return res.status(400).json({ message: 'User ID is required' });
   }
 
-  const purposes = ['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'];
-
   try {
+    const purposeDocs = await Purpose.find();
+    const purposes = purposeDocs.map(doc => doc._id);
+
     const newPermissions = purposes.map(purpose => ({
       userId,
       purpose,
