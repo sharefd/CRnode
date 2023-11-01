@@ -25,15 +25,31 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-import { useState } from 'react';
-import { useMutation } from 'react-query';
-import { createPurpose } from '@/services/purposes';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { createPurpose, fetchPurposes } from '@/services/purposes';
 
 const localUser = localStorage.getItem('CloudRoundsUser');
-const currentUser = JSON.parse(localUser);
+const user = JSON.parse(localUser);
 
-const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles, refetchPurposes }) => {
-  const [purposes, setPurposes] = useState(allowedPurposes);
+const NewArticle = ({ open, onClose, refetchArticles, setLocalArticles }) => {
+  const [allowedPurposes, setAllowedPurposes] = useState([]);
+
+  const {
+    data: purposes,
+    isLoading,
+    refetch: refetchPurposes
+  } = useQuery(['userPurposes', user._id], () => fetchPurposes(user._id));
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    const canWrite = purposes?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())) || [];
+
+    setAllowedPurposes(canWrite);
+    console.log(canWrite);
+  }, [isLoading]);
 
   const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
@@ -57,6 +73,7 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles,
       const allArticles = [...userStore.articles, newArticle];
       const filteredArticles = allArticles.filter(a => allowedPurposes.includes(a.purpose));
       setLocalArticles(sortArticles(filteredArticles));
+      refetchArticles();
       onClose();
     }
   });
@@ -68,9 +85,10 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles,
       canReadMembers: [],
       canWriteMembers: []
     };
-    const createdPurpose = await createPurpose(currentUser._id, purposeData);
-    setPurposes([...allowedPurposes, createdPurpose]);
+    const createdPurpose = await createPurpose(user._id, purposeData);
+    setAllowedPurposes([...allowedPurposes, createdPurpose]);
     setNewPurpose({ name: '', description: '' });
+    refetchPurposes();
     setShowAddPurposeModal(false);
   };
 
@@ -87,7 +105,7 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles,
     const payload = {
       ...article,
       time: formattedTime,
-      organizer: currentUser._id,
+      organizer: user._id,
       event_link: eventLink // Update the event_link with the corrected URL
     };
 
@@ -99,7 +117,7 @@ const NewArticle = ({ open, onClose, allowedPurposes, refetch, setLocalArticles,
     createMutation.mutate(payload);
   };
 
-  if (!currentUser || !allowedPurposes) {
+  if (!user || !allowedPurposes) {
     return <LoadingSpinner />;
   }
 

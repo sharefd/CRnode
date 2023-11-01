@@ -224,9 +224,7 @@ const ArticleList = observer(() => {
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
         setLocalArticles={setLocalArticles}
-        allowedPurposes={canWritePurposes}
-        refetch={refetchArticles}
-        refetchPurposes={refetchPurposes}
+        refetchArticles={refetchArticles}
       />
       <EditArticleModal
         open={!!selectedArticle}
