@@ -9,9 +9,7 @@ export const updateArticle = async editedArticle => {
   try {
     const response = await axios.put(`${baseUrl}/api/articles/${editedArticle._id}`, editedArticle);
     const updatedArticle = response.data;
-    userStore.setArticles(
-      userStore.articles.map(article => (article._id === updatedArticle._id ? updatedArticle : article))
-    );
+    return updatedArticle;
   } catch (error) {
     console.error('Error updating article:', error);
   }

@@ -42,14 +42,17 @@ const ArticleList = observer(() => {
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
-      setLocalArticles(localArticles.filter(article => article._id !== variables));
-      refetchArticles();
+      const updatedArticles = localArticles.filter(article => article._id !== variables);
+      setLocalArticles(updatedArticles);
     }
   });
 
   const updateMutation = useMutation(updateArticle, {
-    onSuccess: () => {
-      refetchArticles();
+    onSuccess: updatedArticle => {
+      const index = localArticles.findIndex(article => article._id === updatedArticle._id);
+      const updatedArticles = [...localArticles];
+      updatedArticles[index] = updatedArticle;
+      setLocalArticles(updatedArticles);
     }
   });
 
@@ -57,14 +60,12 @@ const ArticleList = observer(() => {
     const isConfirmed = window.confirm('Are you sure you want to delete this article?');
     if (!isConfirmed) return;
 
-    deleteArticle(articleId);
-    setSelectedArticle(null);
     deleteMutation.mutate(articleId);
+    setSelectedArticle(null);
   };
 
   const handleSave = async editedArticle => {
     await updateArticle(editedArticle);
-    setLocalArticles(localArticles.map(article => (article._id === editedArticle._id ? editedArticle : article)));
     setSelectedArticle(null);
     updateMutation.mutate(editedArticle);
   };

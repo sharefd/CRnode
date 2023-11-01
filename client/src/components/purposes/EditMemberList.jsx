@@ -30,8 +30,8 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
   const handleSave = async () => {
     const updatedPurpose = {
       ...selectedPurpose,
-      canReadMembers: [...selectedPurpose.canReadMembers, ...newMembers.canReadMembers],
-      canWriteMembers: [...selectedPurpose.canWriteMembers, ...newMembers.canWriteMembers]
+      canReadMembers: Array.from(new Set([...selectedPurpose.canReadMembers, ...newMembers.canReadMembers])),
+      canWriteMembers: Array.from(new Set([...selectedPurpose.canWriteMembers, ...newMembers.canWriteMembers]))
     };
     await updatePurpose(selectedPurpose._id.toString(), updatedPurpose);
     refetchPurposes();
@@ -44,7 +44,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
 
   const canReadUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canReadMembers.includes(u._id)) : [];
   const canWriteUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id)) : [];
-
+  console.log(newMembers);
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle sx={{ fontStyle: 'italic', fontFamily: 'Inter' }}>

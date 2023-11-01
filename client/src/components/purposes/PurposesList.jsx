@@ -58,9 +58,11 @@ const PurposesList = observer(() => {
   };
 
   const handleDelete = async purposeId => {
-    await deletePurpose(purposeId);
-    console.log(`Purpose  deleted`);
-    await refetchPurposes();
+    if (window.confirm('Are you sure you want to delete this purpose?')) {
+      await deletePurpose(purposeId);
+      console.log(`Purpose  deleted`);
+      await refetchPurposes();
+    }
   };
 
   if (userLoading || isLoading) {

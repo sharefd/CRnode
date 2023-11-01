@@ -71,7 +71,7 @@ const MemberList = ({ selectedPurpose }) => {
           <TableRow>
             <TableCell>Member</TableCell>
             <TableCell>View Events</TableCell>
-            <TableCell>Create Events</TableCell>
+            {/* <TableCell>Create Events</TableCell> */}
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -86,12 +86,12 @@ const MemberList = ({ selectedPurpose }) => {
                     onChange={() => handleCheckboxChange(member, 'canRead')}
                   />
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <Checkbox
                     checked={!!purpose.canWriteMembers.find(m => m._id === member._id)}
                     onChange={() => handleCheckboxChange(member, 'canWrite')}
                   />
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   <IconButton sx={{ color: 'indianred' }} onClick={() => handleDeleteMember(member, purpose._id)}>
                     <DeleteIcon />

@@ -48,7 +48,7 @@ const NewArticle = ({ open, onClose, refetchArticles, localArticles, setLocalArt
     const canWrite = purposes?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())) || [];
 
     setAllowedPurposes(canWrite);
-    console.log(canWrite);
+    console.log('Creator Purpose Permissions: ', canWrite);
   }, [isLoading]);
 
   const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
