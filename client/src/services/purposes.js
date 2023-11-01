@@ -65,6 +65,15 @@ export const createPurpose = async (userId, purpose) => {
   }
 };
 
+export const deletePurpose = async purposeId => {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/purposes/${purposeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting purpose:', error);
+  }
+};
+
 export const deleteUserFromPurpose = async (userId, purposeId) => {
   try {
     const response = await axios.delete(`${baseUrl}/api/purposes/${purposeId}/user/${userId}`);

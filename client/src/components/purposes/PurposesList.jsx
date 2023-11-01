@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { observer } from 'mobx-react';
 import {
   Paper,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -17,10 +18,11 @@ import {
   DialogTitle,
   LinearProgress
 } from '@mui/material';
-import { updatePurpose } from '@/services/purposes';
+import { updatePurpose, deletePurpose } from '@/services/purposes';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 import NewPurpose from './NewPurpose';
 import EditMemberList from './EditMemberList';
+import { Delete } from '@mui/icons-material';
 
 const PurposesList = observer(() => {
   const [open, setOpen] = useState(false);
@@ -55,6 +57,12 @@ const PurposesList = observer(() => {
     handleClose();
   };
 
+  const handleDelete = async purposeId => {
+    await deletePurpose(purposeId);
+    console.log(`Purpose  deleted`);
+    await refetchPurposes();
+  };
+
   if (userLoading || isLoading) {
     return <LinearProgress />;
   }
@@ -75,9 +83,12 @@ const PurposesList = observer(() => {
           }}>
           Purposes
         </Typography>
-        <Button variant='contained' color='primary' sx={{ marginLeft: '10px' }} // Adjust the margin value as needed
- onClick={() => setOpenNewPurpose(true)}>
-         + Create New Event Purpose
+        <Button
+          variant='contained'
+          color='primary'
+          sx={{ marginLeft: '10px' }} // Adjust the margin value as needed
+          onClick={() => setOpenNewPurpose(true)}>
+          + Create New Event Purpose
         </Button>
         <Table>
           <TableHead>
@@ -86,6 +97,7 @@ const PurposesList = observer(() => {
               <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
               <TableCell>Edit Members</TableCell>
+              <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -104,6 +116,11 @@ const PurposesList = observer(() => {
                     <Button variant='outlined' color='secondary' onClick={() => handleOpenMemberList(purpose)}>
                       Edit Members
                     </Button>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton variant='outlined' color='error' onClick={() => handleDelete(purpose._id)}>
+                      <Delete />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

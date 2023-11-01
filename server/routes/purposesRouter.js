@@ -133,4 +133,20 @@ router.delete('/:purposeId/user/:userId', jwtMiddleware, async (req, res) => {
   }
 });
 
+router.delete('/:purposeId', jwtMiddleware, async (req, res) => {
+  try {
+    const purposeId = req.params.purposeId;
+    const purpose = await Purpose.findByIdAndDelete(purposeId);
+
+    if (!purpose) {
+      return res.status(404).send('Purpose not found');
+    }
+
+    res.status(200).json({ message: 'Purpose deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting the purpose:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router;
