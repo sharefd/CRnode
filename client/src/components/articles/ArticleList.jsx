@@ -223,6 +223,7 @@ const ArticleList = observer(() => {
       <NewArticle
         open={openNewArticleModal}
         onClose={toggleNewArticleModal}
+        localArticles={localArticles}
         setLocalArticles={setLocalArticles}
         refetchArticles={refetchArticles}
       />

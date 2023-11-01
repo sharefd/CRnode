@@ -32,7 +32,7 @@ import { createPurpose, fetchPurposes } from '@/services/purposes';
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
 
-const NewArticle = ({ open, onClose, refetchArticles, setLocalArticles }) => {
+const NewArticle = ({ open, onClose, refetchArticles, localArticles, setLocalArticles }) => {
   const [allowedPurposes, setAllowedPurposes] = useState([]);
 
   const {
@@ -70,9 +70,8 @@ const NewArticle = ({ open, onClose, refetchArticles, setLocalArticles }) => {
 
   const createMutation = useMutation(createArticle, {
     onSuccess: newArticle => {
-      const allArticles = [...userStore.articles, newArticle];
-      const filteredArticles = allArticles.filter(a => allowedPurposes.includes(a.purpose));
-      setLocalArticles(sortArticles(filteredArticles));
+      const allArticles = [...localArticles, newArticle];
+      setLocalArticles(sortArticles(allArticles));
       refetchArticles();
       onClose();
     }
