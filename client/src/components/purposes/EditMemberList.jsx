@@ -76,30 +76,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
             noOptionsText='Type to find people'
             renderInput={params => <TextField {...params} label='Viewer Permissions' />}
           />
-          <Autocomplete
-            multiple
-            id='canWriteMembers'
-            options={canWriteUsers || []}
-            getOptionLabel={option => `${option.username} (${option.email})`}
-            filterOptions={(options, { inputValue }) => {
-              if (inputValue.length >= 2) {
-                return options.filter(
-                  option =>
-                    option.username.toLowerCase().includes(inputValue.toLowerCase()) ||
-                    option.email.toLowerCase().includes(inputValue.toLowerCase())
-                );
-              }
-              return [];
-            }}
-            onChange={(event, newValue) => handleAddMember('canWriteMembers', newValue)}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
-              ))
-            }
-            noOptionsText='Type to find people'
-            renderInput={params => <TextField {...params} label='Author Permissions' />}
-          />
+
           <MemberList selectedPurpose={selectedPurpose} />
         </Stack>
       </DialogContent>
