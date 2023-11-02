@@ -97,6 +97,27 @@ const PurposesList = observer(() => {
   }
 
   return (
+    <div style={{ paddingInline: '10px' }}>
+      <h1 className='my-4 text-xl'>Calendars</h1>
+      <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
+        + New Calendar
+      </Button>
+      <Table dataSource={purposes} columns={columns} rowKey='_id' />
+
+      <Modal title='Edit Calendar' open={open} onCancel={handleClose} onOk={handleSave}>
+        <Input
+          autoFocus
+          placeholder='Purpose Name'
+          value={(selectedPurpose && selectedPurpose.name) || ''}
+          onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
+        />
+        <Input
+          placeholder='Purpose Description'
+          value={(selectedPurpose && selectedPurpose.description) || ''}
+          onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
+        />
+      </Modal>
+
       <NewPurpose
         open={openNewPurpose}
         handleClose={() => setOpenNewPurpose(false)}
