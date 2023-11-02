@@ -83,10 +83,10 @@ const PurposesList = observer(() => {
             color: 'white',
             borderTopRightRadius: '5px',
             borderTopLeftRadius: '5px',
-            padding: '1rem',
+            padding: '0.7rem',
             mb: 2
           }}>
-          Calendars
+           Calendars
         </Typography>
         <Button
           variant='contained'
