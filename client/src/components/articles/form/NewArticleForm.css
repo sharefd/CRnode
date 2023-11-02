@@ -1,0 +1,57 @@
+.compact-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.compact-form .ant-form-item-label > label {
+  display: block;
+}
+
+.compact-form .ant-form-item-label {
+  margin-bottom: -6px;
+}
+
+.compact-form .ant-input,
+.compact-form .ant-select-selector {
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+  border-radius: 0;
+}
+
+.compact-form .ant-input:focus,
+.compact-form .ant-select-focused .ant-select-selector {
+  border-color: blue;
+  box-shadow: none;
+}
+
+.compact-form .ant-form-item-label > label {
+  color: #333;
+}
+
+.compact-form .ant-input:focus + .ant-form-item-label > label,
+.compact-form .ant-select-focused + .ant-form-item-label > label {
+  color: blue;
+}
+
+.compact-form textarea.ant-input {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.compact-form textarea.ant-input:focus {
+  border-color: blue;
+  box-shadow: none;
+}
+
+.compact-form .ant-select-selector {
+  border: none;
+  border-radius: 4px;
+}
+
+li.ant-picker-ok button {
+  border-radius: 4px;
+  background-color: #1890ff;
+}
+
+.delete-button:hover .anticon-delete {
+  color: red;
+}

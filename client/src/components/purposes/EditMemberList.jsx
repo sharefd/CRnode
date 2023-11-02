@@ -1,95 +1,74 @@
-import { useState } from 'react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Button,
-  Autocomplete,
-  Stack,
-  Chip,
-  LinearProgress
-} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Modal, Button, Transfer, Spin } from 'antd';
 import { updatePurpose } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
-import MemberList from './MemberList';
 
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
-  const [newMembers, setNewMembers] = useState({ canReadMembers: [], canWriteMembers: [] });
   const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
 
-  const handleAddMember = (type, newValue) => {
-    setNewMembers(prevState => ({
-      ...prevState,
-      [type]: newValue.map(user => user._id)
-    }));
-    console.log(newMembers);
+  const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
+
+  const handleChange = nextTargetKeys => {
+    setTargetKeys(nextTargetKeys);
   };
 
   const handleSave = async () => {
     const updatedPurpose = {
       ...selectedPurpose,
-      canReadMembers: Array.from(new Set([...selectedPurpose.canReadMembers, ...newMembers.canReadMembers])),
-      canWriteMembers: Array.from(new Set([...selectedPurpose.canWriteMembers, ...newMembers.canWriteMembers]))
+      canReadMembers: targetKeys
     };
     await updatePurpose(selectedPurpose._id.toString(), updatedPurpose);
     refetchPurposes();
     handleClose();
   };
 
+  useEffect(() => {
+    if (selectedPurpose) {
+      setTargetKeys(selectedPurpose.canReadMembers);
+    }
+  }, [selectedPurpose]);
+
+  const handleModalClose = () => {
+    setTargetKeys([]);
+    handleClose();
+  };
+
   if (isLoadingUsers) {
-    return <LinearProgress />;
+    return <Spin />;
   }
 
-  const canReadUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canReadMembers.includes(u._id)) : [];
-  const canWriteUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id)) : [];
+  const dataSource = data.map(user => ({
+    key: user._id,
+    username: user.username,
+    email: user.email
+  }));
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle sx={{ fontStyle: 'italic', fontFamily: 'Inter' }}>
-        {selectedPurpose && selectedPurpose.name}
-      </DialogTitle>
-      <DialogContent>
-        <Stack sx={{ my: 2 }} spacing={3}>
-          <Autocomplete
-            multiple
-            id='canReadMembers'
-            options={canReadUsers || []}
-            getOptionLabel={option => `${option.username} (${option.email})`}
-            filterOptions={(options, { inputValue }) => {
-              if (inputValue.length >= 2) {
-                return options.filter(
-                  option =>
-                    option.username.toLowerCase().includes(inputValue.toLowerCase()) ||
-                    option.email.toLowerCase().includes(inputValue.toLowerCase())
-                );
-              }
-              return [];
-            }}
-            onChange={(event, newValue) => handleAddMember('canReadMembers', newValue)}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
-              ))
-            }
-            noOptionsText='Type to find people'
-            renderInput={params => <TextField {...params} label='Viewer Permissions' />}
-          />
-
-          <MemberList selectedPurpose={selectedPurpose} />
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color='primary'>
+    <Modal
+      title={selectedPurpose && selectedPurpose.name}
+      open={open}
+      onCancel={handleModalClose}
+      footer={[
+        <Button key='back' onClick={handleClose}>
           Cancel
-        </Button>
-        <Button onClick={handleSave} color='primary'>
+        </Button>,
+        <Button key='submit' ghost className='submit-blue-button' type='primary' onClick={handleSave}>
           Save
         </Button>
-      </DialogActions>
-    </Dialog>
+      ]}>
+      <Transfer
+        dataSource={dataSource}
+        titles={['Available', 'Viewers']}
+        targetKeys={targetKeys}
+        onChange={handleChange}
+        render={item => item.username}
+        listStyle={{
+          width: '45%',
+          height: 300
+        }}
+      />
+    </Modal>
   );
 };
 

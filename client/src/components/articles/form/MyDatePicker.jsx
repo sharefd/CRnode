@@ -51,14 +51,12 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
       const duration = article.duration.split(' - ');
       const startTime = duration[0].split(' ');
       const endTime = duration[1].split(' ');
-      const formattedStartTime = {
+      setSelectedStartTime({
         hour: startTime[0].split(':')[0],
         minute: startTime[0].split(':')[1],
         ampm: startTime[1]
-      };
+      });
 
-      console.log(formattedStartTime);
-      setSelectedStartTime(formattedStartTime);
       setSelectedEndTime({ hour: endTime[0].split(':')[0], minute: endTime[0].split(':')[1], ampm: endTime[1] });
     }
   }, []);
@@ -69,7 +67,9 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
   };
 
   const handleStartTimeChange = (field, value) => {
-    const updatedStartTime = { ...selectedStartTime, [field]: value };
+    const updatedValue = field === 'minute' ? String(value).padStart(2, '0') : value;
+    const updatedStartTime = { ...selectedStartTime, [field]: updatedValue };
+
     setSelectedStartTime(updatedStartTime);
     setStartTime(`${updatedStartTime.hour}:${updatedStartTime.minute} ${updatedStartTime.ampm}`);
 
@@ -77,31 +77,29 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
   };
 
   const handleEndTimeChange = (field, value) => {
-    const updatedEndTime = { ...selectedEndTime, [field]: value };
+    const updatedValue = field === 'minute' ? String(value).padStart(2, '0') : value;
+    const updatedEndTime = { ...selectedEndTime, [field]: updatedValue };
     setSelectedEndTime(updatedEndTime);
     setEndTime(`${updatedEndTime.hour}:${updatedEndTime.minute} ${updatedEndTime.ampm}`);
 
     validateTime(selectedStartTime, updatedEndTime);
   };
 
-  const handleClose = state => {
-    setShow(state);
-  };
-
   const hours = [];
   for (let i = 1; i <= 12; i++) {
     hours.push(
       <option key={`hours-${i}`} value={i}>
-        {i}
+        {i.toString()}
       </option>
     );
   }
 
   const minutes = [];
   for (let i = 0; i < 60; i += 5) {
+    const value = i < 10 ? `0${i}` : `${i}`;
     minutes.push(
-      <option key={`minutes-${i}`} value={i}>
-        {i < 10 ? `0${i}` : i}
+      <option key={`minutes-${i}`} value={value}>
+        {value}
       </option>
     );
   }
@@ -167,7 +165,7 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
             <select
               name='minutes'
               className='bg-transparent text-md appearance-none outline-none mx-0.5'
-              value={selectedStartTime.minute}
+              value={String(selectedStartTime.minute).padStart(2, '0')}
               onChange={e => handleStartTimeChange('minute', e.target.value)}>
               {minutes}
             </select>
@@ -200,7 +198,7 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
             <select
               name='minutes'
               className='bg-transparent text-md appearance-none outline-none mx-0.5'
-              value={selectedEndTime.minute}
+              value={String(selectedEndTime.minute).padStart(2, '0')}
               onChange={e => handleEndTimeChange('minute', e.target.value)}>
               {minutes}
             </select>

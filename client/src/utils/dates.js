@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 
 export const compareDates = (a, b) => {
   const dateA = new Date(a.date);
@@ -65,7 +65,9 @@ export const formatTime = time => {
   return `${hour}:${mins.length < 2 ? `0${mins}` : mins} ${ampm}`;
 };
 
-export const formatMinutes = mins => {
-  console.log(mins);
-  return mins === '5' ? '05' : mins;
-};
+export function extractTimesFromDuration(duration) {
+  const [startStr, endStr] = duration.split(' - ');
+  const startTime = dayjs(startStr, 'hh:mm A');
+  const endTime = dayjs(endStr, 'hh:mm A');
+  return [startTime, endTime];
+}

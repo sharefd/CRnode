@@ -7,6 +7,7 @@ const articleSchema = new mongoose.Schema({
   duration: { type: String },
   purpose: { type: String, required: true },
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  meetingType: { type: String, maxlength: 50 },
   meeting_id: { type: String, maxlength: 50 },
   passcode: { type: String, maxlength: 50 },
   speaker: { type: String },

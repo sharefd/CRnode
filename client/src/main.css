@@ -285,3 +285,41 @@ textarea::placeholder {
 select::placeholder {
   font-size: 14px;
 }
+
+.custom-hover-button {
+  background-color: #1890ff;
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+.custom-hover-button:hover {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
+}
+
+.new-calendar-button:hover {
+  background-color: #1890ff !important;
+  color: #fff !important;
+  border-color: #1890ff !important;
+}
+
+.new-calendar-button {
+  background-color: #fff !important;
+  color: #1890ff !important;
+  border-color: #1890ff !important;
+  margin-bottom: 20px;
+}
+
+.submit-blue-button {
+  background-color: #1890ff !important;
+  color: #fff !important;
+  border-color: #1890ff !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.submit-blue-button:hover {
+  background-color: #59a5ec !important;
+  color: #fff !important;
+  border-color: #59a5ec !important;
+}

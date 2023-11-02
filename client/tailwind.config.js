@@ -27,11 +27,6 @@ module.exports = {
   variants: {
     extend: {}
   },
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/tw-elements-react/dist/js/**/*.js',
-    './node_modules/tailwind-datepicker-react/dist/**/*.js'
-  ],
-  plugins: [require('tw-elements-react/dist/plugin.cjs')]
+  content: ['./index.html', './src/**/*.{js,jsx}'],
+  plugins: []
 };

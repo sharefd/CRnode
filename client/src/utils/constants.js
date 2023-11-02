@@ -49,7 +49,6 @@ export const navlinks = [
     label: 'Manage Calendars',
     type: 'fa',
     Icon: PeopleAlt,
-    endpoint: '/purposes',
     description: 'Create, manage and view calendar permissions.'
   },
   {
@@ -81,9 +80,9 @@ export const navlinks = [
 export const initialArticleData = {
   title: '',
   event_link: '',
-  date: null,
-  duration: 60,
-  purpose: 'Select Purpose',
+  date: new Date(),
+  duration: '',
+  purpose: '',
   meeting_id: '',
   passcode: '',
   speaker: '',

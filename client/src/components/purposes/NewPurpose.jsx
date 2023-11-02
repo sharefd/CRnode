@@ -1,29 +1,21 @@
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Button,
-  Autocomplete,
-  Stack,
-  Chip,
-  LinearProgress
-} from '@mui/material';
+import { Modal, Input, Button, Select, Spin } from 'antd';
 import { createPurpose } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
+
+const { Option } = Select;
+const { TextArea } = Input;
 
 const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '', canReadMembers: [], canWriteMembers: [] });
 
   const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
 
-  const handleAddMember = (type, newValue) => {
+  const handleAddMember = value => {
     setNewPurpose(prevState => ({
       ...prevState,
-      [type]: newValue.map(user => user._id)
+      canReadMembers: value
     }));
   };
 
@@ -35,64 +27,46 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
   };
 
   if (isLoadingUsers) {
-    return <LinearProgress />;
+    return <Spin />;
   }
 
   const users = data.filter(u => u._id !== user._id);
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create New Calendar</DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          margin='dense'
-          label='Calendar Name'
-          fullWidth
-          onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
-        />
-        <TextField
-          margin='dense'
-          label='Description'
-          fullWidth
-          onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
-        />
-        <Stack sx={{ my: 2 }} spacing={3}>
-          <Autocomplete
-            multiple
-            id='canReadMembers'
-            options={users || []}
-            getOptionLabel={option => `${option.username} (${option.email})`}
-            filterOptions={(options, { inputValue }) => {
-              if (inputValue.length >= 2) {
-                return options.filter(
-                  option =>
-                    option.username.toLowerCase().includes(inputValue.toLowerCase()) ||
-                    option.email.toLowerCase().includes(inputValue.toLowerCase())
-                );
-              }
-              return [];
-            }}
-            onChange={(event, newValue) => handleAddMember('canReadMembers', newValue)}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip label={`${option.username} (${option.email})`} {...getTagProps({ index })} />
-              ))
-            }
-            noOptionsText='Type to find people'
-            renderInput={params => <TextField {...params} label='Viewer Permissions' />}
-          />
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color='primary'>
+    <Modal
+      title='Create New Calendar'
+      open={open}
+      onCancel={handleClose}
+      footer={[
+        <Button key='back' onClick={handleClose}>
           Cancel
-        </Button>
-        <Button onClick={handleSave} color='primary'>
+        </Button>,
+        <Button key='submit' ghost type='primary' onClick={handleSave} className='new-calendar-button'>
           Save
         </Button>
-      </DialogActions>
-    </Dialog>
+      ]}>
+      <Input
+        placeholder='Acronym (e.g. UOFTAMR)'
+        onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
+      />
+      <Input
+        placeholder='Description (e.g. UofT Aerospace Rounds)'
+        style={{ marginTop: '10px' }}
+        onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
+      />
+      <Select
+        mode='multiple'
+        style={{ width: '100%', marginTop: '10px' }}
+        placeholder='Viewer Permissions'
+        onChange={handleAddMember}
+        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}>
+        {users.map(user => (
+          <Option key={user._id} value={user._id}>
+            {`${user.username} (${user.email})`}
+          </Option>
+        ))}
+      </Select>
+    </Modal>
   );
 };
 
