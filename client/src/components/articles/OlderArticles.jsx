@@ -144,7 +144,7 @@ const OlderArticles = observer(() => {
                         <TableRow key={index}>
                           <TableCell>{article.purpose}</TableCell>
                           <TableCell>{article.title}</TableCell>
-                          <TableCell>{formatDate(article)}</TableCell>
+                          <TableCell>{formatDate(article.date)}</TableCell>
                           <TableCell>
                             <Checkbox
                               id={`attended-${article._id}`}
