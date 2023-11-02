@@ -56,3 +56,16 @@ export function convertTo24Hour(timeStr) {
 
   return `${hours}:${minutes}`;
 }
+
+export const formatTime = time => {
+  const timeParts = time.split(':');
+  const hour = timeParts[0];
+  const mins = timeParts[1].split(' ')[0];
+  const ampm = timeParts[1].split(' ')[1];
+  return `${hour}:${mins.length < 2 ? `0${mins}` : mins} ${ampm}`;
+};
+
+export const formatMinutes = mins => {
+  console.log(mins);
+  return mins === '5' ? '05' : mins;
+};

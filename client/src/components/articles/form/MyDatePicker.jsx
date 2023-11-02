@@ -41,8 +41,8 @@ const options = {
 const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
   const [show, setShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedStartTime, setSelectedStartTime] = useState({ hour: '8', minute: '00', ampm: 'am' });
-  const [selectedEndTime, setSelectedEndTime] = useState({ hour: '9', minute: '00', ampm: 'am' });
+  const [selectedStartTime, setSelectedStartTime] = useState({ hour: '8', minute: '00', ampm: 'AM' });
+  const [selectedEndTime, setSelectedEndTime] = useState({ hour: '9', minute: '00', ampm: 'AM' });
   const [isValidTime, setIsValidTime] = useState(true);
 
   useEffect(() => {
@@ -51,11 +51,14 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
       const duration = article.duration.split(' - ');
       const startTime = duration[0].split(' ');
       const endTime = duration[1].split(' ');
-      setSelectedStartTime({
+      const formattedStartTime = {
         hour: startTime[0].split(':')[0],
         minute: startTime[0].split(':')[1],
         ampm: startTime[1]
-      });
+      };
+
+      console.log(formattedStartTime);
+      setSelectedStartTime(formattedStartTime);
       setSelectedEndTime({ hour: endTime[0].split(':')[0], minute: endTime[0].split(':')[1], ampm: endTime[1] });
     }
   }, []);
@@ -116,11 +119,13 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
     const startMinutes = parseInt(startTime.minute, 10);
     const endHour = parseInt(endTime.hour, 10);
     const endMinutes = parseInt(endTime.minute, 10);
+    const startAMPM = selectedStartTime.ampm;
+    const endAMPM = selectedEndTime.ampm;
 
     const isValid =
-      !(startHour === endHour && startMinutes === endMinutes) &&
-      !(startHour > endHour) &&
-      !(startHour === endHour && startMinutes > endMinutes);
+      !(startHour === endHour && startMinutes === endMinutes && startAMPM === endAMPM) &&
+      !(startHour > endHour && startAMPM === endAMPM) &&
+      !(startHour === endHour && startMinutes > endMinutes && startAMPM === endAMPM);
 
     setIsValidTime(isValid);
 
@@ -171,8 +176,8 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
               className='bg-transparent text-md appearance-none outline-none mx-0.5'
               value={selectedStartTime.ampm}
               onChange={e => handleStartTimeChange('ampm', e.target.value)}>
-              <option value='am'>AM</option>
-              <option value='pm'>PM</option>
+              <option value='AM'>AM</option>
+              <option value='PM'>PM</option>
             </select>
           </div>
 
@@ -204,8 +209,8 @@ const MyDatePicker = ({ article, setDate, setStartTime, setEndTime }) => {
               className='bg-transparent text-md appearance-none outline-none mx-0.5'
               value={selectedEndTime.ampm}
               onChange={e => handleEndTimeChange('ampm', e.target.value)}>
-              <option value='am'>AM</option>
-              <option value='pm'>PM</option>
+              <option value='AM'>AM</option>
+              <option value='PM'>PM</option>
             </select>
           </div>
         </div>

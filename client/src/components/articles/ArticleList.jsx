@@ -70,9 +70,8 @@ const ArticleList = observer(() => {
   };
 
   const handleSave = async editedArticle => {
-    const updatedArticle = { ...editedArticle, organizer: user._id };
     setSelectedArticle(null);
-    updateMutation.mutate(updatedArticle);
+    updateMutation.mutate(editedArticle);
   };
 
   const toggleDetails = articleId => {
@@ -171,11 +170,11 @@ const ArticleList = observer(() => {
                           <span style={{ fontSize: '13px' }}>{article.purpose}</span>
                         </div>
                         <button
-                          className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
+                          className={`edit-article ${article.organizer.username === user.username ? 'creator' : ''}`}
                           onClick={() => setSelectedArticle(article)}
-                          disabled={article.organizer._id !== user._id}>
+                          disabled={article.organizer.username !== user.username}>
                           Created by {article.organizer.username}
-                          {article.organizer._id === user._id && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
+                          {article.organizer.username === user.username && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
                         </button>
                         {/* END OF card footer*/}
                       </div>
