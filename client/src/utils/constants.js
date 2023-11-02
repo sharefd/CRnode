@@ -45,11 +45,11 @@ export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF
 
 export const navlinks = [
   {
-    label: 'Manage Purposes',
+    label: 'Manage Calendars',
     type: 'fa',
     Icon: PeopleAlt,
-    endpoint: '/purposes',
-    description: 'Create, manage and view purposes permissions.'
+    endpoint: '/calendars',
+    description: 'Create, manage and view calendar permissions.'
   },
   {
     label: 'Manage Requests',
@@ -80,9 +80,9 @@ export const navlinks = [
 export const initialArticleData = {
   title: '',
   event_link: '',
-  date: null,
-  duration: 60,
-  purpose: 'Select Purpose',
+  date: new Date(),
+  duration: '',
+  purpose: '',
   meeting_id: '',
   passcode: '',
   speaker: '',

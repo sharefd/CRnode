@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.13",
     "@mui/x-date-pickers": "^6.16.2",
+    "antd": "^5.10.3",
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
     "mobx": "^6.10.2",

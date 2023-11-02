@@ -6,23 +6,31 @@ import { Box, Grid, Link, Paper, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router';
 
 const Home = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
+  const navigate = useNavigate();
 
   const {
     data: purposes,
     isLoading,
     refetch
-  } = useQuery(['userPurposes', user._id], () => fetchPurposes(user._id), {
-    enabled: !!user._id
+  } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
+    enabled: !!user?._id
   });
 
   useEffect(() => {
     if (isLoading) {
       return;
     }
+
+    if (!user || localUser === undefined) {
+      navigate('/login');
+      return;
+    }
+
     userStore.setUser(user);
 
     const canReadPurposes = getCanReadPermissions(purposes, user._id).map(p => p.name);

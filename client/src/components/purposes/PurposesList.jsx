@@ -1,28 +1,11 @@
-import { useState } from 'react';
 import { observer } from 'mobx-react';
-import {
-  Paper,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  LinearProgress
-} from '@mui/material';
-import { updatePurpose, deletePurpose } from '@/services/purposes';
+import { useState } from 'react';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Progress, Table } from 'antd';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
-import NewPurpose from './NewPurpose';
+import { deletePurpose, updatePurpose } from '@/services/purposes';
 import EditMemberList from './EditMemberList';
-import { Delete } from '@mui/icons-material';
+import NewPurpose from './NewPurpose';
 
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
@@ -68,101 +51,73 @@ const PurposesList = observer(() => {
     }
   };
 
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description'
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (text, record) => (
+        <Button type='primary' className='custom-hover-button' onClick={() => handleOpen(record)}>
+          Edit
+        </Button>
+      )
+    },
+    {
+      title: 'Edit Members',
+      key: 'editMembers',
+      render: (text, record) => <Button onClick={() => handleOpenMemberList(record)}>Edit Members</Button>
+    },
+    {
+      title: 'Delete',
+      key: 'delete',
+      render: (text, record) => (
+        <Button
+          type='link'
+          icon={<DeleteOutlined />}
+          onClick={() => handleDelete(record._id)}
+          style={{ color: 'inherit' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'red')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
+        />
+      )
+    }
+  ];
+
   if (isLoading) {
-    return <LinearProgress />;
+    return <Progress percent={100} status='active' />;
   }
 
   return (
-    <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
-      <TableContainer>
-        <Typography
-          variant='h5'
-          align='left'
-          sx={{
-            backgroundColor: '#0066b2',
-            color: 'white',
-            borderTopRightRadius: '5px',
-            borderTopLeftRadius: '5px',
-            padding: '1rem',
-            mb: 2
-          }}>
-          Calendars
-        </Typography>
-        <Button
-          variant='contained'
-          color='primary'
-          sx={{ marginLeft: '10px' }} // Adjust the margin value as needed
-          onClick={() => setOpenNewPurpose(true)}>
-          + New Calendar
-        </Button>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Actions</TableCell>
-              <TableCell>Edit Members</TableCell>
-              <TableCell>Delete</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {purposes &&
-              purposes.map(purpose => (
-                <TableRow key={purpose._id}>
-                  <TableCell>{purpose.name}</TableCell>
-                  <TableCell>{purpose.description}</TableCell>
+    <div style={{ paddingInline: '10px' }}>
+      <h1 className='my-4 text-xl'>Calendars</h1>
+      <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
+        + New Calendar
+      </Button>
+      <Table dataSource={purposes} columns={columns} rowKey='_id' />
 
-                  <TableCell>
-                    <Button variant='outlined' color='primary' onClick={() => handleOpen(purpose)}>
-                      Edit
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant='outlined' color='secondary' onClick={() => handleOpenMemberList(purpose)}>
-                      Edit Members
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton variant='outlined' color='error' onClick={() => handleDelete(purpose._id)}>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Modal title='Edit Calendar' open={open} onCancel={handleClose} onOk={handleSave}>
+        <Input
+          autoFocus
+          placeholder='Purpose Name'
+          value={(selectedPurpose && selectedPurpose.name) || ''}
+          onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
+        />
+        <Input
+          placeholder='Purpose Description'
+          value={(selectedPurpose && selectedPurpose.description) || ''}
+          onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
+        />
+      </Modal>
 
-      {/* Dialog for editing purpose */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Calendar</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin='dense'
-            label='Purpose Name'
-            fullWidth
-            value={(selectedPurpose && selectedPurpose.name) || ''}
-            onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
-          />
-          <TextField
-            autoFocus
-            margin='dense'
-            label='Purpose Description'
-            fullWidth
-            value={(selectedPurpose && selectedPurpose.description) || ''}
-            onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} color='primary'>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
       <NewPurpose
         open={openNewPurpose}
         handleClose={() => setOpenNewPurpose(false)}
@@ -176,7 +131,7 @@ const PurposesList = observer(() => {
         refetchPurposes={refetchPurposes}
         user={user}
       />
-    </Paper>
+    </div>
   );
 });
 
