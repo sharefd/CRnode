@@ -1,6 +1,5 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
-import userStore from '@/stores/userStore';
 import { Edit } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
@@ -11,8 +10,9 @@ import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { formatDate } from '@/utils/dates';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 import NewArticleForm from './form/NewArticleForm';
-import EditArticleForm from './form/EditArticleForm';
-import { Button } from '@mui/material';
+
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
 
 const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -22,7 +22,6 @@ const ArticleList = observer(() => {
 
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
-  const user = userStore.user;
 
   const {
     allowedArticles,
@@ -57,7 +56,7 @@ const ArticleList = observer(() => {
     onSuccess: updatedArticle => {
       const index = localArticles.findIndex(article => article._id === updatedArticle._id);
       const updatedArticles = [...localArticles];
-      updatedArticles[index] = updatedArticle;
+      updatedArticles[index] = { ...updatedArticle, organizer: { user: user._id, username: user.username } };
       setLocalArticles(updatedArticles);
     }
   });

@@ -6,7 +6,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   LinearProgress,
   Checkbox
 } from '@mui/material';

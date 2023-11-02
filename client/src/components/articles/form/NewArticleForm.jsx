@@ -8,6 +8,7 @@ import NewPurposeDialog from '../actions/NewPurposeDialog';
 import { InputField, SelectField, TextAreaField, SubmitButton, meetingTypeField } from './ArticleFormComponents';
 import { IconButton, Modal, Paper } from '@mui/material';
 import { Close, Delete } from '@mui/icons-material';
+
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
 
@@ -40,7 +41,7 @@ const NewArticleForm = ({
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [article, setArticle] = useState(initialArticleData);
 
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState('12:00 PM');
   const [endTime, setEndTime] = useState('12:00 PM');
 
@@ -111,6 +112,7 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTime} - ${endTime}`,
       organizer: user._id,
+      purpose: article.purpose ? article.purpose : allowedPurposes[0].name,
       event_link: eventLink // Update the event_link with the corrected URL
     };
 
