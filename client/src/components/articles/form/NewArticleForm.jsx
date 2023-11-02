@@ -8,6 +8,7 @@ import NewPurposeDialog from '../actions/NewPurposeDialog';
 import { InputField, SelectField, TextAreaField, SubmitButton, meetingTypeField } from './ArticleFormComponents';
 import { IconButton, Modal, Paper } from '@mui/material';
 import { Close, Delete } from '@mui/icons-material';
+import { formatTime } from '@/utils/dates';
 
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
@@ -82,7 +83,24 @@ const NewArticleForm = ({
 
   const handleSave = async e => {
     e.preventDefault();
-    onSave(article);
+    let eventLink = article.event_link;
+    if (!eventLink.startsWith('https://')) {
+      eventLink = `https://${eventLink}`;
+    }
+
+    const formattedStartTime = formatTime(startTime);
+    const formattedEndTime = formatTime(endTime);
+
+    const payload = {
+      ...article,
+      date: date,
+      duration: `${formattedStartTime} - ${formattedEndTime}`,
+      organizer: user._id,
+      purpose: article.purpose ? article.purpose : allowedPurposes[0].name,
+      event_link: eventLink
+    };
+
+    onSave(payload);
   };
 
   const handleAddPurpose = async () => {
