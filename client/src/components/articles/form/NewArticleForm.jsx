@@ -246,7 +246,7 @@ const NewArticleForm = ({
                 <div className='justify-center'>
                   <SubmitButton label='Submit' />
                 </div>
-                {selectedArticle && (
+                {selectedArticle ? (
                   <IconButton
                     sx={{
                       borderRadius: '20px',
@@ -258,6 +258,8 @@ const NewArticleForm = ({
                     onClick={() => onDelete(article._id)}>
                     <Delete sx={{ fontSize: '24px' }} />
                   </IconButton>
+                ) : (
+                  <div></div>
                 )}
               </div>
             </form>
