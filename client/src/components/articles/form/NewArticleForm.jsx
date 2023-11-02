@@ -88,13 +88,10 @@ const NewArticleForm = ({
       eventLink = `https://${eventLink}`;
     }
 
-    const formattedStartTime = formatTime(startTime);
-    const formattedEndTime = formatTime(endTime);
-
     const payload = {
       ...article,
       date: date,
-      duration: `${formattedStartTime} - ${formattedEndTime}`,
+      duration: `${startTime} - ${endTime}`,
       organizer: user._id,
       purpose: article.purpose ? article.purpose : allowedPurposes[0].name,
       event_link: eventLink
@@ -164,7 +161,6 @@ const NewArticleForm = ({
       <Paper elevation={3} className='relative overflow-y-auto max-w-lg mx-auto mt-20 max-h-[80vh]'>
         <div className='relative overflow-y-auto max-w-lg mx-auto'>
           <div style={{ borderTopLeftRadius: '0.5rem', borderTopRightRadius: '0.5rem' }}>
-           
             <form onSubmit={selectedArticle ? handleSave : handleSubmit} className='p-6'>
               {/* TITLE */}
               <InputField

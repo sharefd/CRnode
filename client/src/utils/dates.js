@@ -64,8 +64,3 @@ export const formatTime = time => {
   const ampm = timeParts[1].split(' ')[1];
   return `${hour}:${mins.length < 2 ? `0${mins}` : mins} ${ampm}`;
 };
-
-export const formatMinutes = mins => {
-  console.log(mins);
-  return mins === '5' ? '05' : mins;
-};
