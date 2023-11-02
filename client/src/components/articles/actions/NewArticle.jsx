@@ -48,7 +48,6 @@ const NewArticle = ({ open, onClose, refetchArticles, localArticles, setLocalArt
     const canWrite = purposes?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())) || [];
 
     setAllowedPurposes(canWrite);
-    console.log('Creator Purpose Permissions: ', canWrite);
   }, [isLoading]);
 
   const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
@@ -56,10 +55,10 @@ const NewArticle = ({ open, onClose, refetchArticles, localArticles, setLocalArt
   const [article, setArticle] = useState({
     title: '',
     event_link: '',
-    dateString: '',
-    time: dayjs('2022-04-17T15:30'),
-    purpose: '',
+    date: '',
     duration: 60,
+
+    purpose: '',
     meeting_id: '',
     passcode: '',
     speaker: '',
@@ -198,8 +197,8 @@ const NewArticle = ({ open, onClose, refetchArticles, localArticles, setLocalArt
                 <TextField
                   type='date'
                   fullWidth
-                  value={article.dateString}
-                  onChange={e => setArticle({ ...article, dateString: e.target.value })}
+                  value={article.date}
+                  onChange={e => setArticle({ ...article, date: e.target.value })}
                 />
               </Grid>
 

@@ -74,7 +74,7 @@ const OlderArticles = observer(() => {
   });
 
   const getFeedback = articleId => {
-    const feedbackObj = userStore.feedbacks.find(f => f.articleId._id === articleId);
+    const feedbackObj = userStore.feedbacks.find(f => f.articleId && f.articleId._id === articleId);
     return feedbackObj ? feedbackObj.feedback : '';
   };
 

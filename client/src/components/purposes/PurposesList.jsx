@@ -24,6 +24,9 @@ import NewPurpose from './NewPurpose';
 import EditMemberList from './EditMemberList';
 import { Delete } from '@mui/icons-material';
 
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
+
 const PurposesList = observer(() => {
   const [open, setOpen] = useState(false);
   const [openMemberList, setOpenMemberList] = useState(false);
@@ -33,7 +36,7 @@ const PurposesList = observer(() => {
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
 
-  const { user, purposes, isLoading, userLoading, refetchPurposes } = useSettingsPermissions();
+  const { purposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
 
   const handleOpen = (purpose = null) => {
     setSelectedPurpose(purpose);
@@ -65,7 +68,7 @@ const PurposesList = observer(() => {
     }
   };
 
-  if (userLoading || isLoading) {
+  if (isLoading) {
     return <LinearProgress />;
   }
 

@@ -20,32 +20,9 @@ export const getMaxHour = visibleHours => {
   return max;
 };
 
-export const formatArticlesToEvents = allowedArticles => {
-  return allowedArticles.map(article => {
-    const startTime24 = convertTo24Hour(article.time);
-    const startDate = new Date(`${article.dateString}T${startTime24}`);
-
-    const duration = article.duration || 60;
-    const endDate = new Date(startDate);
-    endDate.setMinutes(startDate.getMinutes() + duration);
-    const endTime24 = `${endDate.getHours().toString().padStart(2, '0')}:${endDate
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`;
-
-    return {
-      title: article.purpose,
-      start: new Date(`${article.dateString}T${startTime24}`),
-      end: new Date(`${article.dateString}T${endTime24}`),
-      allDay: false,
-      resource: article
-    };
-  });
-};
-
 export const formatDuration24Hour = article => {
   const startTime24 = convertTo24Hour(article.time);
-  const startDate = new Date(`${article.dateString}T${startTime24}`);
+  const startDate = article.date;
   const duration = article.duration || 60;
   const endDate = new Date(startDate);
   endDate.setMinutes(startDate.getMinutes() + duration);

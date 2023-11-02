@@ -9,19 +9,9 @@ import { useEffect, useState } from 'react';
 const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPurposes }) => {
   const [editedArticle, setEditedArticle] = useState(article);
 
-  useEffect(() => {
-    if (article && article.time) {
-      setEditedArticle({ ...article, time: dayjs(article.time, 'hh:mm A') });
-    }
-  }, [article]);
-
   const handleSave = async e => {
     e.preventDefault();
-    const formattedTime = editedArticle.time.format('hh:mm A');
-    onSave({
-      ...editedArticle,
-      time: formattedTime
-    });
+    onSave(editedArticle);
   };
 
   if (!editedArticle) {
@@ -88,8 +78,8 @@ const EditArticleModal = ({ open, onClose, article, onSave, onDelete, allowedPur
                 <TextField
                   type='date'
                   fullWidth
-                  value={editedArticle.dateString}
-                  onChange={e => setEditedArticle({ ...editedArticle, dateString: e.target.value })}
+                  value={editedArticle.date}
+                  onChange={e => setEditedArticle({ ...editedArticle, date: e.target.value })}
                 />
               </Grid>
               <Grid item xs={6}>

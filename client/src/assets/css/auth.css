@@ -73,3 +73,13 @@ hr.divider:after {
 .scrollable-area {
   max-height: calc(100vh - 370px); /* Adjust based on your needs */
 }
+
+.authButton-hover {
+  background-color: #4185ef;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.authButton-hover:hover {
+  background-color: #2e67d2;
+}

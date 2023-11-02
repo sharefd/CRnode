@@ -1,32 +1,32 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
 import userStore from '@/stores/userStore';
-import { formatDateToReadable } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
-import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
-import EditArticleModal from './actions/EditArticleModal';
-import NewArticle from './actions/NewArticle';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import { purposeIcons } from '@/components/ui/PurposeIcons';
-import { formatDuration12Hour } from '@/utils/calendar';
+import { formatDate } from '@/utils/dates';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
+import NewArticleForm from './form/NewArticleForm';
+import EditArticleForm from './form/EditArticleForm';
+import { Button } from '@mui/material';
 
 const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
-  const [selectedPurposes, setSelectedPurposes] = useState(['Show All']);
+  const [selectedPurposes, setSelectedPurposes] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
+
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
-
   const user = userStore.user;
 
   const {
     allowedArticles,
+    canReadPurposes,
     canWritePurposes,
     isLoading,
     refetchArticles,
@@ -39,6 +39,12 @@ const ArticleList = observer(() => {
     const sortedArticles = sortArticles(allowedArticles);
     setLocalArticles(sortedArticles);
   }, [isLoading, allowedArticles]);
+
+  useEffect(() => {
+    if (canReadPurposes.length > 0 && selectedPurposes.length === 0) {
+      setSelectedPurposes(canReadPurposes.map(p => p.name));
+    }
+  }, [canReadPurposes]);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
@@ -65,17 +71,9 @@ const ArticleList = observer(() => {
   };
 
   const handleSave = async editedArticle => {
-    await updateArticle(editedArticle);
+    const updatedArticle = { ...editedArticle, organizer: user._id };
     setSelectedArticle(null);
-    updateMutation.mutate(editedArticle);
-  };
-
-  const handlePurposeChange = newPurposes => {
-    if (newPurposes.includes('Show All')) {
-      setSelectedPurposes(['Show All']);
-    } else {
-      setSelectedPurposes(newPurposes);
-    }
+    updateMutation.mutate(updatedArticle);
   };
 
   const toggleDetails = articleId => {
@@ -91,7 +89,11 @@ const ArticleList = observer(() => {
   };
 
   const toggleNewArticleModal = () => {
-    setOpenNewArticleModal(!openNewArticleModal);
+    if (selectedArticle) {
+      setSelectedArticle(null);
+    } else {
+      setOpenNewArticleModal(!openNewArticleModal);
+    }
   };
 
   const currentDate = new Date();
@@ -99,7 +101,7 @@ const ArticleList = observer(() => {
   eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
 
   const isArticleAfterCurrentDate = article => {
-    const articleDate = new Date(article ? article.dateString : '');
+    const articleDate = new Date(article ? article.date : '');
     return articleDate >= eightHoursAgo;
   };
 
@@ -115,124 +117,87 @@ const ArticleList = observer(() => {
     <div>
       <ActionBar
         user={user}
+        canReadPurposes={canReadPurposes}
         selectedPurposes={selectedPurposes}
-        handlePurposeChange={handlePurposeChange}
+        setSelectedPurposes={setSelectedPurposes}
         toggleNewArticleModal={toggleNewArticleModal}
       />
-      <Box px={2}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
-            {filteredArticles.map((article, index) => {
-              return (
-                <Card key={index} variant='outlined' sx={{ marginBottom: '20px', position: 'relative' }}>
-                  <CardContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={3}>
-                        <Typography variant='subtitle1' color='textSecondary'>
-                          {formatDateToReadable(article.dateString)}
-                        </Typography>
-
-                        <Typography variant='caption' color='textSecondary'>
-                          {formatDuration12Hour(article)}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={9}>
-                        <Box sx={{ backgroundColor: '#f1f8ff', p: '0.5rem' }}>
-                          <Typography variant='h7' sx={{ fontWeight: '700' }}>
-                            {article.title}
-                          </Typography>
-                        </Box>
-                        <CardActions sx={{ my: 1 }}>
-                          <Button
-                            variant='contained'
-                            color='primary'
-                            href={article.event_link}
-                            target='_blank'
-                            size='small'
-                            sx={{ mx: 1, textTransform: 'none', textAlign: 'center' }}>
-                            Join Meeting
-                          </Button>
-
-                          <Button
-                            variant='outlined'
-                            onClick={() => toggleDetails(article._id)}
-                            size='small'
-                            sx={{
-                              textTransform: 'none',
-                              my: 0.5,
-                              mx: 1,
-                              color: 'gray',
-                              borderColor: 'gray',
-                              '&:hover': { backgroundColor: '#ececec', borderColor: 'gray' }
-                            }}>
-                            More Details
-                          </Button>
-                        </CardActions>
-                        <Box
-                          sx={{
-                            display: showDetails[article._id] ? 'flex' : 'none',
-                            alignItems: 'center',
-                            mx: 2,
-                            my: 1,
-                            fontSize: '0.9rem'
-                          }}>
-                          <span>Meeting ID: {article.meeting_id || 'None'}</span>
-                          <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
-                          <span>Passcode: {article.passcode || 'None'}</span>
-                          <Divider orientation='vertical' flexItem sx={{ height: 24, mx: 1 }} />{' '}
-                          <span> Speaker: {article.speaker || ''}</span>
-                        </Box>
-
-                        <Box
-                          sx={{
-                            display: showDetails[article._id] ? 'flex' : 'none',
-                            alignItems: 'center',
-                            mx: 2,
-                            my: 1,
-                            fontSize: '0.9rem'
-                          }}>
-                          <span> {article.additional_details || ''}</span>
-                        </Box>
-                        {/* BEGINNING OF card footer */}
-                        <Box sx={{ mt: 2 }}>
-                          <Box className='purpose-badge'>
-                            {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
-                            <span style={{ fontSize: '13px' }}>{article.purpose}</span>
-                          </Box>
-                          <button
-                            className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
-                            onClick={() => setSelectedArticle(article)}
-                            disabled={article.organizer._id !== user._id}>
-                            Created by {article.organizer.username}
-                            {article.organizer._id === user._id && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
-                          </button>
-                          {/* END OF card footer*/}
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </Grid>
-          <Grid item xs={6} md={5} style={{ position: 'relative', marginTop: '-20px' }}>
+      <div className='px-4'>
+        <div className='grid grid-cols-12 gap-4'>
+          <div className='col-span-12 md:col-span-7'>
+            {filteredArticles.map((article, index) => (
+              <div key={index} className='mb-5 border rounded relative'>
+                <div className='p-4'>
+                  <div className='grid grid-cols-12 gap-2'>
+                    <div className='col-span-3'>
+                      <p className='text-sm text-gray-500'>{formatDate(article.date)}</p>
+                      <p className='text-xs text-gray-500'>{article.duration}</p>
+                    </div>
+                    <div className='col-span-9'>
+                      <div className='bg-blue-100 p-2'>
+                        <h6 className='font-semibold'>{article.title}</h6>
+                      </div>
+                      <div className={`my-2 flex space-x-2 mb-10 ${showDetails[article._id] ? 'mb-4' : 'mb-10'}`}>
+                        <a
+                          href={article.event_link}
+                          target='_blank'
+                          className='text-white bg-blue-500 px-2 py-1 rounded text-sm'>
+                          Join Meeting
+                        </a>
+                        <button
+                          onClick={() => toggleDetails(article._id)}
+                          className='text-gray-500 border border-gray-500 px-2 py-1 rounded text-sm hover:bg-gray-300'>
+                          More Details
+                        </button>
+                      </div>
+                      <div
+                        className={`flex items-center mx-2 my-1 mb-8 text-sm ${
+                          showDetails[article._id] ? 'block' : 'hidden'
+                        }`}>
+                        <span>Meeting ID: {article.meeting_id || 'None'}</span>
+                        <div className='mx-2 h-5 border-r border-gray-400'></div>
+                        <span>Passcode: {article.passcode || 'None'}</span>
+                        <div className='mx-2 h-5 border-r border-gray-400'></div>
+                        <span>Speaker: {article.speaker || ''}</span>
+                      </div>
+                      <div
+                        className={`flex items-center mx-2 my-1 text-sm ${
+                          showDetails[article._id] ? 'block' : 'hidden'
+                        }`}>
+                        <span>{article.additional_details || ''}</span>
+                      </div>
+                      <div className='mt-2'>
+                        <div className='purpose-badge'>
+                          {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
+                          <span style={{ fontSize: '13px' }}>{article.purpose}</span>
+                        </div>
+                        <button
+                          className={`edit-article ${article.organizer._id === user._id ? 'creator' : ''}`}
+                          onClick={() => setSelectedArticle(article)}
+                          disabled={article.organizer._id !== user._id}>
+                          Created by {article.organizer.username}
+                          {article.organizer._id === user._id && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
+                        </button>
+                        {/* END OF card footer*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='col-span-6 md:col-span-5 relative mt-[-5]'>
             <ArticleCalendar articles={localArticles} />
-          </Grid>
-        </Grid>
-      </Box>
-      <NewArticle
-        open={openNewArticleModal}
+          </div>
+        </div>
+      </div>
+      <NewArticleForm
+        open={openNewArticleModal || !!selectedArticle}
         onClose={toggleNewArticleModal}
         localArticles={localArticles}
         setLocalArticles={setLocalArticles}
         refetchArticles={refetchArticles}
-      />
-      <EditArticleModal
-        open={!!selectedArticle}
-        onClose={() => setSelectedArticle(null)}
-        allowedPurposes={canWritePurposes}
-        article={selectedArticle}
+        selectedArticle={selectedArticle}
         onSave={handleSave}
         onDelete={handleDelete}
       />

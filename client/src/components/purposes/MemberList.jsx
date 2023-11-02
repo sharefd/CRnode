@@ -47,6 +47,8 @@ const MemberList = ({ selectedPurpose }) => {
       }
     }
 
+    console.log(updatedPurpose);
+
     setLocalPurpose(updatedPurpose);
   };
 
@@ -60,7 +62,7 @@ const MemberList = ({ selectedPurpose }) => {
     }
   };
 
-  if (isLoadingPurpose) {
+  if (isLoadingPurpose || !localPurpose) {
     return <LinearProgress />;
   }
 
@@ -82,7 +84,7 @@ const MemberList = ({ selectedPurpose }) => {
                 <TableCell>{member.username}</TableCell>
                 <TableCell>
                   <Checkbox
-                    checked={!!purpose.canReadMembers.find(m => m._id === member._id)}
+                    checked={!!localPurpose.canReadMembers.find(m => m._id === member._id)}
                     onChange={() => handleCheckboxChange(member, 'canRead')}
                   />
                 </TableCell>

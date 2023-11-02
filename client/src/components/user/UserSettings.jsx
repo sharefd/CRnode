@@ -30,6 +30,9 @@ import { useMutation, useQueryClient } from 'react-query';
 import { grey } from '@mui/material/colors';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
+
 const UserSettings = observer(() => {
   const queryClient = useQueryClient();
 
@@ -38,7 +41,7 @@ const UserSettings = observer(() => {
   const [tempValues, setTempValues] = useState({});
   const [showPasswordChange, setShowPasswordChange] = useState(false);
 
-  const { user, purposes, canWritePurposes, canReadPurposes, isLoading, userLoading } = useSettingsPermissions();
+  const { purposes, canWritePurposes, canReadPurposes, isLoading } = useSettingsPermissions(user);
 
   const mutation = useMutation(updateUser, {
     onSuccess: data => {
@@ -54,8 +57,8 @@ const UserSettings = observer(() => {
   });
 
   useEffect(() => {
-    if (user && purposes) {
-      setTempValues({
+    if (!isLoading) {
+      const newValues = {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -63,9 +66,10 @@ const UserSettings = observer(() => {
         canRead: canReadPurposes,
         canWrite: canWritePurposes,
         university: user.university
-      });
+      };
+      setTempValues(newValues);
     }
-  }, [user]);
+  }, [isLoading]);
 
   const handleFieldUpdate = async (field, newValue) => {
     const updatedUser = { _id: user._id, [field]: newValue };
@@ -212,7 +216,7 @@ const UserSettings = observer(() => {
     </Box>
   );
 
-  if (isLoading || userLoading || !user) {
+  if (isLoading || !user) {
     return <LinearProgress />;
   }
 
@@ -292,7 +296,9 @@ const UserSettings = observer(() => {
               {user.attended.map((article, index) => (
                 <ListItem key={index} sx={{ display: 'list-item' }}>
                   {article.title}
-                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>({formatDate(article)})</span>
+                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
+                    ({formatDate(article.date)})
+                  </span>
                 </ListItem>
               ))}
             </List>

@@ -1,9 +1,9 @@
-const SelectField = ({ field, value, onChange, error }) => (
-  <div className='mb-4'>
+const SelectField = ({ field, value, onChange, error, border = true, classes }) => (
+  <div className={`mb-4`}>
     <label className='block text-sm font-medium text-gray-600'>{field.label}</label>
     <select
       name={field.name}
-      className='mt-1 p-2 w-full rounded-md border'
+      className={` ${border ? 'w-full border rounded-md mt-1 p-2 ' : `${classes} border-b mt-2.5 outline-none`}`}
       required={field.required}
       value={value}
       onChange={onChange}>

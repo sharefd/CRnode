@@ -25,6 +25,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
       ...prevState,
       [type]: newValue.map(user => user._id)
     }));
+    console.log(newMembers);
   };
 
   const handleSave = async () => {
@@ -44,7 +45,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
 
   const canReadUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canReadMembers.includes(u._id)) : [];
   const canWriteUsers = selectedPurpose ? data.filter(u => !selectedPurpose.canWriteMembers.includes(u._id)) : [];
-  console.log(newMembers);
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle sx={{ fontStyle: 'italic', fontFamily: 'Inter' }}>

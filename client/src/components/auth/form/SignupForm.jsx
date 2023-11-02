@@ -1,15 +1,11 @@
 import { createUser } from '@/services/users';
-import userStore from '@/stores/userStore';
-import { CircularProgress, Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import ChevronLeft from '../buttons/ChevronLeft';
-import ContinueWithEmail from '../buttons/ContinueWithEmail';
-import GoogleButton from '../buttons/GoogleButton';
 import InputField from '../fields/InputField';
 import SelectField from '../fields/SelectField';
+import { CircularProgress, Typography } from '@mui/material';
 
 const SignupForm = observer(({ fields, setIsSignUp }) => {
   const navigate = useNavigate();
@@ -89,55 +85,61 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className='p-8 w-full mx-auto mt-8 pt-4'>
-        {showForm ? (
-          <>
-            <ChevronLeft setShowForm={setShowForm} />
-            <div className='scrollable-area'>
-              <h1 className='text-center text-2xl mb-4'>Sign Up</h1>
-              {fields.map((field, index) => {
-                const FieldComponent = field.type === 'select' ? SelectField : InputField;
+        <div className='scrollable-area'>
+          <h1 className='text-center text-2xl mb-4'>Sign Up</h1>
+          {fields.map((field, index) => {
+            const FieldComponent = field.type === 'select' ? SelectField : InputField;
 
-                return (
-                  <FieldComponent
-                    key={index}
-                    field={field}
-                    value={credentials[field.name]}
-                    onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
-                    error={fieldErrors[field.name]}
-                  />
-                );
-              })}
-              <div className='mt-8 w-full text-center'>
-                {isLoading && (
-                  <div className='w-full text-center'>
-                    <CircularProgress size={24} />
-                  </div>
-                )}
-                <div className='pb-4 sm:pb-8 text-center w-full'>
-                  {!isLoading && (
-                    <button type='submit' className='w-full bg-blue-500 text-white p-2 rounded-full hover:bg-blue-400'>
-                      Sign Up
-                    </button>
-                  )}
-                </div>
+            return (
+              <FieldComponent
+                key={index}
+                field={field}
+                value={credentials[field.name]}
+                onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
+                error={fieldErrors[field.name]}
+              />
+            );
+          })}
+          <div className='mt-8 w-full text-center'>
+            {isLoading && (
+              <div className='w-full text-center'>
+                <CircularProgress size={24} />
               </div>
+            )}
+            <div className='pb-4 sm:pb-8 text-center w-full'>
+              {!isLoading && (
+                <Typography
+                  onClick={handleSubmit}
+                  sx={{
+                    cursor: 'pointer',
+                    px: 2,
+                    py: 1,
+                    width: '100%',
+                    color: '#fff',
+                    backgroundColor: '#4185EF',
+                    '&:hover': { backgroundColor: '#2e67d2' },
+                    borderRadius: '9999px'
+                  }}>
+                  Sign Up
+                </Typography>
+              )}
             </div>
-          </>
-        ) : (
-          <>
-            <GoogleButton isSignup={true} />
+          </div>
+        </div>
+        {/* <GoogleButton isSignup={true} />
             <hr className='divider' />
-            <ContinueWithEmail showForm={showForm} setShowForm={setShowForm} />
-            <p className='mt-8 text-center'>
-              Already have an account?{' '}
-              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(false)}>
-                Log in
-              </span>
-            </p>
-          </>
-        )}
+            <ContinueWithEmail showForm={showForm} setShowForm={setShowForm} /> */}
+        <p className='mt-8 text-center'>
+          Already have an account?{' '}
+          <button
+            type='button'
+            className='text-blue-500 cursor-pointer hover:underline'
+            onClick={() => setIsSignUp(false)}>
+            Log in
+          </button>
+        </p>
       </div>
     </form>
   );

@@ -1,11 +1,12 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import url('./assets/css/auth.css');
+@import url('./assets/css/buttons.css');
+@import url('./assets/css/Modal.css');
+@import url('./assets/css/ArticleList.css');
 
-@import url('./auth.css');
-@import url('./buttons.css');
-@import url('./Modal.css');
-@import url('./ArticleList.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
 
 * {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
@@ -273,14 +274,14 @@ span.request-status.denied {
   border-color: black;
 }
 
-.slot-without-event {
-  display: none;
+input::placeholder {
+  font-size: 14px;
 }
 
-.rbc-timeslot-group {
-  display: none;
+textarea::placeholder {
+  font-size: 14px;
 }
 
-.rbc-event {
-  display: block !important;
+select::placeholder {
+  font-size: 14px;
 }

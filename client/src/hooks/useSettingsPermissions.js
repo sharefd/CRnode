@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
-import { fetchCurrentUser } from '@/services/users';
 
-const useSettingsPermissions = () => {
+const useSettingsPermissions = user => {
   const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
-
-  const { data: user = {}, isLoading: userLoading } = useQuery('currentUser', fetchCurrentUser);
 
   const {
     data,
@@ -16,11 +13,11 @@ const useSettingsPermissions = () => {
     error,
     refetch: refetchPurposes
   } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
-    enabled: !userLoading && user !== undefined
+    enabled: user !== undefined
   });
 
   useEffect(() => {
-    if (isLoading || userLoading) {
+    if (isLoading) {
       return;
     }
 
@@ -33,15 +30,13 @@ const useSettingsPermissions = () => {
     };
 
     filterData();
-  }, [isLoading, userLoading]);
+  }, [isLoading]);
 
   return {
     purposes: data,
-    user,
     canWritePurposes,
     canReadPurposes,
     isLoading,
-    userLoading,
     refetchPurposes,
     isError,
     error

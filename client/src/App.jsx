@@ -17,7 +17,6 @@ import PurposesList from './components/purposes/PurposesList';
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
 const SuccessMessage = lazy(() => import('./components/requests/SuccessMessage'));
 const ArticleList = lazy(() => import('./components/articles/ArticleList'));
-const BigCalendar = lazy(() => import('./components/articles/calendar/BigCalendar'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
 const isDevelopment = process.env.NODE_ENV === 'development';

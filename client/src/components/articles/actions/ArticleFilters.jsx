@@ -1,44 +1,59 @@
-import { Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import useArticlePermissions from '@/hooks/useArticlePermissions';
+import { useState } from 'react';
 
-export const ArticleFilters = ({ userId, selectedPurposes, handlePurposeChange }) => {
-  const { purposes, canReadPurposes: allowedPurposes, isLoading } = useArticlePermissions(userId);
+export const ArticleFilters = ({ canReadPurposes, selectedPurposes, setSelectedPurposes }) => {
+  const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const purposeChoices = allowedPurposes.map(p => p.name);
+  const allowedPurposes = canReadPurposes.map(purpose => purpose.name);
+  const filteredPurposes = allowedPurposes.filter(p => p.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const handleToggle = (event, newPurposes) => {
-    if (newPurposes.length === 0) {
-      handlePurposeChange([]);
-    } else if (newPurposes[0] === 'Show All' && newPurposes.length > 1) {
-      const filteredPurposes = newPurposes.filter(purpose => purpose !== 'Show All');
-      handlePurposeChange(filteredPurposes);
+  const handleToggle = purpose => {
+    let newPurposes = [...selectedPurposes];
+    if (newPurposes.includes(purpose)) {
+      newPurposes = newPurposes.filter(p => p !== purpose);
     } else {
-      handlePurposeChange(newPurposes);
+      newPurposes.push(purpose);
+    }
+    setSelectedPurposes(newPurposes);
+  };
+
+  const toggleAll = () => {
+    if (selectedPurposes.length === allowedPurposes.length) {
+      setSelectedPurposes([]);
+    } else {
+      setSelectedPurposes(allowedPurposes);
     }
   };
 
   return (
-    <Grid item xs={4} md={4} sx={{ pt: 2, pb: 2 }}>
-      <ToggleButtonGroup
-        color='primary'
-        value={selectedPurposes}
-        onChange={handleToggle}
-        aria-label='purpose'
-        size='small'
-        sx={{ ml: 4 }}>
-        <ToggleButton value='Show All' aria-label='Show All' className='button-4'>
-          Show All
-        </ToggleButton>
-        {purposeChoices.map(purpose => (
-          <ToggleButton
-            key={purpose}
-            value={purpose}
-            aria-label={purpose}
-            sx={{ textTransform: 'none', fontFamily: 'Inter' }}>
-            {purpose}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    </Grid>
+    <div className='flex'>
+      {open && (
+        <div className='w-64 h-screen bg-gray-200 fixed top-0 right-0 overflow-y-auto'>
+          <div className='p-4'>
+            <input
+              type='text'
+              placeholder='Search...'
+              className='w-full p-2 mb-4 border rounded'
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <button onClick={toggleAll} className='w-full p-2 mb-4 bg-blue-500 text-white rounded'>
+              {selectedPurposes.length === allowedPurposes.length ? 'Deselect All' : 'Select All'}
+            </button>
+            {filteredPurposes.map(purpose => (
+              <div key={purpose} className='flex items-center p-2 hover:bg-gray-300'>
+                <input
+                  type='checkbox'
+                  checked={selectedPurposes.includes(purpose)}
+                  onChange={() => handleToggle(purpose)}
+                  className='mr-2'
+                />
+                <span>{purpose}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

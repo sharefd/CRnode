@@ -49,7 +49,6 @@ const useArticlePermissions = () => {
 
     const allowedPurposes = canReadPurposes.map(p => p.name);
     const canReadArticles = articles ? articles.filter(article => allowedPurposes.includes(article.purpose)) : [];
-
     setAllowedArticles(canReadArticles);
   }, [isArticlesLoading, canReadPurposes]);
 

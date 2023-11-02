@@ -76,3 +76,17 @@ export const navlinks = [
     description: 'Explore public events and request access.'
   }
 ];
+
+export const initialArticleData = {
+  title: '',
+  event_link: '',
+  date: null,
+  duration: 60,
+  purpose: 'Select Purpose',
+  meeting_id: '',
+  passcode: '',
+  speaker: '',
+  additional_details: '',
+  location: '',
+  meetingType: 'virtual'
+};

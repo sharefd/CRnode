@@ -1,10 +1,37 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        ...colors,
+        sky: colors.sky,
+        stone: colors.stone,
+        neutral: colors.neutral,
+        gray: colors.gray,
+        slate: colors.slate,
+        transparent: 'transparent',
+        current: 'currentColor',
+        white: '#ffffff',
+        purple: '#3f3cbb',
+        midnight: '#121063',
+        metal: '#565584',
+        tahiti: '#3ab7bf',
+        silver: '#ecebff',
+        'bubble-gum': '#ff77e9',
+        bermuda: '#78dcca',
+        bluebrand: '#0066b2'
+      }
+    }
   },
   variants: {
     extend: {}
   },
-  plugins: []
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/tw-elements-react/dist/js/**/*.js',
+    './node_modules/tailwind-datepicker-react/dist/**/*.js'
+  ],
+  plugins: [require('tw-elements-react/dist/plugin.cjs')]
 };

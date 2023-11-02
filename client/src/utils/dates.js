@@ -1,8 +1,8 @@
 import moment from 'moment-timezone';
 
 export const compareDates = (a, b) => {
-  const dateA = new Date(a.dateString);
-  const dateB = new Date(b.dateString);
+  const dateA = new Date(a.date);
+  const dateB = new Date(b.date);
 
   if (dateA < dateB) return -1;
   if (dateA > dateB) return 1;
@@ -28,17 +28,15 @@ export const compareDates = (a, b) => {
   return minutesA - minutesB;
 };
 
-export const formatDate = article => {
-  const dateTime = `${article.dateString} ${article.time}`;
-  const date = moment.tz(dateTime, 'YYYY-MM-DD hh:mm A', 'UTC').tz('America/New_York');
-  const formattedDate = date.format('MMMM D, YYYY');
-  return formattedDate;
+export const formatDate = dateString => {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-export function formatDateToReadable(dateString) {
+export function formatDateToReadable(date) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  const dateParts = dateString.split('-');
+  const dateParts = date.toString().split('-');
   const year = dateParts[0];
   const month = months[parseInt(dateParts[1]) - 1]; // months are 0-indexed in JS
   const day = parseInt(dateParts[2]); // remove leading zero if any

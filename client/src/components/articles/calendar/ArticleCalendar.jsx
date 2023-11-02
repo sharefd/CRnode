@@ -29,7 +29,7 @@ const ArticleCalendar = ({ articles }) => {
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const filteredArticles = articles.filter(article => {
-    const articleDate = new Date(`${article.dateString}T12:00:00`);
+    const articleDate = new Date(article.date);
     return articleDate.getMonth() === month && articleDate.getFullYear() === year;
   });
 
@@ -48,7 +48,7 @@ const ArticleCalendar = ({ articles }) => {
         } else {
           const cellDate = new Date(year, month, day);
           const eventsOnThisDay = filteredArticles.filter(article => {
-            const articleDate = new Date(`${article.dateString}T12:00:00`);
+            const articleDate = new Date(article.date);
             return articleDate.toDateString() === cellDate.toDateString();
           });
 

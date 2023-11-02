@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import InputField from '../fields/InputField';
-import GoogleButton from '../buttons/GoogleButton';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/userStore';
-import { fetchPurposes } from '@/services/purposes';
 import { fetchUserFeedbacks } from '@/services/feedbacks';
 import { toast } from 'react-toastify';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { loginUser } from '@/services/users';
 
@@ -47,11 +45,7 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className='scrollable-area'>
-        <div>
-          <GoogleButton isSignup={false} />
-        </div>
         <div className='px-8 py-2 w-full mx-auto pt-4'>
-          <hr className='divider sign-in' />
           <div style={{ marginTop: '30px', marginBottom: '30px' }}>
             {fields.map((field, index) => (
               <InputField
@@ -71,9 +65,20 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
           <div className='pb-4 sm:pb-8 w-full text-center'>
             <div className='flex justify-center mt-8'>
               {!isLoading && (
-                <button type='submit' className='w-full bg-blue-500 text-white p-2 rounded-full hover:bg-blue-400'>
+                <Typography
+                  onClick={handleSubmit}
+                  sx={{
+                    cursor: 'pointer',
+                    px: 2,
+                    py: 1,
+                    width: '100%',
+                    color: '#fff',
+                    backgroundColor: '#4185EF',
+                    '&:hover': { backgroundColor: '#2e67d2' },
+                    borderRadius: '9999px'
+                  }}>
                   Login
-                </button>
+                </Typography>
               )}
             </div>
             <p className='mt-8 text-center'>

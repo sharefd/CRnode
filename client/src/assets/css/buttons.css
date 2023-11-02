@@ -307,3 +307,21 @@ a.btn2--circle {
   --btn-padding: 0;
   --btn-border-radius: 50%;
 }
+
+.chevron-btn {
+  position: absolute;
+  z-index: 20;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1.5px solid #e7e7e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chevron-btn:hover {
+  background-color: #f2f2f2;
+  border-color: #dbdbde;
+}

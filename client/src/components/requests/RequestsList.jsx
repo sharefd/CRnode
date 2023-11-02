@@ -22,7 +22,9 @@ import { useMutation } from 'react-query';
 import useRequestPermissions from '@/hooks/useRequestPermissions';
 
 const RequestsList = observer(() => {
-  const user = userStore.user;
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [openMenuId, setOpenMenuId] = useState(null);
