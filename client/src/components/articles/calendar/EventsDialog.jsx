@@ -56,7 +56,7 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticl
         <Box className='modal-info' sx={{ marginBottom: '30px' }}>
           <Box className='modal-purpose'>
             <AccessTimeIcon sx={{ mr: 2 }} />
-            <span className='modal-purpose-date'>{formatDate(currentArticle)}</span>
+            <span className='modal-purpose-date'>{formatDate(currentArticle.date)}</span>
             <span className='modal-purpose-at'>@</span>
             <span className='modal-purpose-time'>{currentArticle.time}</span>
           </Box>

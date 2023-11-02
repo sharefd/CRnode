@@ -121,9 +121,9 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
           <Box className='modal-info'>
             <Box className='modal-purpose'>
               <AccessTimeIcon sx={{ mr: 2 }} />
-              <span className='modal-purpose-date'>{formatDate(article)}</span>
+              <span className='modal-purpose-date'>{formatDate(article.date)}</span>
               <span className='modal-purpose-at'>@</span>
-              <span className='modal-purpose-time'>{article.time}</span>
+              <span className='modal-purpose-time'>{article.duration}</span>
             </Box>
 
             {isCopied && <div className='copied-message'>Copied</div>}
