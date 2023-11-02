@@ -130,7 +130,7 @@ const OlderArticles = observer(() => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell> Purpose </TableCell>
+                      <TableCell>Calendar </TableCell>
                       <TableCell>Article Title</TableCell>
                       <TableCell>Date</TableCell>
                       <TableCell>Attended</TableCell>

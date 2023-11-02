@@ -49,7 +49,7 @@ const Home = observer(() => {
       {user ? (
         <>
           <Typography variant='h6'>Welcome, {user ? user.firstName : 'None'}.</Typography>
-          <Typography>To get started, click Rounds Catalog and request access to rounds.</Typography>
+          <Typography>To get started, navigate to My Calendar and create an event. </Typography>
           <Grid container spacing={2} sx={{ mt: 4, px: 8 }}>
             {navlinks.map((navlink, index) => (
               <Grid key={index} item xs={12} md={6}>

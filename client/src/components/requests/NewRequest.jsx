@@ -125,7 +125,7 @@ const NewRequest = observer(() => {
                 id='purpose'
                 inputProps={{ id: 'purpose' }}
                 select
-                label='Purpose'
+                label='Calendar'
                 required
                 fullWidth
                 value={purpose}

@@ -142,7 +142,7 @@ const ArticleList = observer(() => {
                         <a
                           href={article.event_link}
                           target='_blank'
-                    className='text-white bg-blue-500 px-2 py-1 rounded text-sm hover:bg-blue-600'> 
+                    className='text-white bg-bluebrand px-2 py-1 rounded text-sm hover:bg-blue-500'> 
                             Join Meeting
                         </a>
                         <button
