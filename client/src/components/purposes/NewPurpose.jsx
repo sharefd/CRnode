@@ -42,12 +42,12 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create New Purpose</DialogTitle>
+      <DialogTitle>Create New Calendar</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin='dense'
-          label='Purpose Name'
+          label='Calendar Name'
           fullWidth
           onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
         />

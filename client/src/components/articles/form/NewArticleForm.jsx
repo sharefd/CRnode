@@ -132,7 +132,7 @@ const NewArticleForm = ({
 
   const purposeField = {
     name: 'purpose',
-    label: 'Purpose',
+    label: 'Calendar',
     required: true,
     choices: allowedPurposes.map(purpose => ({ label: purpose.description, value: purpose.name }))
   };
@@ -146,12 +146,7 @@ const NewArticleForm = ({
       <Paper elevation={3} className='relative overflow-y-auto max-w-lg mx-auto mt-20 max-h-[80vh]'>
         <div className='relative overflow-y-auto max-w-lg mx-auto'>
           <div style={{ borderTopLeftRadius: '0.5rem', borderTopRightRadius: '0.5rem' }}>
-            <div className='text-center text-white bg-blue-600 p-2.5 rounded-t relative'>
-              Create Event
-              <IconButton onClick={onClose} style={{ position: 'absolute', right: 1, top: 2 }}>
-                <Close sx={{ color: '#fff', fontSize: '22px' }} />
-              </IconButton>
-            </div>
+           
             <form onSubmit={selectedArticle ? handleSave : handleSubmit} className='p-6'>
               {/* TITLE */}
               <InputField

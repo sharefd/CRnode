@@ -86,14 +86,14 @@ const PurposesList = observer(() => {
             padding: '1rem',
             mb: 2
           }}>
-          Purposes
+          Calendars
         </Typography>
         <Button
           variant='contained'
           color='primary'
           sx={{ marginLeft: '10px' }} // Adjust the margin value as needed
           onClick={() => setOpenNewPurpose(true)}>
-          + Create New Event Purpose
+          + New Calendar
         </Button>
         <Table>
           <TableHead>
@@ -135,7 +135,7 @@ const PurposesList = observer(() => {
 
       {/* Dialog for editing purpose */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Purpose</DialogTitle>
+        <DialogTitle>Edit Calendar</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

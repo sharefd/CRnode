@@ -133,15 +133,18 @@ const ArticleList = observer(() => {
                       <p className='text-xs text-gray-500'>{article.duration}</p>
                     </div>
                     <div className='col-span-9'>
-                      <div className='bg-blue-100 p-2'>
+                      <div className='bg-blue-50 p-2 rounded-lg'>
                         <h6 className='font-semibold'>{article.title}</h6>
                       </div>
-                      <div className={`my-2 flex space-x-2 mb-10 ${showDetails[article._id] ? 'mb-4' : 'mb-10'}`}>
+                      <div className={`my-2 flex space-x-2 mb-10 ${showDetails[article._id] ? 'mb-4' : 'mb-10'}`}
+                          
+                          style={{ paddingTop: '7px' }}
+                          >
                         <a
                           href={article.event_link}
                           target='_blank'
-                          className='text-white bg-blue-500 px-2 py-1 rounded text-sm'>
-                          Join Meeting
+                    className='text-white bg-blue-500 px-2 py-1 rounded text-sm hover:bg-blue-600'> 
+                            Join Meeting
                         </a>
                         <button
                           onClick={() => toggleDetails(article._id)}
