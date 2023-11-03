@@ -1,21 +1,23 @@
 import { observer } from 'mobx-react';
-import { Avatar, List, Card, Button, Progress, Input, Grid, Typography } from 'antd';
-import { Modal, Dropdown, Menu, Popconfirm, Badge, Alert, Space, Divider, Tooltip, Select } from 'antd';
+import { Avatar, List, Card, Button, Progress, Input, Typography } from 'antd';
+import { Modal, Space, Divider, Select } from 'antd';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { updateUser, deleteUser } from '@/services/users';
 import { toast } from 'react-toastify';
-import { formatDate } from '@/utils/dates';
 import PasswordChange from './PasswordChange';
 import { UNIVERSITY_CHOICES } from '@/utils/constants';
 import { useMutation } from 'react-query';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
+import AttendedArticles from './AttendedArticles';
 
 const UserSettings = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
 
   const [open, setOpen] = useState(false);
+  const [isAttendedModalOpen, setIsAttendedModalOpen] = useState(false);
+
   const [editingField, setEditingField] = useState(null);
   const [tempValues, setTempValues] = useState({
     username: user.username,
@@ -26,9 +28,10 @@ const UserSettings = observer(() => {
     canWrite: [],
     university: user.university
   });
+
   const [showPasswordChange, setShowPasswordChange] = useState(false);
 
-  const { purposes, canWritePurposes, canReadPurposes, isLoading } = useSettingsPermissions(user);
+  const { canWritePurposes, canReadPurposes, isLoading } = useSettingsPermissions();
 
   const mutation = useMutation(updateUser, {
     onSuccess: data => {
@@ -188,14 +191,15 @@ const UserSettings = observer(() => {
           <Divider>ATTENDED ARTICLES</Divider>
           <List>
             {user.attended.length > 0 ? (
-              user.attended.map((article, index) => (
-                <List.Item key={index}>
-                  {article.title}
-                  <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
-                    ({formatDate(article.date)})
-                  </span>
-                </List.Item>
-              ))
+              <>
+                <Typography.Text>
+                  You have attended {user.attended.length} articles.
+                  <Button type='link' onClick={() => setIsAttendedModalOpen(true)}>
+                    View Details
+                  </Button>
+                </Typography.Text>
+                <AttendedArticles isOpen={isAttendedModalOpen} onClose={() => setIsAttendedModalOpen(false)} />
+              </>
             ) : (
               <List.Item>No articles attended.</List.Item>
             )}

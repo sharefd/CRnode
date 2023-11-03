@@ -5,7 +5,6 @@ import userStore from '@/stores/userStore';
 import { formatDate } from '@/utils/dates';
 import { AddCircle, Edit } from '@mui/icons-material';
 import { Layout, Card, Table, Checkbox, Pagination, Modal, Input, Button } from 'antd';
-import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -15,15 +14,16 @@ import useArticlePermissions from '@/hooks/useArticlePermissions';
 const { Content } = Layout;
 const { TextArea } = Input;
 
-const OlderArticles = observer(() => {
-  const localUser = localStorage.getItem('CloudRoundsUser');
-  const user = JSON.parse(localUser);
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
 
+const OlderArticles = observer(() => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState('');
   const [currentArticle, setCurrentArticle] = useState(null);
+  const [attended, setAttended] = useState(user.attended || []);
 
   const {
     data: feedbacks,
@@ -41,6 +41,10 @@ const OlderArticles = observer(() => {
     if (!user || isFeedbacksQueryLoading) return;
     userStore.setFeedbacks(feedbacks);
   }, [user, feedbacks]);
+
+  useEffect(() => {
+    setAttended(user.attended);
+  }, []);
 
   const handleFeedbackSubmit = async currentArticle => {
     try {
@@ -64,19 +68,14 @@ const OlderArticles = observer(() => {
   };
 
   const handleToggleAttending = async (articleId, isAttending) => {
+    console.log(isAttending);
     if (user) {
       try {
-        await toggleAttending(user._id, articleId, isAttending);
-        runInAction(() => {
-          if (isAttending) {
-            userStore.user.attended.push(articleId);
-          } else {
-            const index = userStore.user.attended.indexOf(articleId);
-            if (index > -1) {
-              userStore.user.attended.splice(index, 1);
-            }
-          }
-        });
+        const response = await toggleAttending(user._id, articleId, isAttending);
+        setAttended(response.attended);
+        const updatedUser = { ...user, attended: response.attended };
+        localStorage.setItem('CloudRoundsUser', JSON.stringify(updatedUser));
+        console.log(response);
       } catch (error) {
         console.error('There was an error updating attendance:', error);
       }
@@ -140,7 +139,7 @@ const OlderArticles = observer(() => {
                 dataIndex='attended'
                 render={(text, article) => (
                   <Checkbox
-                    checked={user && user.attended.includes(article._id)}
+                    checked={attended && attended.includes(article._id)}
                     onChange={e => handleToggleAttending(article._id, e.target.checked)}
                   />
                 )}

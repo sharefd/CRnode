@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 
-const useSettingsPermissions = user => {
+const useSettingsPermissions = () => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
 

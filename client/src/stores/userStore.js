@@ -8,6 +8,7 @@ class UserStore {
   permissions = [];
   canRead = [];
   canWrite = [];
+  attended = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -15,6 +16,10 @@ class UserStore {
 
   setUser(user) {
     this.user = user;
+  }
+
+  setAttended(attended) {
+    this.attended = attended;
   }
 
   setPurposes(purposes) {

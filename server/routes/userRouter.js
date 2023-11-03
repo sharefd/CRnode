@@ -188,7 +188,6 @@ router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
     }
 
     await user.save();
-
     res.status(200).json({ message: 'Successfully updated attendance', attended: user.attended });
   } catch (err) {
     res.status(500).send(err);
