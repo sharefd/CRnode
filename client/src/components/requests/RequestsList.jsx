@@ -121,7 +121,7 @@ const RequestsList = observer(() => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: '700' }}>Purpose</TableCell>
+              <TableCell sx={{ fontWeight: '700' }}>Calendar</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>User</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
               <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Actions</TableCell>

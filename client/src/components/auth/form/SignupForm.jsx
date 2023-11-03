@@ -132,13 +132,8 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
             <hr className='divider' />
             <ContinueWithEmail showForm={showForm} setShowForm={setShowForm} /> */}
         <p className='mt-8 text-center'>
-          Already have an account?{' '}
-          <button
-            type='button'
-            className='text-blue-500 cursor-pointer hover:underline'
-            onClick={() => setIsSignUp(false)}>
-            Log in
-          </button>
+          {' '}
+          
         </p>
       </div>
     </form>
