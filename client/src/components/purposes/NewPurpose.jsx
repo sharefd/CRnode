@@ -68,11 +68,11 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
       ) : (
         <>
           <Input
-            placeholder='Acronym (e.g. UOFTAMR)'
+            placeholder='Name/Acronym (e.g. UofT OMR)'
             onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
           />
           <Input
-            placeholder='Description (e.g. UofT Aerospace Rounds)'
+            placeholder='Description (e.g. Weekly Divisional Cardiology Rounds)'
             style={{ marginTop: '10px' }}
             onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
           />
