@@ -287,7 +287,7 @@ const UserSettings = observer(() => {
 
           <Box sx={{ marginTop: '1.5rem' }}>
             <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
-              ATTENDED ARTICLES
+              ATTENDED EVENTS
             </Typography>
             <List sx={{ listStyle: 'decimal', pl: 4 }}>
               {user.attended.map((article, index) => (
@@ -303,7 +303,7 @@ const UserSettings = observer(() => {
 
           <Box sx={{ marginTop: '1.5rem' }}>
             <Typography variant='overline' sx={{ my: '1rem', color: grey[900], fontSize: '16px' }}>
-              PERMISSIONS
+              CALENDAR PERMISSIONS
             </Typography>
             {user && (
               <List sx={{ listStyle: 'disc', pl: 4 }}>
