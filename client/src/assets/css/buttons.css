@@ -209,11 +209,7 @@
 
 .purpose-badge {
   display: flex;
-  position: absolute;
   align-items: center;
-  bottom: 10px;
-  right: 20px;
-  z-index: 1;
   border-radius: 6px;
   background-color: #f1f8ff;
   padding: 8px;
@@ -222,6 +218,7 @@
   border-color: #4285f4;
   color: #4285f4;
   font-size: 0.7rem;
+  margin-left: auto;
 }
 
 .event-purpose-badge {

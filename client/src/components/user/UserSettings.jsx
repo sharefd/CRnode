@@ -282,9 +282,6 @@ const UserSettings = observer(() => {
               <Grid item xs={12} md={12}>
                 {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
               </Grid>
-              <Grid item xs={12} md={12}>
-                {renderField('Purposes', 'purposes')}
-              </Grid>
             </Grid>
           </Box>
 
