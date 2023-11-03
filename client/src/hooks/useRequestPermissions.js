@@ -3,10 +3,13 @@ import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchRequests } from '@/services/requests';
 
-const useRequestPermissions = userId => {
+const useRequestPermissions = () => {
   const [canWritePurposes, setCanWritePurposes] = useState(null);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
   const [allowedRequests, setAllowedRequests] = useState([]);
+
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const userId = JSON.parse(localUser)._id;
 
   const {
     data,
@@ -55,6 +58,7 @@ const useRequestPermissions = userId => {
 
   return {
     purposes: data,
+    requests,
     canWritePurposes,
     canReadPurposes,
     allowedRequests,

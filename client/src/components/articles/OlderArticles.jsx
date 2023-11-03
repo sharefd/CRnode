@@ -129,7 +129,8 @@ const OlderArticles = observer(() => {
             <Table
               dataSource={sortedArticles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
               pagination={false}
-              rowKey={record => record._id}>
+              rowKey={record => record._id}
+              scroll={{ x: 'max-content' }}>
               <Table.Column title='Purpose' dataIndex='purpose' key='purpose' />
               <Table.Column title='Article Title' dataIndex='title' key='title' />
               <Table.Column title='Date' dataIndex='date' key='date' render={date => formatDate(date)} />

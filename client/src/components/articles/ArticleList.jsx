@@ -10,7 +10,7 @@ import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { formatDate } from '@/utils/dates';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 import NewArticleForm from './form/NewArticleForm';
-import { Row, Col, Card, Button, Divider, Pagination } from 'antd';
+import { Row, Col, Card, Button, Divider, Pagination, Modal } from 'antd';
 
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -68,11 +68,20 @@ const ArticleList = observer(() => {
   });
 
   const handleDelete = async articleId => {
-    const isConfirmed = window.confirm('Are you sure you want to delete this article?');
-    if (!isConfirmed) return;
-
-    deleteMutation.mutate(articleId);
-    setSelectedArticle(null);
+    Modal.confirm({
+      title: 'Are you sure you want to delete this article?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        deleteMutation.mutate(articleId);
+        setSelectedArticle(null);
+      },
+      onCancel() {
+        return;
+      }
+    });
   };
 
   const handleSave = async editedArticle => {

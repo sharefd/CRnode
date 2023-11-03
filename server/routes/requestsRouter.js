@@ -16,36 +16,24 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/new', async (req, res) => {
-  const { purpose, year_of_study, message, user, email } = req.body;
+  const { purpose, userId } = req.body;
 
-  if (!purpose || !year_of_study || !user) {
+  if (!purpose || !userId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
-  if (!['OM1', 'UOFTAMR', 'MACIMAHD1', 'MACIMAHD2', 'MACIMAHD3'].includes(purpose)) {
-    return res.status(400).json({ message: 'Invalid purpose' });
-  }
-
-  if (
-    !['PGY1', 'PGY2', 'PGY3', 'PGY4', 'PGY5', 'PGY6', 'PGY7', 'PGY8', 'PGY9', 'CC1', 'CC2', 'CC3', 'CC4'].includes(
-      year_of_study
-    )
-  ) {
-    return res.status(400).json({ message: 'Invalid year of study' });
-  }
-
   try {
-    const request = new Request({
-      purpose,
-      year_of_study,
-      message,
-      email,
-      user
-    });
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const request = new Request({ purpose, user: user._id });
 
     await request.save();
 
-    await sendEmail('New Request Submitted', 'A new request has been submitted.', email);
+    await sendEmail('New Request Submitted', 'A new request has been submitted.', user.email);
 
     res.status(201).json({ message: 'Request created successfully', request });
   } catch (error) {

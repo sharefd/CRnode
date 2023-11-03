@@ -323,3 +323,27 @@ select::placeholder {
   color: #fff !important;
   border-color: #59a5ec !important;
 }
+
+.ant-transfer-operation button {
+  background-color: #1890ff !important;
+  color: #fff !important;
+  border-color: #1890ff !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.ant-transfer-operation button:hover {
+  background-color: #50a9f9 !important;
+  color: #fff !important;
+  border-color: #50a9f9 !important;
+}
+
+.ant-transfer-operation button:disabled {
+  background-color: #f5f5f5 !important;
+  border-color: #ececec !important;
+  color: #fff !important;
+}
+
+.cancel-request-btn:hover {
+  background-color: red !important;
+  color: white !important;
+}

@@ -3,9 +3,12 @@ import { Modal, Button, Transfer, Spin } from 'antd';
 import { updatePurpose } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
+import { fetchRequests, createRequest } from '@/services/requests';
 
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
-  const { data, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
+  const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
+
+  const { data: requests, isLoading: isRequestsLoading, refetch } = useQuery('requests', fetchRequests);
 
   const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
 
@@ -13,12 +16,27 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     setTargetKeys(nextTargetKeys);
   };
 
+  // const handleSave = async () => {
+  //   const updatedPurpose = {
+  //     ...selectedPurpose,
+  //     canReadMembers: targetKeys
+  //   };
+  //   await updatePurpose(selectedPurpose._id.toString(), updatedPurpose);
+  //   refetchPurposes();
+  //   handleClose();
+  // };
+
   const handleSave = async () => {
-    const updatedPurpose = {
-      ...selectedPurpose,
-      canReadMembers: targetKeys
-    };
-    await updatePurpose(selectedPurpose._id.toString(), updatedPurpose);
+    const newMembers = targetKeys.filter(key => !selectedPurpose.canReadMembers.includes(key));
+    console.log(newMembers);
+    for (const memberId of newMembers) {
+      const request = {
+        purpose: selectedPurpose.name,
+        userId: memberId
+      };
+      await createRequest(request);
+    }
+
     refetchPurposes();
     handleClose();
   };
@@ -38,10 +56,21 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     return <Spin />;
   }
 
-  const dataSource = data.map(user => ({
+  const hasPendingRequest = (userId, purpose) => {
+    if (isRequestsLoading) {
+      return false;
+    }
+
+    return requests.some(
+      request => request.user._id === userId && request.purpose === purpose && request.status === 'Pending'
+    );
+  };
+
+  const dataSource = users.map(user => ({
     key: user._id,
     username: user.username,
-    email: user.email
+    email: user.email,
+    disabled: hasPendingRequest(user._id, selectedPurpose && selectedPurpose.name)
   }));
 
   return (

@@ -98,5 +98,5 @@ export const initialArticleData = {
   speaker: '',
   additional_details: '',
   location: '',
-  meetingType: 'virtual'
+  meetingType: 'Virtual'
 };
