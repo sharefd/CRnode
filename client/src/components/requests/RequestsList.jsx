@@ -7,9 +7,9 @@ import {
   MoreOutlined,
   HourglassOutlined
 } from '@ant-design/icons';
-import { Button, Dropdown, Layout, Menu, Modal, Pagination, Progress, Table, Typography } from 'antd';
+import { Button, Dropdown, Layout, Modal, Pagination, Progress, Table, Typography } from 'antd';
 import { observer } from 'mobx-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import useRequestPermissions from '@/hooks/useRequestPermissions';
 
@@ -23,9 +23,15 @@ const RequestsList = observer(() => {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [localRequests, setLocalRequests] = useState([]);
 
-  const { requests, allowedRequests, isLoading: isQueryLoading } = useRequestPermissions();
+  const { requests, allowedRequests, isLoading: isQueryLoading, refetch } = useRequestPermissions();
   const [showUserRequests, setShowUserRequests] = useState(false);
+
+  useEffect(() => {
+    if (isQueryLoading) return;
+    setLocalRequests(allowedRequests);
+  }, [isQueryLoading, allowedRequests]);
 
   const deleteMutation = useMutation(deleteRequest, {
     onSuccess: (data, variables) => {
@@ -61,13 +67,14 @@ const RequestsList = observer(() => {
     },
     {
       onSuccess: (data, variables) => {
-        const updatedRequests = allowedRequests.map(request => {
+        const updatedRequests = localRequests.map(request => {
           if (request._id === variables.id) {
             return { ...request, status: variables.status, isApproving: false };
           }
           return request;
         });
         refetch();
+        setLocalRequests(updatedRequests);
         userStore.setSubmittedRequests(updatedRequests.filter(r => r.user._id === user._id));
         setIsLoading(false);
         handleClose();
@@ -102,13 +109,13 @@ const RequestsList = observer(() => {
     updateStatusMutation.mutate({ id, purpose, status });
   };
 
-  if (!user || isQueryLoading || isLoading) {
+  if (isQueryLoading || isLoading) {
     return <Progress percent={100} status='active' />;
   }
 
   const displayedRequests = showUserRequests
     ? requests.filter(req => req.user._id === user._id)
-    : allowedRequests.filter(req => req.user._id !== user._id);
+    : localRequests.filter(req => req.user._id !== user._id);
 
   const columns = [
     {
@@ -222,7 +229,7 @@ const RequestsList = observer(() => {
             scroll={{ x: 'max-content' }}
           />
           <Pagination
-            total={allowedRequests.length}
+            total={localRequests.length}
             pageSize={rowsPerPage}
             current={page}
             onChange={handleChangePage}
