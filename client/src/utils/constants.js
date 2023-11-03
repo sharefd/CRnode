@@ -49,6 +49,7 @@ export const navlinks = [
     label: 'Manage Calendars',
     type: 'fa',
     Icon: PeopleAlt,
+    endpoint: '/calendars',
     description: 'Create, manage and view calendar permissions.'
   },
   {
