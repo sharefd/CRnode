@@ -10,6 +10,7 @@ import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { formatDate } from '@/utils/dates';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 import NewArticleForm from './form/NewArticleForm';
+import { Row, Col, Card, Button, Divider, Badge, Pagination } from 'antd';
 
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
@@ -18,25 +19,30 @@ const ArticleList = observer(() => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState([]);
+  const [selectedOrganizers, setSelectedOrganizers] = useState([]);
+  const [organizerFilter, setOrganizerFilter] = useState([]);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
 
-  const {
-    allowedArticles,
-    canReadPurposes,
-    canWritePurposes,
-    isLoading,
-    refetchArticles,
-    refetch: refetchPurposes
-  } = useArticlePermissions();
+  const { allowedArticles, canReadPurposes, isLoading, refetchArticles } = useArticlePermissions();
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 5;
+
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     if (isLoading) return;
 
     const sortedArticles = sortArticles(allowedArticles);
     setLocalArticles(sortedArticles);
+
+    const organizers = [...new Set(sortedArticles.map(article => article.organizer.username))];
+    setSelectedOrganizers(organizers);
   }, [isLoading, allowedArticles]);
 
   useEffect(() => {
@@ -107,9 +113,18 @@ const ArticleList = observer(() => {
     return <LoadingSpinner />;
   }
 
-  const filteredArticles = selectedPurposes.includes('Show All')
-    ? localArticles.filter(isArticleAfterCurrentDate)
-    : localArticles.filter(article => selectedPurposes.includes(article.purpose)).filter(isArticleAfterCurrentDate);
+  const filteredArticles = localArticles
+    .filter(article => {
+      return organizerFilter.length === 0 || organizerFilter.includes(article.organizer.username);
+    })
+    .filter(article => {
+      return selectedPurposes.includes('Show All') || selectedPurposes.includes(article.purpose);
+    })
+    .filter(isArticleAfterCurrentDate);
+
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
   return (
     <div>
@@ -119,78 +134,81 @@ const ArticleList = observer(() => {
         selectedPurposes={selectedPurposes}
         setSelectedPurposes={setSelectedPurposes}
         toggleNewArticleModal={toggleNewArticleModal}
+        selectedOrganizers={selectedOrganizers}
+        organizerFilter={organizerFilter}
+        setOrganizerFilter={setOrganizerFilter}
       />
-      <div className='px-4'>
-        <div className='grid grid-cols-12 gap-4'>
-          <div className='col-span-12 md:col-span-7'>
-            {filteredArticles.map((article, index) => (
-              <div key={index} className='mb-5 border rounded relative'>
-                <div className='p-4'>
-                  <div className='grid grid-cols-12 gap-2'>
-                    <div className='col-span-3'>
-                      <p className='text-sm text-gray-500'>{formatDate(article.date)}</p>
-                      <p className='text-xs text-gray-500'>{article.duration}</p>
+      <div style={{ padding: '0 16px' }}>
+        <Row gutter={16}>
+          <Col span={24} md={14}>
+            {currentArticles.map((article, index) => (
+              <Card key={index} style={{ marginBottom: '16px' }}>
+                <Row gutter={8}>
+                  <Col span={6}>
+                    <p style={{ fontSize: 'small', color: '#8c8c8c' }}>{formatDate(article.date)}</p>
+                    <p style={{ fontSize: 'x-small', color: '#8c8c8c' }}>{article.duration}</p>
+                  </Col>
+                  <Col span={18}>
+                    <div className='bg-blue-100 text-black px-2 py-1 rounded mb-3'>{article.title}</div>
+                    <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
+                      <Button type='primary' href={article.event_link} target='_blank' style={{ marginRight: '8px' }}>
+                        Join Meeting
+                      </Button>
+                      <Button onClick={() => toggleDetails(article._id)}>More Details</Button>
                     </div>
-                    <div className='col-span-9'>
-                      <div className='bg-blue-50 p-2 rounded-lg'>
-                        <h6 className='font-semibold'>{article.title}</h6>
-                      </div>
-                      <div className={`my-2 flex space-x-2 mb-10 ${showDetails[article._id] ? 'mb-4' : 'mb-10'}`}
-                          
-                          style={{ paddingTop: '7px' }}
-                          >
-                        <a
-                          href={article.event_link}
-                          target='_blank'
-                    className='text-white bg-bluebrand px-2 py-1 rounded text-sm hover:bg-blue-500'> 
-                            Join Meeting
-                        </a>
-                        <button
-                          onClick={() => toggleDetails(article._id)}
-                          className='text-gray-500 border border-gray-500 px-2 py-1 rounded text-sm hover:bg-gray-300'>
-                          More Details
-                        </button>
-                      </div>
-                      <div
-                        className={`flex items-center mx-2 my-1 mb-8 text-sm ${
-                          showDetails[article._id] ? 'block' : 'hidden'
-                        }`}>
-                        <span>Meeting ID: {article.meeting_id || 'None'}</span>
-                        <div className='mx-2 h-5 border-r border-gray-400'></div>
-                        <span>Passcode: {article.passcode || 'None'}</span>
-                        <div className='mx-2 h-5 border-r border-gray-400'></div>
-                        <span>Speaker: {article.speaker || ''}</span>
-                      </div>
-                      <div
-                        className={`flex items-center mx-2 my-1 text-sm ${
-                          showDetails[article._id] ? 'block' : 'hidden'
-                        }`}>
-                        <span>{article.additional_details || ''}</span>
-                      </div>
-                      <div className='mt-2'>
-                        <div className='purpose-badge'>
-                          {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
-                          <span style={{ fontSize: '13px' }}>{article.purpose}</span>
+                    {showDetails[article._id] && (
+                      <>
+                        {article.meetingType !== 'In-Person' ? (
+                          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                            <span>Meeting ID: {article.meeting_id || 'None'}</span>
+                            <Divider type='vertical' />
+                            <span>Passcode: {article.passcode || 'None'}</span>
+                            <Divider type='vertical' />
+                            <span>Speaker: {article.speaker || ''}</span>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                            <span>Location: {article.location || 'Not specified'}</span>
+                            <Divider type='vertical' />
+                            <span>Speaker: {article.speaker || ''}</span>
+                          </div>
+                        )}
+                        <div style={{ marginBottom: '8px' }}>
+                          <span>{article.additional_details || ''}</span>
                         </div>
-                        <button
-                          className={`edit-article ${article.organizer.username === user.username ? 'creator' : ''}`}
-                          onClick={() => setSelectedArticle(article)}
-                          disabled={article.organizer.username !== user.username}>
-                          Created by {article.organizer.username}
-                          {article.organizer.username === user.username && <Edit sx={{ fontSize: '12px', ml: 0.5 }} />}
-                        </button>
-                        {/* END OF card footer*/}
-                      </div>
+                      </>
+                    )}
+                  </Col>
+                  <div
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <Button
+                      onClick={() => setSelectedArticle(article)}
+                      disabled={article.organizer.username !== user.username}
+                      style={{ fontSize: '12px' }}>
+                      by {article.organizer.username}
+                      {article.organizer.username === user.username && (
+                        <Edit style={{ fontSize: '12px', marginLeft: '4px' }} />
+                      )}
+                    </Button>
+                    <div className='purpose-badge'>
+                      {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
+                      <span style={{ fontSize: '13px' }}>{article.purpose}</span>
                     </div>
                   </div>
-                </div>
-              </div>
+                </Row>
+              </Card>
             ))}
-          </div>
-          <div className='col-span-6 md:col-span-5 relative mt-[-5]'>
+            <Pagination
+              current={currentPage}
+              total={filteredArticles.length}
+              pageSize={articlesPerPage}
+              onChange={handlePageChange}
+            />
+          </Col>
+          <Col span={12} md={10}>
             <ArticleCalendar articles={localArticles} />
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
       <NewArticleForm
         open={openNewArticleModal || !!selectedArticle}
