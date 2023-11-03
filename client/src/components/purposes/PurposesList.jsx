@@ -67,14 +67,14 @@ const PurposesList = observer(() => {
       key: 'actions',
       render: (text, record) => (
         <Button type='primary' className='custom-hover-button' onClick={() => handleOpen(record)}>
-          Edit
+          Edit Name
         </Button>
       )
     },
     {
       title: 'Edit Members',
       key: 'editMembers',
-      render: (text, record) => <Button onClick={() => handleOpenMemberList(record)}>Edit Members</Button>
+      render: (text, record) => <Button type='primary' className='custom-hover-button' onClick={() => handleOpenMemberList(record)}>Edit Members</Button>
     },
     {
       title: 'Delete',

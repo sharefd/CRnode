@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Input, Checkbox, Drawer, Space, Divider } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { CalendarToday } from '@mui/icons-material'; // Import the calendar icon
+
+
 
 const ActionBar = ({
   selectedPurposes,
@@ -132,11 +135,14 @@ const ActionBar = ({
         </Space>
       </Drawer>
       <Space className='flex justify-end items-center w-full px-4 py-3 mb-5 bg-gray-100'>
-        <Button type='primary' onClick={toggleNewArticleModal} className='submit-blue-button mr-1'>
-          + Create Event
-        </Button>
-        <p className='text-gray-600 text-sm'>{formattedTime}</p>
-      </Space>
+  <Button type='primary' className='custom-hover-button' onClick={toggleNewArticleModal}>
+    <span style={{ marginRight: '8px' }}>
+      <CalendarToday /> {/* Add the calendar icon here */}
+    </span>
+    Create Event
+  </Button>
+  <p className='text-gray-600 text-sm'>{formattedTime}</p>
+</Space>
     </div>
   );
 };
