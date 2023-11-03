@@ -137,9 +137,9 @@ const ActionBar = ({
       <Space className='flex justify-end items-center w-full px-4 py-3 mb-5 bg-gray-100'>
   <Button type='primary' className='custom-hover-button' onClick={toggleNewArticleModal}>
     <span style={{ marginRight: '8px' }}>
-      <CalendarToday /> {/* Add the calendar icon here */}
+      <CalendarToday /> 
     </span>
-    Create Event
+    <span style={{ fontWeight: 'bold' }}>Create Event</span> {/* Add the fontWeight style to make the text bold */}
   </Button>
   <p className='text-gray-600 text-sm'>{formattedTime}</p>
 </Space>
