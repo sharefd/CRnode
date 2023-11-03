@@ -91,7 +91,7 @@ const ActionBar = ({
         closeIcon={<RightOutlined />}>
         <Input placeholder='Search...' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
 
-        <Divider>Purposes</Divider>
+        <Divider>Calendars</Divider>
         <div className='flex justify-between'>
           <Button size='small' onClick={selectAllPurposes}>
             Select All
