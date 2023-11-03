@@ -23,6 +23,7 @@ const PurposesList = observer(() => {
 
   const handleOpen = (purpose = null) => {
     setSelectedPurpose(purpose);
+    setNewPurpose({ name: purpose.name, description: purpose.description });
     setOpen(true);
   };
 
@@ -38,17 +39,31 @@ const PurposesList = observer(() => {
   };
 
   const handleSave = async () => {
-    await updatePurpose(selectedPurpose._id.toString(), { ...selectedPurpose, newPurpose });
+    await updatePurpose(selectedPurpose._id, newPurpose);
     await refetchPurposes();
     handleClose();
   };
 
-  const handleDelete = async purposeId => {
-    if (window.confirm('Are you sure you want to delete this purpose?')) {
-      await deletePurpose(purposeId);
-      console.log(`Purpose  deleted`);
-      await refetchPurposes();
-    }
+  const handleDelete = purposeId => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this purpose?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      async onOk() {
+        try {
+          await deletePurpose(purposeId);
+          console.log(`Purpose deleted`);
+          await refetchPurposes();
+        } catch (error) {
+          console.error('Error deleting purpose:', error);
+        }
+      },
+      onCancel() {
+        return;
+      }
+    });
   };
 
   const columns = [
@@ -74,7 +89,11 @@ const PurposesList = observer(() => {
     {
       title: 'Edit Members',
       key: 'editMembers',
-      render: (text, record) => <Button type='primary' className='custom-hover-button' onClick={() => handleOpenMemberList(record)}>Edit Members</Button>
+      render: (text, record) => (
+        <Button type='primary' className='custom-hover-button' onClick={() => handleOpenMemberList(record)}>
+          Edit Members
+        </Button>
+      )
     },
     {
       title: 'Delete',
@@ -108,12 +127,12 @@ const PurposesList = observer(() => {
         <Input
           autoFocus
           placeholder='Purpose Name'
-          value={(selectedPurpose && selectedPurpose.name) || ''}
+          value={newPurpose.name}
           onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
         />
         <Input
           placeholder='Purpose Description'
-          value={(selectedPurpose && selectedPurpose.description) || ''}
+          value={newPurpose.description}
           onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
         />
       </Modal>

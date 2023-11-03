@@ -324,14 +324,16 @@ select::placeholder {
   border-color: #59a5ec !important;
 }
 
-.ant-transfer-operation button {
+.ant-transfer-operation button,
+.ant-modal-footer button:nth-child(2) {
   background-color: #1890ff !important;
   color: #fff !important;
   border-color: #1890ff !important;
   transition: all 0.3s ease-in-out;
 }
 
-.ant-transfer-operation button:hover {
+.ant-transfer-operation button:hover,
+.ant-modal-footer button:nth-child(2):hover {
   background-color: #50a9f9 !important;
   color: #fff !important;
   border-color: #50a9f9 !important;
