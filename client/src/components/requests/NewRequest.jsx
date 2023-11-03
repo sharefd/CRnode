@@ -13,7 +13,7 @@ import { fetchRequests, createRequest } from '@/services/requests';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 const localUser = localStorage.getItem('CloudRoundsUser');
 const user = JSON.parse(localUser);
 

@@ -3,7 +3,7 @@ import userStore from '@/stores/userStore';
 import { compareDates } from '@/utils/dates';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 
 export const updateArticle = async editedArticle => {
   try {

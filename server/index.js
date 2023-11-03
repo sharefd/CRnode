@@ -46,6 +46,6 @@ if (process.env.NODE_ENV !== 'development') {
   });
 }
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3003, () => {
   console.log(`Server listening on port ${process.env.PORT}`);
 });

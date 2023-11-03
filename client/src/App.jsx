@@ -20,7 +20,7 @@ const ArticleList = lazy(() => import('./components/articles/ArticleList'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 
 const App = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
