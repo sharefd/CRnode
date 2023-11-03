@@ -96,6 +96,26 @@ router.put('/bulk-update/:userId', jwtMiddleware, async (req, res) => {
   }
 });
 
+router.put('/remove-user', jwtMiddleware, async (req, res) => {
+  const { purposeName, userId } = req.body;
+
+  try {
+    const purpose = await Purpose.findOne({ name: purposeName });
+    if (!purpose) {
+      return res.status(404).json({ message: 'Purpose not found' });
+    }
+
+    purpose.canReadMembers = purpose.canReadMembers.filter(id => id.toString() !== userId);
+    purpose.canWriteMembers = purpose.canWriteMembers.filter(id => id.toString() !== userId);
+
+    await purpose.save();
+
+    res.status(200).json({ message: 'User removed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 router.put('/update/:id', jwtMiddleware, async (req, res) => {
   try {
     const purposeId = req.params.id;

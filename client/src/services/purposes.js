@@ -38,6 +38,18 @@ export const bulkUpdatePurposes = async purposesToUpdate => {
   }
 };
 
+export const removeUserFromPurpose = async (purposeName, userId) => {
+  try {
+    const response = await axios.put(`${baseUrl}/api/purposes/remove-user`, {
+      purposeName,
+      userId
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updatePurpose = async (purposeId, editedPurpose) => {
   try {
     const response = await axios.put(`${baseUrl}/api/purposes/update/${purposeId}`, editedPurpose);
