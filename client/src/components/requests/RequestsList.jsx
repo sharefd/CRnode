@@ -1,37 +1,30 @@
 import { deleteRequest, updateRequest } from '@/services/requests';
 import userStore from '@/stores/userStore';
-import { CheckCircle, Delete, DoNotDisturb, HourglassEmpty, MoreHoriz } from '@mui/icons-material';
 import {
-  IconButton,
-  LinearProgress,
-  Menu,
-  MenuItem,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography
-} from '@mui/material';
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  DeleteOutlined,
+  MoreOutlined,
+  HourglassOutlined
+} from '@ant-design/icons';
+import { Button, Dropdown, Layout, Menu, Modal, Pagination, Progress, Table, Typography } from 'antd';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import useRequestPermissions from '@/hooks/useRequestPermissions';
 
+const { Content } = Layout;
+
 const RequestsList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [openMenuId, setOpenMenuId] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { allowedRequests, purposes, canWritePurposes, isLoading: isQueryLoading } = useRequestPermissions(user._id);
+  const { allowedRequests, isLoading: isQueryLoading } = useRequestPermissions(user._id);
 
   const deleteMutation = useMutation(deleteRequest, {
     onSuccess: (data, variables) => {
@@ -74,18 +67,13 @@ const RequestsList = observer(() => {
     }
   );
 
-  const handleClick = (event, requestId) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-    setOpenMenuId(requestId);
-  };
   const handleClose = () => {
-    setAnchorEl(null);
     setOpenMenuId(null);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage, newRowsPerPage) => {
     setPage(newPage);
+    setRowsPerPage(newRowsPerPage);
   };
 
   const handleChangeRowsPerPage = event => {
@@ -98,118 +86,114 @@ const RequestsList = observer(() => {
   };
 
   if (!user || isQueryLoading || isLoading) {
-    return <LinearProgress />;
+    return <Progress percent={100} status='active' />;
   }
 
   return (
-    <Paper sx={{ width: '80%', margin: '0 auto', mt: 3 }}>
-      <TableContainer>
-        <Typography
-          variant='h5'
-          align='left'
-          sx={{
-            backgroundColor: '#0066b2',
-            color: 'white',
-            borderTopRightRadius: '5px',
-            borderTopLeftRadius: '5px',
-            padding: '1rem',
-            mb: 2
-          }}>
-          Requests
-        </Typography>
-        {isLoading && <LinearProgress />}
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: '700' }}>Purpose</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>User</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Message</TableCell>
-              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Actions</TableCell>
-              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: '700', textAlign: 'center' }}>Delete</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? allowedRequests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : allowedRequests
-            ).map(request => (
-              <TableRow key={request._id}>
-                <TableCell>{request.purpose}</TableCell>
-                <TableCell>
+    <Layout style={{ width: '100%', margin: '0 auto', height: '100vh' }}>
+      <Content style={{ padding: '10px 80px', marginTop: '64px' }}>
+        <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
+          <Typography.Title level={2}>Requests</Typography.Title>
+          {isLoading && <Progress percent={100} status='active' />}
+          <Table
+            dataSource={
+              rowsPerPage > 0 ? allowedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage) : allowedRequests
+            }
+            pagination={false}
+            rowKey={record => record._id}
+            columns={[
+              {
+                title: 'Purpose',
+                dataIndex: 'purpose',
+                key: 'purpose',
+                render: text => <strong>{text}</strong>
+              },
+              {
+                title: 'User',
+                dataIndex: 'user',
+                key: 'user',
+                render: user => (
                   <div>
-                    <p style={{ padding: 0, margin: 0, fontSize: '12px' }}>{request.user.username}</p>
-                    <span style={{ padding: 0, margin: 0, fontSize: '12px', color: 'blue' }}>{request.email}</span>
+                    <p style={{ padding: 0, margin: 0, fontSize: '12px' }}>{user.username}</p>
+                    <span style={{ padding: 0, margin: 0, fontSize: '12px', color: 'blue' }}>{user.email}</span>
                   </div>
-                </TableCell>
-                <TableCell>{request.message}</TableCell>
+                )
+              },
+              {
+                title: 'Message',
+                dataIndex: 'message',
+                key: 'message',
+                render: text => <strong>{text}</strong>
+              },
+              {
+                title: 'Actions',
+                key: 'actions',
+                render: (text, request) => {
+                  const menuItems = [
+                    {
+                      key: 'approve',
+                      label: 'Approve',
+                      disabled: request.status === 'Approved',
+                      onClick: () => updateStatus(request._id, request.purpose, 'Approved')
+                    },
+                    {
+                      key: 'deny',
+                      label: 'Deny',
+                      disabled: request.status === 'Denied',
+                      onClick: () => updateStatus(request._id, request.purpose, 'Denied')
+                    },
+                    {
+                      key: 'reset',
+                      label: 'Reset',
+                      disabled: request.status === 'Pending',
+                      onClick: () => updateStatus(request._id, request.purpose, 'Pending')
+                    }
+                  ];
 
-                <TableCell>
-                  {request.isApproving ? (
-                    <LinearProgress />
+                  return request.isApproving ? (
+                    <Progress percent={100} status='active' />
                   ) : (
-                    <div style={{ textAlign: 'center' }}>
-                      <IconButton onClick={e => handleClick(e, request._id)} sx={{ p: 0, m: 0 }}>
-                        <MoreHoriz />
-                      </IconButton>
-                      <Menu
-                        anchorEl={openMenuId === request._id ? anchorEl : null}
-                        keepMounted
-                        open={openMenuId === request._id}
-                        onClose={handleClose}>
-                        <MenuItem
-                          className='status-button approve'
-                          onClick={() => updateStatus(request._id, request.purpose, 'Approved')}
-                          disabled={request.status === 'Approved'}>
-                          Approve
-                        </MenuItem>
+                    <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+                      <Button icon={<MoreOutlined />} />
+                    </Dropdown>
+                  );
+                }
+              },
 
-                        <MenuItem
-                          className='status-button deny'
-                          onClick={() => updateStatus(request._id, request.purpose, 'Denied')}
-                          disabled={request.status === 'Denied'}>
-                          Deny
-                        </MenuItem>
-
-                        <MenuItem
-                          className='status-button reset'
-                          onClick={() => updateStatus(request._id, request.purpose, 'Pending')}
-                          disabled={request.status === 'Pending'}>
-                          Reset
-                        </MenuItem>
-                      </Menu>
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>
-                  {request.status === 'Denied' ? (
-                    <DoNotDisturb sx={{ opacity: '0.5', color: 'indianred' }} />
-                  ) : request.status === 'Pending' ? (
-                    <HourglassEmpty sx={{ opacity: '0.5', color: 'goldenrod' }} />
-                  ) : (
-                    <CheckCircle sx={{ opacity: '0.5', color: 'green' }} />
-                  )}
-                </TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>
-                  <IconButton onClick={() => handleDelete(request._id)} color='error'>
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[25, 50, 100]}
-        component='div'
-        count={allowedRequests.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+              {
+                title: 'Status',
+                key: 'status',
+                render: (text, request) => {
+                  if (request.status === 'Denied') {
+                    return <CloseCircleOutlined style={{ color: 'indianred' }} />;
+                  } else if (request.status === 'Pending') {
+                    return <HourglassOutlined style={{ color: 'goldenrod' }} />;
+                  } else {
+                    return <CheckCircleOutlined style={{ color: 'green' }} />;
+                  }
+                }
+              },
+              {
+                title: 'Delete',
+                key: 'delete',
+                render: (text, request) => (
+                  <Button icon={<DeleteOutlined />} onClick={() => handleDelete(request._id)} danger />
+                )
+              }
+            ]}
+          />
+          <Pagination
+            total={allowedRequests.length}
+            pageSize={rowsPerPage}
+            current={page}
+            onChange={handleChangePage}
+            showSizeChanger
+            pageSizeOptions={['25', '50', '100']}
+            style={{ marginTop: '20px' }}
+          />
+        </div>
+      </Content>
+    </Layout>
   );
 });
 
