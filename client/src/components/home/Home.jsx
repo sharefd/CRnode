@@ -1,8 +1,7 @@
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { Spin, Typography, Card, Row, Col } from 'antd';
 import { fetchPurposes, getCanReadPermissions, getCanWritePermissions } from '@/services/purposes';
 import userStore from '@/stores/userStore';
-import { navlinks } from '@/utils/constants';
-import { Box, Grid, Link, Paper, Typography } from '@mui/material';
+import { homeLinks } from '@/utils/constants';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
@@ -36,50 +35,39 @@ const Home = observer(() => {
   }, [isLoading]);
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <Spin />;
   }
 
   return (
-    <Box sx={{ ml: 4, mt: 4 }}>
+    <div style={{ marginLeft: '16px', marginTop: '16px' }}>
       {user ? (
         <>
-          <Typography variant='h6'>Welcome, {user ? user.firstName : 'None'}.</Typography>
-          <Typography>To get started, navigate to My Calendar and create an event. </Typography>
-          <Grid container spacing={2} sx={{ mt: 4, px: 8 }}>
-            {navlinks.map((navlink, index) => (
-              <Grid key={index} item xs={12} md={6}>
-                <Link href={navlink.endpoint} style={{ textDecoration: 'none' }}>
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      width: '100%',
-                      height: '150px',
-                      padding: '16px',
-                      textAlign: 'center',
-                      transition: 'background-color 0.3s',
-                      '&:hover': { backgroundColor: '#EBF5FB' }
-                    }}>
-                    <div className='flex justify-center mb-2'>
-                      {!navlink.type && <navlink.Icon fontSize='large' />}
-                      {navlink.type && <navlink.Icon size={28} />}
+          <Typography.Title level={4}>Welcome, {user ? user.firstName : 'None'}.</Typography.Title>
+          <Typography.Text>To get started, navigate to My Calendar and create an event.</Typography.Text>
+          <Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px' }}>
+            {homeLinks.map((navlink, index) => (
+              <Col key={index} xs={24} md={12}>
+                <a href={navlink.endpoint} style={{ textDecoration: 'none' }}>
+                  <Card className='text-center h-150 p-2 hover:bg-slate-50' hoverable>
+                    <div className='flex items-center justify-center mb-2'>
+                      <navlink.Icon style={{ fontSize: '24px' }} />
+                      <Typography.Text className='ml-2' strong>
+                        {navlink.label}
+                      </Typography.Text>
                     </div>
-                    <Typography variant='subtitle1'>{navlink.label}</Typography>
-                    <Typography variant='body2' style={{ marginTop: '8px' }}>
-                      {navlink.description}
-                    </Typography>{' '}
-                    {/* Updated styling */}
-                  </Paper>
-                </Link>
-              </Grid>
+                    <Typography.Text style={{ marginTop: '8px' }}>{navlink.description}</Typography.Text>
+                  </Card>
+                </a>
+              </Col>
             ))}
-          </Grid>
+          </Row>
         </>
       ) : (
-        <Typography variant='h6' sx={{ color: 'gray' }}>
+        <Typography.Title level={4} style={{ color: 'gray' }}>
           You are not logged in.
-        </Typography>
+        </Typography.Title>
       )}
-    </Box>
+    </div>
   );
 });
 

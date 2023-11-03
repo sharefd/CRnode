@@ -1,4 +1,5 @@
-import { EventAvailable, History, Key, ManageSearch, PeopleAlt } from '@mui/icons-material';
+import { EventAvailable, History, Key, ManageSearch, PeopleAlt, Settings } from '@mui/icons-material';
+import { SettingOutlined } from '@ant-design/icons';
 
 export const UNIVERSITY_CHOICES = [
   { value: '', label: 'Select University' },
@@ -46,20 +47,19 @@ export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF
 
 export const navlinks = [
   {
-    label: 'Manage Calendars',
-    type: 'fa',
+    label: 'Calendars',
     Icon: PeopleAlt,
     endpoint: '/calendars',
     description: 'Create, manage and view calendar permissions.'
   },
   {
-    label: 'Manage Requests',
+    label: 'Requests',
     Icon: Key,
     endpoint: '/requests',
     description: 'View and manage incoming calendar requests.'
   },
   {
-    label: 'My Calendar',
+    label: 'Events',
     Icon: EventAvailable,
     endpoint: '/articles',
     description: 'Access your events. Includes a calendar view.'
@@ -77,6 +77,15 @@ export const navlinks = [
     description: 'Explore public events and request access.'
   }
 ];
+
+export const accountSettingsLink = {
+  label: 'Account Settings',
+  Icon: Settings,
+  endpoint: '/settings',
+  description: 'Manage your account settings.'
+};
+
+export const homeLinks = [...navlinks, accountSettingsLink];
 
 export const initialArticleData = {
   title: '',

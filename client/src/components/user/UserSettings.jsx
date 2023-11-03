@@ -161,24 +161,15 @@ const UserSettings = observer(() => {
 
   return (
     <Card style={{ maxWidth: '600px', margin: '0 auto', marginTop: '1rem', marginBottom: '2rem' }}>
+      <div className='flex justify-between items-center bg-bluebrand text-white' style={{ padding: '0.8rem 1rem' }}>
+        <Typography.Title level={4} style={{ margin: 0, color: '#fff', fontWeight: 300 }}>
+          Account Settings
+        </Typography.Title>
+        <Avatar className='bg-white text-bluebrand align-middle' size={42} gap={8}>
+          {initials}
+        </Avatar>
+      </div>
       <Space direction='vertical' style={{ width: '100%' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: '#0066b2',
-            color: 'white',
-            padding: '1rem'
-          }}>
-          <Typography.Title level={4} style={{ margin: 0, color: '#fff', fontWeight: 300 }}>
-            Account Settings
-          </Typography.Title>
-          <Avatar style={{ backgroundColor: '#fff', color: '#0066b2', verticalAlign: 'middle' }} size={42} gap={8}>
-            {initials}
-          </Avatar>
-        </div>
-
         <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
           <Divider>LOGIN INFORMATION</Divider>
           <Space direction='vertical' style={{ width: '100%' }}>

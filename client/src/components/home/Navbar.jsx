@@ -90,7 +90,7 @@ const Navbar = observer(() => {
             '&:hover': { color: sidebar && isActive ? 'gray' : '#7793b1' },
             borderBottom: isActive && !sidebar ? '2px solid #eaeaec' : 'none'
           }}>
-          {!link.type && <link.Icon sx={{ fontSize: '28px' }} />}
+          {!link.type && <link.Icon sx={{ fontSize: link.size || '28px' }} />}
           {link.type && <link.Icon size={20} />}
           {sidebar && <Typography sx={{ ml: '8px' }}>{link.label}</Typography>}
         </Box>
@@ -122,9 +122,7 @@ const Navbar = observer(() => {
           mx: 1
         }}>
         <Typography sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{user && user.username}</Typography>
-        <IconButton onClick={null} sx={{ fontSize: '15px', marginBottom: '0.5rem', borderRadius: '5px' }}>
-          Change Password
-        </IconButton>
+
         <IconButton onClick={handleLogout} sx={{ fontSize: '15px', borderRadius: '5px' }}>
           Log Out
         </IconButton>
