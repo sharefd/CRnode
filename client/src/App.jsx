@@ -23,7 +23,8 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
 
 const App = observer(() => {
-  const [user, setUser] = useState(userStore.user);
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
 
   axios.interceptors.request.use(
     config => {
@@ -37,24 +38,6 @@ const App = observer(() => {
       return Promise.reject(error);
     }
   );
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem('CloudRoundsToken');
-      if (token) {
-        try {
-          const response = await axios.get(`${baseUrl}/api/users/me`);
-          userStore.setUser(response.data);
-          setUser(response.data);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          localStorage.removeItem('CloudRoundsToken');
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   return (
     <>

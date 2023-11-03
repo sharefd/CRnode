@@ -1,9 +1,8 @@
-import LockIcon from '@mui/icons-material/Lock';
-import { Box, Button, TextField, IconButton } from '@mui/material';
+import { LockOutlined } from '@ant-design/icons';
+import { Input, Button, Space } from 'antd';
 import { useState } from 'react';
 import { changePassword } from '../../services/users';
 import { toast } from 'react-toastify';
-import { Clear } from '@mui/icons-material';
 
 const PasswordChange = ({ userId, onSuccess, onCancel }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -28,52 +27,37 @@ const PasswordChange = ({ userId, onSuccess, onCancel }) => {
   };
 
   return (
-    <Box sx={{ px: '1rem', pb: 3, pt: 1, position: 'relative' }}>
-      <IconButton onClick={onCancel} sx={{ position: 'absolute', top: '10px', right: '-45px', zIndex: 1 }}>
-        <Clear sx={{ fontSize: '18px', color: 'red' }} />
-      </IconButton>
-      <TextField
-        variant='standard'
+    <Space direction='vertical' style={{ width: '100%' }}>
+      <Input.Password
         autoFocus
-        size='small'
-        fullWidth
-        type='password'
-        label='Current Password'
+        placeholder='Current Password'
         value={currentPassword}
         onChange={e => setCurrentPassword(e.target.value)}
-        margin='dense'
+        prefix={<LockOutlined />}
       />
-      <TextField
-        variant='standard'
-        size='small'
-        fullWidth
-        type='password'
-        label='New Password'
+      <Input.Password
+        placeholder='New Password'
         value={newPassword}
         onChange={e => setNewPassword(e.target.value)}
-        margin='dense'
+        prefix={<LockOutlined />}
       />
-      <TextField
-        variant='standard'
-        size='small'
-        fullWidth
-        type='password'
-        label='Confirm New Password'
+      <Input.Password
+        placeholder='Confirm New Password'
         value={confirmPassword}
         onChange={e => setConfirmPassword(e.target.value)}
-        margin='dense'
+        prefix={<LockOutlined />}
       />
-      <div style={{ width: '100%' }}>
-        <Button
-          variant='contained'
-          size='small'
-          color='primary'
-          onClick={handleChangePassword}
-          sx={{ marginTop: '1.5rem' }}>
-          Submit
-        </Button>
+      <div className='text-center my-2'>
+        <Space>
+          <Button type='primary' ghost className='submit-blue-button' onClick={handleChangePassword}>
+            Submit
+          </Button>
+          <Button type='default' onClick={onCancel}>
+            Cancel
+          </Button>
+        </Space>
       </div>
-    </Box>
+    </Space>
   );
 };
 export default PasswordChange;

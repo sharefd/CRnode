@@ -7,10 +7,10 @@ import { deletePurpose, updatePurpose } from '@/services/purposes';
 import EditMemberList from './EditMemberList';
 import NewPurpose from './NewPurpose';
 
-const localUser = localStorage.getItem('CloudRoundsUser');
-const user = JSON.parse(localUser);
-
 const PurposesList = observer(() => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [open, setOpen] = useState(false);
   const [openMemberList, setOpenMemberList] = useState(false);
 

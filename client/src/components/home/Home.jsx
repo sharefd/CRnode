@@ -8,16 +8,13 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
+
 const Home = observer(() => {
-  const localUser = localStorage.getItem('CloudRoundsUser');
-  const user = JSON.parse(localUser);
   const navigate = useNavigate();
 
-  const {
-    data: purposes,
-    isLoading,
-    refetch
-  } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
+  const { data: purposes, isLoading } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
     enabled: !!user?._id
   });
 
@@ -30,8 +27,6 @@ const Home = observer(() => {
       navigate('/login');
       return;
     }
-
-    userStore.setUser(user);
 
     const canReadPurposes = getCanReadPermissions(purposes, user._id).map(p => p.name);
     userStore.setCanRead(canReadPurposes);
