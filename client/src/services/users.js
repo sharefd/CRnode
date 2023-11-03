@@ -53,7 +53,7 @@ export const loginUser = async (username, password) => {
     const response = await axios.post(`${baseUrl}/api/users/login`, { username, password });
     return response.data;
   } catch (error) {
-    console.error('There was an error creating the user:', error);
+    console.error('There was an error during log in:', error);
   }
 };
 

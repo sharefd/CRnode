@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
+
 const userRouter = require('./routes/userRouter');
 const articlesRouter = require('./routes/articlesRouter');
 const requestsRouter = require('./routes/requestsRouter');
@@ -21,6 +23,10 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
+if (process.env.NODE_ENV !== 'development') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+}
+
 app.use('/api/users', userRouter);
 app.use('/api/articles', articlesRouter);
 app.use('/api/requests', requestsRouter);
@@ -33,6 +39,12 @@ app.use((err, req, res, next) => {
     res.status(401).send('Invalid or missing token');
   }
 });
+
+if (process.env.NODE_ENV !== 'development') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+}
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}`);
