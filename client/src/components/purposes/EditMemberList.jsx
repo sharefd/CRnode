@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Button, List, Input, Spin } from 'antd';
+import { Modal, Button, List, Input, Spin, Pagination } from 'antd';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '@/services/users';
 import { fetchRequests, createRequest } from '@/services/requests';
@@ -9,6 +9,9 @@ import { toast } from 'react-toastify';
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
   const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
   const { data: requests, isLoading: isRequestsLoading } = useQuery('requests', fetchRequests);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
   const [searchValue, setSearchValue] = useState('');
@@ -77,8 +80,13 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     .filter(user => user.username.includes(searchValue) && searchValue.length >= 3 && !targetKeys.includes(user._id))
     .slice(0, 5);
 
+  const currentMembers = users.filter(user => targetKeys.includes(user._id));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedMembers = currentMembers.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <Modal
+      width={600}
       title={selectedPurpose && selectedPurpose.name}
       open={open}
       onCancel={handleModalClose}
@@ -114,12 +122,20 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
         <div style={{ width: '45%' }}>
           <h4>Current members</h4>
           <List
-            dataSource={users.filter(user => targetKeys.includes(user._id))}
+            dataSource={paginatedMembers}
             renderItem={user => (
               <List.Item key={user._id} actions={[<Button onClick={() => handleRemoveUser(user)}>Remove</Button>]}>
                 {user.username}
               </List.Item>
             )}
+          />
+          <Pagination
+            current={currentPage}
+            onChange={setCurrentPage}
+            total={currentMembers.length}
+            pageSize={itemsPerPage}
+            hideOnSinglePage
+            simple
           />
         </div>
       </div>
