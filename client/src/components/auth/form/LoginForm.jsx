@@ -27,21 +27,28 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
       return;
     }
 
-    const response = await loginUser(credentials.username, credentials.password);
-    userStore.setUser(response.user);
-    localStorage.setItem('CloudRoundsToken', response.token);
-    localStorage.setItem('CloudRoundsUser', JSON.stringify(response.user));
+    try {
+      const response = await loginUser(credentials.username, credentials.password);
+      userStore.setUser(response.user);
+      localStorage.setItem('CloudRoundsToken', response.token);
+      localStorage.setItem('CloudRoundsUser', JSON.stringify(response.user));
 
-    const feedbacks = await fetchUserFeedbacks(response.user._id);
-    userStore.setFeedbacks(feedbacks);
+      const feedbacks = await fetchUserFeedbacks(response.user._id);
+      userStore.setFeedbacks(feedbacks);
 
-    setTimeout(() => {
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/');
+      }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Login failed. Please check your credentials and try again.', {
+        autoClose: 2500,
+        pauseOnFocusLoss: false
+      });
       setIsLoading(false);
-      toast.success('Successfully logged in', { autoClose: 1500, pauseOnFocusLoss: false });
-      navigate('/');
-    }, 1500);
+    }
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <div className='scrollable-area'>

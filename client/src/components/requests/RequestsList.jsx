@@ -12,6 +12,7 @@ import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import useRequestPermissions from '@/hooks/useRequestPermissions';
+import SubmittedRequests from './SubmittedRequests';
 
 const { Content } = Layout;
 
@@ -93,7 +94,10 @@ const RequestsList = observer(() => {
     <Layout style={{ width: '100%', margin: '0 auto', height: '100vh' }}>
       <Content style={{ padding: '10px 80px', marginTop: '64px' }}>
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Typography.Title level={2}>Requests</Typography.Title>
+          <SubmittedRequests />
+          <hr style={{ margin: '40px 0' }} />
+
+          <Typography.Title level={2}>Incoming Requests</Typography.Title>
           {isLoading && <Progress percent={100} status='active' />}
           <Table
             dataSource={

@@ -7,12 +7,10 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 
-const localUser = localStorage.getItem('CloudRoundsUser');
-const user = JSON.parse(localUser);
-
 const Home = observer(() => {
   const navigate = useNavigate();
-
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
   const { data: purposes, isLoading } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
     enabled: !!user?._id
   });
@@ -22,7 +20,7 @@ const Home = observer(() => {
       return;
     }
 
-    if (!user || localUser === undefined) {
+    if (localUser === undefined) {
       navigate('/login');
       return;
     }
