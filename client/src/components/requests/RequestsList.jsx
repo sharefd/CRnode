@@ -241,9 +241,9 @@ const RequestsList = observer(() => {
     <Layout style={{ width: '100%', margin: '0 auto', height: '100vh' }}>
       <Content style={{ padding: '10px 80px', marginTop: '64px' }}>
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Button onClick={toggleView}>{showUserRequests ? 'View Invitations' : 'View Access Requests'}</Button>
+          <Button onClick={toggleView}>{!showUserRequests ? 'View Invitations' : 'View Access Requests'}</Button>
           <hr style={{ margin: '20px 0' }} />
-          <Typography.Title level={2}>{showUserRequests ? 'Access Requests' : 'Invitations'}</Typography.Title>
+          <Typography.Title level={2}>{!showUserRequests ? 'Access Requests' : 'Invitations'}</Typography.Title>
           {isLoading && <Progress percent={100} status='active' />}
           <Table
             dataSource={
