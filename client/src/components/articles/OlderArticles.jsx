@@ -125,7 +125,7 @@ const OlderArticles = observer(() => {
     <Layout>
       <Content style={{ padding: '0 50px', marginTop: '64px' }}>
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Card title='Older Articles' bordered={false} style={{ width: '100%' }}>
+          <Card title='Events' bordered={false} style={{ width: '100%' }}>
             <Table
               dataSource={sortedArticles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
               pagination={false}
@@ -168,7 +168,7 @@ const OlderArticles = observer(() => {
             open={open}
             onCancel={handleClose}
             footer={[
-              <Button key='submit' type='primary' onClick={() => handleFeedbackSubmit(currentArticle)}>
+              <Button key='submit' type='' onClick={() => handleFeedbackSubmit(currentArticle)}>
                 Submit
               </Button>
             ]}>
