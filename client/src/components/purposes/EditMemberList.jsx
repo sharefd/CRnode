@@ -119,9 +119,10 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
             )}
           />
         </div>
-        <div style={{ width: '45%' }}>
+        <div style={{ width: '50%', position: 'relative', minHeight: '370px' }}>
           <h4>Current members</h4>
           <List
+            style={{ overflow: 'auto', maxHeight: '370px' }}
             dataSource={paginatedMembers}
             renderItem={user => (
               <List.Item key={user._id} actions={[<Button onClick={() => handleRemoveUser(user)}>Remove</Button>]}>
@@ -129,14 +130,16 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
               </List.Item>
             )}
           />
-          <Pagination
-            current={currentPage}
-            onChange={setCurrentPage}
-            total={currentMembers.length}
-            pageSize={itemsPerPage}
-            hideOnSinglePage
-            simple
-          />
+          <div style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
+            <Pagination
+              current={currentPage}
+              onChange={setCurrentPage}
+              total={currentMembers.length}
+              pageSize={itemsPerPage}
+              hideOnSinglePage
+              simple
+            />
+          </div>
         </div>
       </div>
     </Modal>
