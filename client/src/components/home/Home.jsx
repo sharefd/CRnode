@@ -1,18 +1,22 @@
 import { Spin, Typography, Card, Row, Col } from 'antd';
-import { fetchPurposes, getCanReadPermissions, getCanWritePermissions } from '@/services/purposes';
 import userStore from '@/stores/userStore';
 import { homeLinks } from '@/utils/constants';
 import { observer } from 'mobx-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
+import { fetchCurrentUser } from '@/services/users';
 
 const Home = observer(() => {
   const navigate = useNavigate();
-  const localUser = localStorage.getItem('CloudRoundsUser');
-  const user = JSON.parse(localUser);
-  const { data: purposes, isLoading } = useQuery(['userPurposes', user?._id], () => fetchPurposes(user?._id), {
-    enabled: !!user?._id
+  const [user, setUser] = useState(userStore.user);
+
+  const {
+    data: fetchedUser,
+    isLoading,
+    isError
+  } = useQuery('userData', fetchCurrentUser, {
+    enabled: !user
   });
 
   useEffect(() => {
@@ -20,17 +24,13 @@ const Home = observer(() => {
       return;
     }
 
-    if (localUser === undefined) {
+    if (fetchedUser) {
+      localStorage.setItem('CloudRoundsUser', JSON.stringify(fetchedUser));
+      setUser(fetchedUser);
+    } else if (!user) {
       navigate('/login');
-      return;
     }
-
-    const canReadPurposes = getCanReadPermissions(purposes, user._id).map(p => p.name);
-    userStore.setCanRead(canReadPurposes);
-
-    const canWritePurposes = getCanWritePermissions(purposes, user._id).map(p => p.name);
-    userStore.setCanWrite(canWritePurposes);
-  }, [isLoading]);
+  }, [isLoading, fetchedUser]);
 
   if (isLoading) {
     return <Spin />;

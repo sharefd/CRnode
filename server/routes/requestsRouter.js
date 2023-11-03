@@ -15,6 +15,34 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/bulk-new', async (req, res) => {
+  const { purpose, userIds } = req.body;
+
+  try {
+    const users = await User.find({ _id: { $in: userIds } });
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'Users not found' });
+    }
+
+    const requests = users.map(user => ({
+      purpose: purpose,
+      user: user._id
+    }));
+
+    await Request.insertMany(requests);
+
+    // Send email to each user
+    for (let user of users) {
+      await sendEmail('New Request Submitted', 'A new request has been submitted.', user.email);
+    }
+
+    res.status(201).json({ message: 'Requests created successfully', requests });
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while creating the requests', error });
+  }
+});
+
 router.post('/new', async (req, res) => {
   const { purpose, userId } = req.body;
 

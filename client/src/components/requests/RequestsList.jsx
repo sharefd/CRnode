@@ -178,7 +178,36 @@ const RequestsList = observer(() => {
             }
           }
         ]
-      : []),
+      : [
+          {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, request) => {
+              const menuItems = [
+                {
+                  key: 'approve',
+                  label: 'Approve',
+                  disabled: request.status === 'Approved',
+                  onClick: () => updateStatus(request._id, request.purpose, 'Approved')
+                },
+                {
+                  key: 'deny',
+                  label: 'Deny',
+                  disabled: request.status === 'Denied',
+                  onClick: () => updateStatus(request._id, request.purpose, 'Denied')
+                }
+              ];
+
+              return request.isApproving ? (
+                <Progress percent={100} status='active' />
+              ) : (
+                <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+                  <Button icon={<MoreOutlined />} />
+                </Dropdown>
+              );
+            }
+          }
+        ]),
     {
       title: 'Status',
       key: 'status',
@@ -202,9 +231,8 @@ const RequestsList = observer(() => {
           icon={<DeleteOutlined />}
           onClick={() => handleDelete(request._id)}
           danger
-          className='hover:bg-red-500 cancel-request-btn'>
-          {showUserRequests ? 'Cancel Request' : ''}
-        </Button>
+          className='hover:bg-red-500 cancel-request-btn'
+        />
       )
     }
   ];
@@ -213,7 +241,7 @@ const RequestsList = observer(() => {
     <Layout style={{ width: '100%', margin: '0 auto', height: '100vh' }}>
       <Content style={{ padding: '10px 80px', marginTop: '64px' }}>
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Button onClick={toggleView}>{showUserRequests ? 'Show Incoming Requests' : 'Show My Requests'}</Button>
+          <Button onClick={toggleView}>{showUserRequests ? 'Access Requests' : 'Invitations'}</Button>
           <hr style={{ margin: '20px 0' }} />
           <Typography.Title level={2}>{showUserRequests ? 'My Requests' : 'Incoming Requests'}</Typography.Title>
           {isLoading && <Progress percent={100} status='active' />}
