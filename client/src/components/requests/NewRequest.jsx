@@ -14,6 +14,8 @@ import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3001' : '';
+const localUser = localStorage.getItem('CloudRoundsUser');
+const user = JSON.parse(localUser);
 
 const NewRequest = observer(() => {
   const navigate = useNavigate();
@@ -22,8 +24,6 @@ const NewRequest = observer(() => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const user = userStore.user;
 
   const { data: requests, isLoading: isQueryLoading, refetch } = useQuery('requests', fetchRequests);
 
@@ -55,7 +55,6 @@ const NewRequest = observer(() => {
   const createRequestMutation = useMutation(createRequest, {
     onSuccess: data => {
       userStore.setSubmittedRequests([...userStore.submittedRequests, data.request]);
-      // refetch();
       navigate('/requests/submitted');
     },
     onError: error => {

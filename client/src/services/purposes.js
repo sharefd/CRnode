@@ -38,14 +38,6 @@ export const bulkUpdatePurposes = async purposesToUpdate => {
   }
 };
 
-export const fetchCanWritePurposes = purposes => {
-  return purposes.filter(purpose => purpose.canWriteMembers.includes(userStore.user._id));
-};
-
-export const fetchCanReadPurposes = purposes => {
-  return purposes.filter(purpose => purpose.canReadMembers.includes(userStore.user._id));
-};
-
 export const updatePurpose = async (purposeId, editedPurpose) => {
   try {
     const response = await axios.put(`${baseUrl}/api/purposes/update/${purposeId}`, editedPurpose);

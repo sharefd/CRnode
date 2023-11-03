@@ -1,8 +1,6 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-
 import { Modal, Input, Select, Button, DatePicker, TimePicker, Form, Row, Col } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-
 import { createArticle, sortArticles } from '@/services/articles';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -12,9 +10,6 @@ import { initialArticleData } from '@/utils/constants';
 import './NewArticleForm.css';
 import dayjs from 'dayjs';
 import { extractTimesFromDuration } from '@/utils/dates';
-
-const localUser = localStorage.getItem('CloudRoundsUser');
-const user = JSON.parse(localUser);
 
 const NewArticleForm = ({
   open,
@@ -26,6 +21,9 @@ const NewArticleForm = ({
   onSave,
   onDelete
 }) => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [allowedPurposes, setAllowedPurposes] = useState(null);
   const [showAddPurposeModal, setShowAddPurposeModal] = useState(false);
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });

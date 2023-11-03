@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   AppBar,
@@ -27,12 +27,13 @@ const Navbar = observer(() => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const user = userStore.user;
-
   const handleClick = event => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
+
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -171,20 +172,17 @@ const Navbar = observer(() => {
               </Menu>
             </Box>
           </Box>
-        ) : (
-          user && (
-            <>
-              <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
+        ) : user ? (
+          <>
+            <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
 
-              <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
-                {list()}
-              </Drawer>
-            </>
-          )
-        )}
-        {!user && (
+            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
+              {list()}
+            </Drawer>
+          </>
+        ) : (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.3, justifyContent: 'space-between' }}>
             <Link to='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color='inherit'>Login</Button>

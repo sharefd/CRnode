@@ -10,12 +10,12 @@ import { purposeIcons } from '@/components/ui/PurposeIcons';
 import { formatDate } from '@/utils/dates';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 import NewArticleForm from './form/NewArticleForm';
-import { Row, Col, Card, Button, Divider, Badge, Pagination } from 'antd';
-
-const localUser = localStorage.getItem('CloudRoundsUser');
-const user = JSON.parse(localUser);
+import { Row, Col, Card, Button, Divider, Pagination } from 'antd';
 
 const ArticleList = observer(() => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
   const [selectedPurposes, setSelectedPurposes] = useState([]);
