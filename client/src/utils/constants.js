@@ -23,7 +23,8 @@ export const YEAR_OF_STUDY_CHOICES = [
   'CC1',
   'CC2',
   'CC3',
-  'CC4'
+  'CC4',
+  'Other'
 ];
 
 export const monthNames = [
@@ -48,20 +49,19 @@ export const navlinks = [
     label: 'Manage Calendars',
     type: 'fa',
     Icon: PeopleAlt,
-    endpoint: '/calendars',
     description: 'Create, manage and view calendar permissions.'
   },
   {
     label: 'Manage Requests',
     Icon: Key,
     endpoint: '/requests',
-    description: 'View and manage incoming permission requests.'
+    description: 'View and manage incoming calendar requests.'
   },
   {
-    label: 'My Rounds',
+    label: 'My Calendar',
     Icon: EventAvailable,
     endpoint: '/articles',
-    description: 'Access your articles and events. Includes a calendar view.'
+    description: 'Access your events. Includes a calendar view.'
   },
   {
     label: 'Past Rounds',
