@@ -28,19 +28,25 @@ const useArticlePermissions = () => {
 
     const uniquePurposeIds = new Set(canReadArticles.map(article => article.purpose._id));
 
-    const uniqueCanReadPurposes = [...uniquePurposeIds].map(
-      id => canReadArticles.find(article => article.purpose._id === id).purpose
-    );
-    const uniqueCanWritePurposes = [...uniquePurposeIds].map(
-      id => canWriteArticles.find(article => article.purpose._id === id).purpose
-    );
+    if (canReadArticles.length > 0) {
+      const uniqueCanReadPurposes = [...uniquePurposeIds].map(
+        id => canReadArticles.find(article => article.purpose._id === id).purpose
+      );
 
-    const uniqueAllowedPurposes = uniqueCanReadPurposes.map(purpose => purpose.name);
+      setCanReadPurposes(uniqueCanReadPurposes);
+
+      const uniqueAllowedPurposes = uniqueCanReadPurposes.map(purpose => purpose.name);
+      setAllowedPurposes(uniqueAllowedPurposes);
+    }
+
+    if (canWriteArticles.length > 0) {
+      const uniqueCanWritePurposes = [...uniquePurposeIds].map(
+        id => canWriteArticles.find(article => article.purpose._id === id).purpose
+      );
+      setCanWritePurposes(uniqueCanWritePurposes);
+    }
 
     setAllowedArticles(canReadArticles);
-    setAllowedPurposes(uniqueAllowedPurposes);
-    setCanReadPurposes(uniqueCanReadPurposes);
-    setCanWritePurposes(uniqueCanWritePurposes);
   }, [isLoading, articles]);
 
   return {

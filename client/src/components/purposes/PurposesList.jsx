@@ -20,7 +20,7 @@ const PurposesList = observer(() => {
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
 
-  const { purposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
+  const { canWritePurposes: purposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
 
   const handleOpen = (purpose = null, field) => {
     setSelectedPurpose(purpose);
