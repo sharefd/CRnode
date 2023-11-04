@@ -42,7 +42,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     const newMembers = targetKeys.filter(key => !selectedPurpose.canReadMembers.includes(key));
     for (const memberId of newMembers) {
       const request = {
-        purpose: selectedPurpose.name,
+        purposeId: selectedPurpose._id,
         userId: memberId
       };
       await createRequest(request);

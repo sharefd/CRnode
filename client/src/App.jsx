@@ -6,7 +6,6 @@ import Admin from './components/admin/Admin';
 import UserSettings from './components/user/UserSettings';
 import Home from './components/home/Home';
 import Navbar from './components/home/Navbar';
-// import NewRequest from './components/requests/NewRequest';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import { fetchCurrentUser } from './services/users';
 import { ToastContainer } from 'react-toastify';
@@ -19,9 +18,6 @@ const RequestsList = lazy(() => import('./components/requests/RequestsList'));
 const SuccessMessage = lazy(() => import('./components/requests/SuccessMessage'));
 const ArticleList = lazy(() => import('./components/articles/ArticleList'));
 const OlderArticles = lazy(() => import('./components/articles/OlderArticles'));
-
-const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 
 const App = observer(() => {
   const [user, setUser] = useState({});
@@ -72,7 +68,6 @@ const App = observer(() => {
             <Route path='/requests' element={<RequestsList />} />
             <Route path='/login' element={<AuthPage />} />
             <Route path='/settings' element={<UserSettings />} />
-            {/* <Route path='/requests/new' element={<NewRequest />} /> */}
             <Route path='/requests/submitted' element={<SuccessMessage />} />
           </Routes>
         </Suspense>

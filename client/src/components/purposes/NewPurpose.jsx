@@ -33,7 +33,7 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
       });
 
       if (createdPurpose && createdPurpose._id) {
-        await createBulkRequests(newPurpose.canReadMembers, createdPurpose.name);
+        await createBulkRequests(newPurpose.canReadMembers, createdPurpose._id);
       }
 
       await refetchPurposes();

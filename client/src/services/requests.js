@@ -14,9 +14,9 @@ export const updateRequest = async request => {
   }
 };
 
-export const createBulkRequests = async (userIds, purpose) => {
+export const createBulkRequests = async (userIds, purposeId) => {
   try {
-    const response = await axios.post(`${baseUrl}/api/requests/bulk-new`, { purpose, userIds });
+    const response = await axios.post(`${baseUrl}/api/requests/bulk-new`, { purposeId, userIds });
     return response.data;
   } catch (error) {
     console.error('Error creating purposes:', error);
