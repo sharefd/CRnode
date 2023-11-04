@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, Progress, Table } from 'antd';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 import { deletePurpose, updatePurpose } from '@/services/purposes';
@@ -13,6 +13,7 @@ const PurposesList = observer(() => {
 
   const [open, setOpen] = useState(false);
   const [openMemberList, setOpenMemberList] = useState(false);
+  const [editField, setEditField] = useState(null);
 
   const [openNewPurpose, setOpenNewPurpose] = useState(false);
 
@@ -21,9 +22,10 @@ const PurposesList = observer(() => {
 
   const { purposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
 
-  const handleOpen = (purpose = null) => {
+  const handleOpen = (purpose = null, field) => {
     setSelectedPurpose(purpose);
     setNewPurpose({ name: purpose.name, description: purpose.description });
+    setEditField(field);
     setOpen(true);
   };
 
@@ -70,42 +72,46 @@ const PurposesList = observer(() => {
     {
       title: 'Name',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: (text, record) => (
+        <>
+          {text} <EditOutlined className='cursor-pointer' onClick={() => handleOpen(record, 'name')} />
+        </>
+      )
     },
     {
       title: 'Description',
       dataIndex: 'description',
-      key: 'description'
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
+      key: 'description',
       render: (text, record) => (
-        <Button type='primary' className='custom-hover-button' onClick={() => handleOpen(record)}>
-          Edit Name
-        </Button>
+        <>
+          {text} <EditOutlined className='cursor-pointer' onClick={() => handleOpen(record, 'description')} />
+        </>
       )
     },
+
     {
       title: 'Edit Members',
       key: 'editMembers',
+      width: '18%',
       render: (text, record) => (
-        <Button type='primary' className='custom-hover-button' onClick={() => handleOpenMemberList(record)}>
-          Edit Members
-        </Button>
+        <UserSwitchOutlined
+          onMouseEnter={e => (e.currentTarget.style.color = 'blue')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
+          className='cursor-pointer text-lg'
+          onClick={() => handleOpenMemberList(record)}
+        />
       )
     },
     {
       title: 'Delete',
       key: 'delete',
       render: (text, record) => (
-        <Button
-          type='link'
-          icon={<DeleteOutlined />}
-          onClick={() => handleDelete(record._id)}
-          style={{ color: 'inherit' }}
+        <DeleteOutlined
           onMouseEnter={e => (e.currentTarget.style.color = 'red')}
           onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
+          onClick={() => handleDelete(record._id)}
+          className='cursor-pointer text-lg'
         />
       )
     }
@@ -124,17 +130,21 @@ const PurposesList = observer(() => {
       <Table dataSource={purposes} columns={columns} rowKey='_id' />
 
       <Modal title='Edit Calendar' open={open} onCancel={handleClose} onOk={handleSave}>
-        <Input
-          autoFocus
-          placeholder='Purpose Name'
-          value={newPurpose.name}
-          onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
-        />
-        <Input
-          placeholder='Purpose Description'
-          value={newPurpose.description}
-          onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
-        />
+        {editField === 'name' && (
+          <Input
+            autoFocus
+            placeholder='Purpose Name'
+            value={newPurpose.name}
+            onChange={e => setNewPurpose({ ...newPurpose, name: e.target.value })}
+          />
+        )}
+        {editField === 'description' && (
+          <Input
+            placeholder='Purpose Description'
+            value={newPurpose.description}
+            onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
+          />
+        )}
       </Modal>
 
       <NewPurpose
