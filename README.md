@@ -7,14 +7,20 @@ CloudRounds is a comprehensive solution designed to assist medical professionals
 
 ## Features
 
-- **User Authentication**: Secure login and signup functionality to ensure only authorized users can access the platform.
+### Permissions-Role-Based System
 
-- **Admin Dashboard**: Provides administrators with the ability to manage user permissions and oversee platform activities.
+- CloudRounds offers a robust permissions-role-based system. Users can create calendars for various purposes and provide View or Write permissions to other users.
+- Additionally, users can invite others via email to access specific calendars or events.
+- The integrated calendar also comes with a feature to send email notifications about upcoming events, ensuring you never miss an important round or event.
 
-- **Article Management**: Allows users to view, create, and manage articles related to medical rounds and events.
+### User Authentication
+Secure login and signup functionality to ensure only authorized users can access the platform.
 
-- **Resource Store**: A centralized store to manage resources such as purposes, requests, and users.
+### Admin Dashboard
+Provides administrators with the ability to manage user permissions and oversee platform activities.
 
-- **User Store**: Manages user-specific data, including articles, submitted requests, feedbacks, permissions, and more.
+### Article Management
+Allows users to view, create, and manage articles related to medical rounds and events.
 
-- **Permissions-Role-Based System**: CloudRounds offers a robust permissions-role-based system. Users can create calendars for various purposes and provide View or Write permissions to other users in a user-friendly manner. Additionally, users can invite others via email to access specific calendars or events. The integrated calendar also comes with a feature to send email notifications about upcoming events, ensuring you never miss an important round or event.
+
+
