@@ -29,6 +29,6 @@ jobs:
       run: |
         echo "$DO_SSH_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -r ./ deployer@142.93.60.189:~/CRnode
+        scp -i private_key.pem -r * deployer@142.93.60.189:~/CRnode/
         ssh -i private_key.pem deployer@142.93.60.189 "cd ~/CRnode/server && npm run build:ui && pm2 restart 3"
         rm -f private_key.pem
