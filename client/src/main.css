@@ -351,4 +351,18 @@ select::placeholder {
 }
 
 
+/* Mobile view */
+@media only screen and (max-width: 768px) {
+  .ant-table {
+    font-size: 12px;
+  }
 
+  .ant-table td,
+  .ant-table th {
+    padding: 8px;
+  }
+
+  .scrollable-table {
+    overflow-x: auto;
+  }
+}

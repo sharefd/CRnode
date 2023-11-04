@@ -245,23 +245,26 @@ const RequestsList = observer(() => {
           <hr style={{ margin: '20px 0' }} />
           <Typography.Title level={2}>{!showUserRequests ? 'Access Requests' : 'Invitations'}</Typography.Title>
           {isLoading && <Progress percent={100} status='active' />}
-          <Table
-            dataSource={
-              rowsPerPage > 0
-                ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                : displayedRequests
-            }
-            pagination={false}
-            rowKey={record => record._id}
-            columns={columns}
-            scroll={{ x: 'max-content' }}
-          />
+          <div className='scrollable-table'>
+            <Table
+              dataSource={
+                rowsPerPage > 0
+                  ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                  : displayedRequests
+              }
+              pagination={false}
+              rowKey={record => record._id}
+              columns={columns}
+              scroll={{ x: 'max-content' }}
+            />
+          </div>
+
           <Pagination
             total={localRequests.length}
             pageSize={rowsPerPage}
             current={page}
             onChange={handleChangePage}
-            showSizeChanger
+            showSizeChanger={window.innerWidth > 768}
             pageSizeOptions={['25', '50', '100']}
             style={{ marginTop: '20px' }}
           />
