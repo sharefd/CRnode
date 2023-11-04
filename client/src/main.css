@@ -349,3 +349,19 @@ select::placeholder {
   background-color: red !important;
   color: white !important;
 }
+
+/* Mobile view */
+@media only screen and (max-width: 768px) {
+  .ant-table {
+    font-size: 12px;
+  }
+
+  .ant-table td,
+  .ant-table th {
+    padding: 8px;
+  }
+
+  .scrollable-table {
+    overflow-x: auto;
+  }
+}
