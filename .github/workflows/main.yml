@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container: node:16
 
     steps:
     - name: Checkout code
