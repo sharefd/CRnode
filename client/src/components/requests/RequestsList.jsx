@@ -122,7 +122,7 @@ const RequestsList = observer(() => {
       title: 'Purpose',
       dataIndex: 'purpose',
       key: 'purpose',
-      render: text => <strong>{text}</strong>
+      render: purpose => <strong>{purpose && purpose.name}</strong>
     },
     {
       title: 'User',

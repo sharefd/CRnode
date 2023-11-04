@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/bulk-new', async (req, res) => {
-  const { purpose, userIds } = req.body;
+  const { purposeId, userIds } = req.body;
 
   try {
     const users = await User.find({ _id: { $in: userIds } });
@@ -26,7 +26,7 @@ router.post('/bulk-new', async (req, res) => {
     }
 
     const requests = users.map(user => ({
-      purpose: purpose,
+      purpose: purposeId,
       user: user._id
     }));
 
@@ -48,9 +48,9 @@ router.post('/bulk-new', async (req, res) => {
 });
 
 router.post('/new', async (req, res) => {
-  const { purpose, userId } = req.body;
+  const { purposeId, userId } = req.body;
 
-  if (!purpose || !userId) {
+  if (!purposeId || !userId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -61,7 +61,7 @@ router.post('/new', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const request = new Request({ purpose, user: user._id });
+    const request = new Request({ purpose: purposeId, user: user._id });
 
     await request.save();
 
