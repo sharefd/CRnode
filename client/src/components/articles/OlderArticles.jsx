@@ -175,7 +175,7 @@ const OlderArticles = observer(() => {
             <h5 style={{ fontStyle: 'italic' }}>{currentArticle ? currentArticle.title : ''}</h5>
             <TextArea
               id='feedback-edit'
-              placeholder='Your Feedback'
+              placeholder='This feature is being worked on!'
               value={currentFeedback}
               onChange={e => setCurrentFeedback(e.target.value)}
               rows={4}
