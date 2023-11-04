@@ -350,7 +350,6 @@ select::placeholder {
   color: white !important;
 }
 
-
 /* Mobile view */
 @media only screen and (max-width: 768px) {
   .ant-table {
@@ -364,5 +363,13 @@ select::placeholder {
 
   .scrollable-table {
     overflow-x: auto;
+  }
+
+  .full-width-mobile {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 }

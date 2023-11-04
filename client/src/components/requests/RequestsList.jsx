@@ -238,35 +238,37 @@ const RequestsList = observer(() => {
   ];
 
   return (
-    <Layout style={{ width: '100%', margin: '0 auto', height: '100vh' }}>
-      <Content style={{ padding: '10px 80px', marginTop: '64px' }}>
-        <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Button onClick={toggleView}>{!showUserRequests ? 'View Invitations' : 'View Access Requests'}</Button>
-          <hr style={{ margin: '20px 0' }} />
-          <Typography.Title level={2}>{!showUserRequests ? 'Access Requests' : 'Invitations'}</Typography.Title>
-          {isLoading && <Progress percent={100} status='active' />}
-          <div className='scrollable-table'>
-            <Table
-              dataSource={
-                rowsPerPage > 0
-                  ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  : displayedRequests
-              }
-              pagination={false}
-              rowKey={record => record._id}
-              columns={columns}
-              scroll={{ x: 'max-content' }}
-            />
-          </div>
-
+    <Layout className='w-full mx-auto h-screen'>
+      <Content className='p-4 mt-16'>
+        <div className='w-full bg-white p-6 min-h-[280px] text-center full-width-mobile'>
+          <Button onClick={toggleView} className='mb-5'>
+            {!showUserRequests ? 'View Invitations' : 'View Access Requests'}
+          </Button>
+          <hr className='my-5' />
+          <Typography.Title level={2} className='mb-5'>
+            {!showUserRequests ? 'Access Requests' : 'Invitations'}
+          </Typography.Title>
+          {isLoading && <Progress percent={100} status='active' className='mb-5' />}
+          <Table
+            dataSource={
+              rowsPerPage > 0
+                ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                : displayedRequests
+            }
+            pagination={false}
+            rowKey={record => record._id}
+            columns={columns}
+            scroll={{ x: 'max-content' }}
+            className='w-full overflow-x-auto'
+          />
           <Pagination
             total={localRequests.length}
             pageSize={rowsPerPage}
             current={page}
             onChange={handleChangePage}
-            showSizeChanger={window.innerWidth > 768}
+            showSizeChanger
             pageSizeOptions={['25', '50', '100']}
-            style={{ marginTop: '20px' }}
+            className='mt-5'
           />
         </div>
       </Content>
