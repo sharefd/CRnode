@@ -1,72 +1,46 @@
 import { useEffect, useState } from 'react';
-import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 import { fetchRequests } from '@/services/requests';
 
 const useRequestPermissions = () => {
-  const [canWritePurposes, setCanWritePurposes] = useState(null);
+  const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
+  const [allowedPurposes, setAllowedPurposes] = useState([]);
   const [allowedRequests, setAllowedRequests] = useState([]);
 
   const localUser = localStorage.getItem('CloudRoundsUser');
   const userId = JSON.parse(localUser)._id;
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch: refetchPurposes
-  } = useQuery(['userPurposes', userId], () => fetchPurposes(userId));
-
-  const {
-    data: requests,
-    isLoading: isRequestsLoading,
-    refetch
-  } = useQuery('requests', fetchRequests, {
-    enabled: !isLoading
-  });
+  const { data: requests, isLoading, refetch } = useQuery('requests', fetchRequests);
 
   useEffect(() => {
     if (isLoading) {
       return;
     }
 
-    const filterData = async () => {
-      const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(userId.toString())) || [];
-      setCanWritePurposes(canWrite);
+    const canWriteRequests =
+      requests?.filter(request => request.purpose && request.purpose.canWriteMembers.includes(userId)) || [];
+    const canReadRequests =
+      requests?.filter(request => request.purpose && request.purpose.canReadMembers.includes(userId)) || [];
 
-      const canRead = data?.filter(purpose => purpose.canReadMembers.includes(userId.toString())) || [];
-      setCanReadPurposes(canRead);
-    };
+    const uniqueCanWritePurposes = [...new Set(canWriteRequests.map(request => request.purpose))];
+    const uniqueCanReadPurposes = [...new Set(canReadRequests.map(request => request.purpose))];
+    const uniqueAllowedPurposes = [...new Set(canReadRequests.map(request => request.purpose.name))];
 
-    if (userId) {
-      filterData();
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (isRequestsLoading || !canWritePurposes) {
-      return;
-    }
-
-    const allowedPurposes = canWritePurposes.map(p => p.name);
-    const canWriteRequests = requests ? requests.filter(request => allowedPurposes.includes(request.purpose)) : [];
-
+    setCanWritePurposes(uniqueCanWritePurposes);
+    setCanReadPurposes(uniqueCanReadPurposes);
+    setAllowedPurposes(uniqueAllowedPurposes);
     setAllowedRequests(canWriteRequests);
-  }, [isRequestsLoading, canWritePurposes]);
+  }, [isLoading, requests]);
 
   return {
-    purposes: data,
     requests,
     canWritePurposes,
     canReadPurposes,
+    allowedPurposes,
     allowedRequests,
-    isLoading: isRequestsLoading || isLoading,
-    refetch,
-    refetchPurposes,
-    isError,
-    error
+    isLoading,
+    refetch
   };
 };
 

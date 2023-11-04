@@ -35,10 +35,13 @@ const UserSettings = observer(() => {
 
   const mutation = useMutation(updateUser, {
     onSuccess: data => {
-      localStorage.setItem('CloudRoundsUser', JSON.stringify(data.user));
-
-      setTempValues(data.user);
-      toast.success('Field updated successfully!', { autoClose: 2000, pauseOnFocusLoss: false });
+      console.log(data);
+      if (data && data.user) {
+        localStorage.setItem('CloudRoundsUser', JSON.stringify(data.user));
+        const updatedUser = data.user;
+        setTempValues({ ...tempValues, updatedUser });
+        toast.success('Field updated successfully!', { autoClose: 2000, pauseOnFocusLoss: false });
+      }
     },
     onError: error => {
       toast.error(error.message || 'Error updating field. Please try again.', {

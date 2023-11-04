@@ -63,8 +63,8 @@ const EventsDialog = ({ open, setOpen, events = [], initialIndex, selectedArticl
 
           <Box className='modal-purpose'>
             <Box className='event-purpose-badge'>
-              {purposeIcons[currentArticle.purpose] || purposeIcons.DEFAULT}
-              <span style={{ fontSize: '13px' }}>{currentArticle.purpose}</span>
+              {purposeIcons[currentArticle.purpose.name] || purposeIcons.DEFAULT}
+              <span style={{ fontSize: '13px' }}>{currentArticle.purpose.name}</span>
             </Box>
             {isCopied && <div className='copied-message'>Copied</div>}
           </Box>

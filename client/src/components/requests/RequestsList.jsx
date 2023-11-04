@@ -105,8 +105,8 @@ const RequestsList = observer(() => {
     setShowUserRequests(!showUserRequests);
   };
 
-  const updateStatus = (id, purpose, status) => {
-    updateStatusMutation.mutate({ id, purpose, status });
+  const updateStatus = (id, purposeId, status) => {
+    updateStatusMutation.mutate({ id, purpose: purposeId, status });
   };
 
   if (isQueryLoading || isLoading) {
@@ -152,19 +152,19 @@ const RequestsList = observer(() => {
                   key: 'approve',
                   label: 'Approve',
                   disabled: request.status === 'Approved',
-                  onClick: () => updateStatus(request._id, request.purpose, 'Approved')
+                  onClick: () => updateStatus(request._id, request.purpose._id, 'Approved')
                 },
                 {
                   key: 'deny',
                   label: 'Deny',
                   disabled: request.status === 'Denied',
-                  onClick: () => updateStatus(request._id, request.purpose, 'Denied')
+                  onClick: () => updateStatus(request._id, request.purpose._id, 'Denied')
                 },
                 {
                   key: 'reset',
                   label: 'Reset',
                   disabled: request.status === 'Pending',
-                  onClick: () => updateStatus(request._id, request.purpose, 'Pending')
+                  onClick: () => updateStatus(request._id, request.purpose._id, 'Pending')
                 }
               ];
 
@@ -188,13 +188,13 @@ const RequestsList = observer(() => {
                   key: 'approve',
                   label: 'Approve',
                   disabled: request.status === 'Approved',
-                  onClick: () => updateStatus(request._id, request.purpose, 'Approved')
+                  onClick: () => updateStatus(request._id, request.purpose._id, 'Approved')
                 },
                 {
                   key: 'deny',
                   label: 'Deny',
                   disabled: request.status === 'Denied',
-                  onClick: () => updateStatus(request._id, request.purpose, 'Denied')
+                  onClick: () => updateStatus(request._id, request.purpose._id, 'Denied')
                 }
               ];
 

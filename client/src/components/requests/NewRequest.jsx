@@ -14,11 +14,12 @@ import useArticlePermissions from '@/hooks/useArticlePermissions';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
-const localUser = localStorage.getItem('CloudRoundsUser');
-const user = JSON.parse(localUser);
 
 const NewRequest = observer(() => {
   const navigate = useNavigate();
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [purpose, setPurpose] = useState('');
   const [yearOfStudy, setYearOfStudy] = useState('');
   const [message, setMessage] = useState('');
