@@ -101,7 +101,7 @@ export const homeLinks = [
     label: 'Rounds Catalog',
     Icon: ManageSearch,
     endpoint: '',
-    description: 'Explore public events and request access. Coming soon.'
+    description: 'Coming soon.'
   },
   {
     label: 'Account Settings',
