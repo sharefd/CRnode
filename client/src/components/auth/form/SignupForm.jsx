@@ -118,8 +118,8 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
                     py: 1,
                     width: '100%',
                     color: '#fff',
-                    backgroundColor: '#4185EF',
-                    '&:hover': { backgroundColor: '#2e67d2' },
+                    backgroundColor: '#64748b',
+                    '&:hover': { backgroundColor: '#1e293b' },
                     borderRadius: '9999px'
                   }}>
                   Sign Up

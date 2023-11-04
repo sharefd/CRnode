@@ -350,6 +350,7 @@ select::placeholder {
   color: white !important;
 }
 
+
 /* Mobile view */
 @media only screen and (max-width: 768px) {
   .ant-table {

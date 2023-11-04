@@ -155,7 +155,7 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Purpose' labelCol={{ span: 24 }} colon={false}>
+            <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false}>
               <Select value={article.purpose} onChange={value => setArticle({ ...article, purpose: value })}>
                 <Select.Option value='' disabled>
                   Select Purpose
