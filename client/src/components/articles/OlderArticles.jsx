@@ -119,6 +119,14 @@ const OlderArticles = observer(() => {
     );
   };
 
+  const titleStyle = {
+    maxWidth: '200px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
+  };
+
   return (
     <Layout>
       <Content style={{ padding: '0 50px', marginTop: '64px' }}>
@@ -135,7 +143,12 @@ const OlderArticles = observer(() => {
                 key='purpose'
                 render={purpose => (purpose ? purpose.name : '')}
               />
-              <Table.Column title='Article Title' dataIndex='title' key='title' />
+              <Table.Column
+                title='Article Title'
+                dataIndex='title'
+                key='title'
+                render={title => <div style={titleStyle}>{title}</div>}
+              />{' '}
               <Table.Column title='Date' dataIndex='date' key='date' render={date => formatDate(date)} />
               <Table.Column
                 title='Attended'
