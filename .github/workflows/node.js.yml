@@ -8,7 +8,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,25 +17,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: cd client && npm i
-    - run: cd server && npm i    
-    - run: cd server && npm run build:ui --if-present
 
-    # Deployment to DigitalOcean droplet
+    - name: Add DO Droplet to SSH known hosts
+      run: |
+        echo "142.93.60.189 $(ssh-keyscan 142.93.60.189 2>/dev/null)" >> ~/.ssh/known_hosts
+
     - name: Deploy to DigitalOcean
-      if: github.event_name == 'push' && matrix.node-version == '18.x'
       env:
         DO_SSH_KEY: ${{ secrets.DO_SSH_PRIVATE_KEY }}
-        DO_HOST: ${{ secrets.DO_HOST }}
-        DO_USERNAME: ${{ secrets.DO_USERNAME }}
+        DO_HOST: 142.93.60.189
+        DO_USERNAME: marwan
       run: |
         echo "$DO_SSH_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -r ./ $DO_USERNAME@$DO_HOST:~/CRnode
-        ssh -i private_key.pem $DO_USERNAME@$DO_HOST "cd ~/CRnode/server && npm run build:ui && pm2 restart 3"
+        scp -i private_key.pem -r ./ marwan@142.93.60.189:~/CRnode
+        ssh -i private_key.pem marwan@142.93.60.189 "cd ~/CRnode/server && npm run build:ui && pm2 restart 3"
         rm -f private_key.pem
