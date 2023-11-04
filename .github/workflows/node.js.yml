@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: cd client && npm i
     - run: cd server && npm i    
     - run: cd server && npm run build:ui --if-present
     - run: cd server && npm test
