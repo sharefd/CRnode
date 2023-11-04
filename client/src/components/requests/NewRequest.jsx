@@ -119,7 +119,7 @@ const NewRequest = observer(() => {
           <LinearProgress />
         ) : (
           <Grid container spacing={3} sx={{ padding: 4 }}>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
               <TextField
                 id='purpose'
                 inputProps={{ id: 'purpose' }}
@@ -144,6 +144,7 @@ const NewRequest = observer(() => {
                 ))}
               </TextField>
             </Grid>
+<!--
             <Grid item xs={4}>
               <TextField
                 id='level'
@@ -155,13 +156,14 @@ const NewRequest = observer(() => {
                 variant='outlined'
                 value={yearOfStudy}
                 onChange={e => setYearOfStudy(e.target.value)}>
-                {YEAR_OF_STUDY_CHOICES.map((option, index) => (
+                //{YEAR_OF_STUDY_CHOICES.map((option, index) => (
                   <MenuItem key={index} value={option}>
-                    {option}
+                    //{option}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
+-->
             <Grid item xs={12}>
               <TextField
                 id='message'
