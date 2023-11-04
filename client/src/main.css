@@ -2,6 +2,7 @@
 @import url('./assets/css/buttons.css');
 @import url('./assets/css/Modal.css');
 @import url('./assets/css/ArticleList.css');
+@import url('./assets/css/Calendar.css');
 
 @tailwind base;
 @tailwind components;
@@ -14,69 +15,6 @@
 
 p.MuiTypography-root {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
-}
-
-#calendar-container {
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#calendar-header {
-  width: 100%;
-  min-width: 4290px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5px;
-  background-color: #0066b2;
-  color: white;
-  border-radius: 20px;
-}
-
-#calendar-body {
-  width: 100%;
-}
-
-#current-month-year {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-#calendar-weekday th {
-  text-align: center;
-}
-
-#calendar-body td {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  vertical-align: middle;
-  font-weight: bold;
-  border: 0px solid #ddd;
-  cursor: pointer;
-  padding: 10px;
-}
-
-#calendar-body td.event {
-  position: relative;
-}
-
-#prev-month,
-#next-month {
-  background: none;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  color: #fff;
-}
-
-#prev-month:hover,
-#next-month:hover {
-  color: #0056b3;
-  text-decoration: underline;
 }
 
 .plus-icon {
@@ -158,41 +96,6 @@ p.MuiTypography-root {
 .id-pass,
 .date-time {
   font-size: 16px;
-}
-
-.event-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.events-container {
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-}
-
-.event-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 2px;
-}
-
-@media screen and (max-width: 600px) {
-  #calendar-body td {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media screen and (min-width: 601px) and (max-width: 1024px) {
-  #calendar-body td {
-    width: 50px;
-    height: 50px;
-  }
 }
 
 /* TIME PICKER - NewArticle */

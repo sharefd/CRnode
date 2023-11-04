@@ -138,7 +138,7 @@ const Navbar = observer(() => {
   };
 
   return (
-    <AppBar position='static' sx={{ backgroundColor: '#344154', py: '2px' }}>
+    <AppBar position='static' sx={{ backgroundColor: '#0066b2', py: '2px' }}>
       <Toolbar>
         <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }} direction='row'>
           <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -162,6 +162,7 @@ const Navbar = observer(() => {
                     color: '#fff',
                     width: '36px',
                     height: '36px',
+                    border: '1px solid #fff',
                     fontSize: '14px',
                     '&:hover': { color: 'lightgray', border: '1px solid lightgray' }
                   }}>

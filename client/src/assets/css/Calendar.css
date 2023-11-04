@@ -1,0 +1,147 @@
+#calendar-container {
+  margin-top: 20px;
+}
+
+#calendar-header {
+  width: 100%;
+  align-items: center;
+}
+
+#calendar-body {
+  width: 100%;
+  min-width: 420px;
+  border-radius: 0px;
+}
+
+#current-month-year {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+#calendar-body th {
+  text-align: center;
+  border-radius: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+#calendar-body tr {
+  text-align: center;
+}
+
+#calendar-cell .ant-typography {
+  font-size: 16px;
+}
+
+#calendar-body td {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+}
+
+#calendar-body td.event {
+  position: relative;
+}
+
+#prev-month,
+#next-month {
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+}
+
+#prev-month:hover,
+#next-month:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.event-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.events-container {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.event-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 2px;
+}
+
+sup.ant-scroll-number.ant-badge-count {
+  font-size: 10px;
+  background-color: #2877cc;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  #calendar-container {
+    margin-top: 10px;
+  }
+
+  #calendar-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #calendar-body {
+    min-width: auto;
+  }
+
+  #current-month-year {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+
+  #calendar-body th {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  #calendar-body td {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+  }
+
+  #calendar-cell .ant-typography {
+    font-size: 14px;
+  }
+  sup.ant-scroll-number.ant-badge-count {
+    height: 12px !important;
+    padding: 4px 4px !important;
+    border: 1px solid #2877cc !important;
+    border-radius: 50% !important;
+    left: 15px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 12px !important;
+    line-height: 22px !important;
+  }
+
+  .purpose-badge p {
+    font-size: 11px;
+  }
+
+  .mb-5 {
+    margin-bottom: 8px;
+  }
+}

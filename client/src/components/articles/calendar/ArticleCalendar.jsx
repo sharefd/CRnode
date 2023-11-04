@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Button, Table } from 'antd';
 import CalendarCell from './CalendarCell';
 import { monthNames } from '@/utils/constants';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
@@ -38,13 +38,13 @@ const ArticleCalendar = ({ articles }) => {
     let day = 1;
 
     for (let i = 0; i < 6; i++) {
-      let cells = [];
+      let week = {};
 
       for (let j = 0; j < 7; j++) {
         if (i === 0 && j < firstDay) {
-          cells.push(<TableCell key={j}></TableCell>);
+          week[j] = null;
         } else if (day > lastDate) {
-          cells.push(<TableCell key={j}></TableCell>);
+          week[j] = null;
         } else {
           const cellDate = new Date(year, month, day);
           const eventsOnThisDay = filteredArticles.filter(article => {
@@ -52,9 +52,9 @@ const ArticleCalendar = ({ articles }) => {
             return articleDate.toDateString() === cellDate.toDateString();
           });
 
-          cells.push(
+          week[j] = (
             <CalendarCell
-              key={j}
+              key={`cell-${i}-${j}-${day}`}
               day={day}
               month={month}
               year={year}
@@ -66,44 +66,33 @@ const ArticleCalendar = ({ articles }) => {
         }
       }
 
-      rows.push(<TableRow key={i}>{cells}</TableRow>);
+      // Check if all days in the week are null
+      if (!Object.values(week).every(day => day === null)) {
+        week['key'] = i;
+
+        rows.push(week);
+      }
     }
 
     return rows;
   };
 
+  const calendarData = generateCalendarCells();
+
   return (
-    <div id='calendar-container'>
+    <div id='calendar-container' className='flex flex-col'>
       <div
         id='calendar-head'
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: '#1976d2', // Background color
-          borderRadius: '20px', // Adjust the value to your desired level of rounding
-          color: 'white',
-          minWidth: '420px' // Set the minimum width you desire, e.g., 200px
-        }}>
-        <Button id='prev-month' onClick={() => changeMonth(-1)} style={{}}>
-          <ChevronLeft />
-        </Button>
+        className='flex items-center justify-between bg-bluebrand text-white min-w-[420px] rounded-t-xl'>
+        <Button id='prev-month' onClick={() => changeMonth(-1)} icon={<LeftOutlined />} />
 
         <Button
-          variant='outlined'
-          size='small'
-          sx={{
-            textTransform: 'none',
-            color: '#1976d2',
+          onClick={goToToday}
+          style={{
             borderColor: 'white',
             backgroundColor: 'white',
-            '&:hover': {
-              backgroundColor: '#F5F5F5',
-              color: '#1976d2',
-              borderColor: 'white'
-            }
-          }}
-          onClick={goToToday}>
+            color: '#1976d2'
+          }}>
           TODAY
         </Button>
 
@@ -113,28 +102,21 @@ const ArticleCalendar = ({ articles }) => {
             flex: 1,
             display: 'flex',
             justifyContent: 'center',
-            marginRight: '45px' // Adjust the margin value as needed
+            marginRight: '45px'
           }}>
           {`${monthNames[month]} ${year}`}
         </span>
 
-        <Button id='next-month' onClick={() => changeMonth(1)} style={{ color: 'white' }}>
-          <ChevronRight />
-        </Button>
+        <Button id='next-month' onClick={() => changeMonth(1)} icon={<RightOutlined />} />
       </div>
-      <Table id='calendar-body'>
-        <TableHead>
-          <TableRow id='calendar-weekday'>
-            <TableCell>Sun</TableCell>
-            <TableCell>Mon</TableCell>
-            <TableCell>Tue</TableCell>
-            <TableCell>Wed</TableCell>
-            <TableCell>Thu</TableCell>
-            <TableCell>Fri</TableCell>
-            <TableCell>Sat</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{generateCalendarCells()}</TableBody>
+      <Table id='calendar-body' dataSource={calendarData} pagination={false}>
+        <Table.Column title='Sun' dataIndex='0' key='0' />
+        <Table.Column title='Mon' dataIndex='1' key='1' />
+        <Table.Column title='Tue' dataIndex='2' key='2' />
+        <Table.Column title='Wed' dataIndex='3' key='3' />
+        <Table.Column title='Thu' dataIndex='4' key='4' />
+        <Table.Column title='Fri' dataIndex='5' key='5' />
+        <Table.Column title='Sat' dataIndex='6' key='6' />
       </Table>
     </div>
   );
