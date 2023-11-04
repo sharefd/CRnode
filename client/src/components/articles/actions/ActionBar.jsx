@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Input, Checkbox, Drawer, Space, Divider } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { CalendarToday } from '@mui/icons-material';
 import { FcCalendar } from 'react-icons/fc';
 
 const ActionBar = ({
@@ -25,7 +24,7 @@ const ActionBar = ({
   const [searchTerm, setSearchTerm] = useState('');
 
   const allowedPurposes = canReadPurposes.map(purpose => purpose.name);
-  const filteredPurposes = allowedPurposes.filter(p => p.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredPurposes = allowedPurposes.filter(p => p && p.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const handlePurposeToggle = purpose => {
     let newPurposes = [...selectedPurposes];
@@ -84,6 +83,7 @@ const ActionBar = ({
         icon={showSidebar ? <LeftOutlined /> : <RightOutlined />}
         className='absolute top-3'
       />
+      {/* LEFT SIDEBAR: Article Filters */}
       <Drawer
         title='Filters'
         placement='left'
@@ -134,6 +134,10 @@ const ActionBar = ({
           ))}
         </Space>
       </Drawer>
+
+      {/* Horizontal Bar below Navbar */}
+      {/* Display most recent upcoming event details */}
+
       <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100'>
         <Button type='primary' className='flex items-center custom-hover-button' onClick={toggleNewArticleModal}>
           <span style={{ marginRight: '8px' }}>

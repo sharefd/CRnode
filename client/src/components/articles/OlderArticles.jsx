@@ -33,7 +33,7 @@ const OlderArticles = observer(() => {
     enabled: !!user
   });
 
-  const { allowedArticles, isLoading: isPurposesLoading } = useArticlePermissions();
+  const { allowedArticles, isLoading } = useArticlePermissions();
 
   const sortedArticles = sortArticlesDescending(allowedArticles);
 
@@ -75,7 +75,6 @@ const OlderArticles = observer(() => {
         setAttended(response.attended);
         const updatedUser = { ...user, attended: response.attended };
         localStorage.setItem('CloudRoundsUser', JSON.stringify(updatedUser));
-        console.log(response);
       } catch (error) {
         console.error('There was an error updating attendance:', error);
       }
@@ -102,7 +101,7 @@ const OlderArticles = observer(() => {
     setOpen(false);
   };
 
-  if (isPurposesLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingSpinner />;
 
   const renderFeedback = article => {
     const feedback = getFeedback(article._id);
@@ -130,7 +129,12 @@ const OlderArticles = observer(() => {
               pagination={false}
               rowKey={record => record._id}
               scroll={{ x: 'max-content' }}>
-              <Table.Column title='Purpose' dataIndex='purpose' key='purpose' />
+              <Table.Column
+                title='Purpose'
+                dataIndex='purpose'
+                key='purpose'
+                render={purpose => (purpose ? purpose.name : '')}
+              />
               <Table.Column title='Article Title' dataIndex='title' key='title' />
               <Table.Column title='Date' dataIndex='date' key='date' render={date => formatDate(date)} />
               <Table.Column

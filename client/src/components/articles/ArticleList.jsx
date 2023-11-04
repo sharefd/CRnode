@@ -127,7 +127,7 @@ const ArticleList = observer(() => {
       return organizerFilter.length === 0 || organizerFilter.includes(article.organizer.username);
     })
     .filter(article => {
-      return selectedPurposes.includes('Show All') || selectedPurposes.includes(article.purpose);
+      return selectedPurposes.includes('Show All') || selectedPurposes.includes(article.purpose.name);
     })
     .filter(isArticleAfterCurrentDate);
 
@@ -139,6 +139,7 @@ const ArticleList = observer(() => {
     <div>
       <ActionBar
         user={user}
+        mostRecentArticle={currentArticles[0]}
         canReadPurposes={canReadPurposes}
         selectedPurposes={selectedPurposes}
         setSelectedPurposes={setSelectedPurposes}
@@ -194,14 +195,14 @@ const ArticleList = observer(() => {
                       onClick={() => setSelectedArticle(article)}
                       disabled={article.organizer.username !== user.username}
                       style={{ fontSize: '12px' }}>
-                      by {article.organizer.username}
+                      by {`${article.organizer.firstName} ${article.organizer.lastName}`}
                       {article.organizer.username === user.username && (
                         <Edit style={{ fontSize: '12px', marginLeft: '4px' }} />
                       )}
                     </Button>
                     <div className='purpose-badge'>
-                      {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
-                      <span style={{ fontSize: '13px' }}>{article.purpose}</span>
+                      {purposeIcons[article.purpose.name] || purposeIcons.DEFAULT}
+                      <span style={{ fontSize: '13px' }}>{article.purpose.name}</span>
                     </div>
                   </div>
                 </Row>

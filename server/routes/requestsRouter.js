@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const requests = await Request.find().populate('user', 'username');
+    const requests = await Request.find().populate('user', 'username').populate('purpose');
     res.status(200).json(requests);
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching requests', error });
@@ -37,7 +37,11 @@ router.post('/bulk-new', async (req, res) => {
       await sendEmail('New Request Submitted', 'A new request has been submitted.', user.email);
     }
 
-    res.status(201).json({ message: 'Requests created successfully', requests });
+    const populatedRequests = await Request.find({ _id: { $in: requests.map(r => r._id) } })
+      .populate('user', 'username')
+      .populate('purpose');
+
+    res.status(201).json({ message: 'Requests created successfully', requests: populatedRequests });
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while creating the requests', error });
   }
@@ -62,8 +66,9 @@ router.post('/new', async (req, res) => {
     await request.save();
 
     await sendEmail('New Request Submitted', 'A new request has been submitted.', user.email);
+    const populatedRequest = await Request.findById(request._id).populate('user', 'username').populate('purpose');
 
-    res.status(201).json({ message: 'Request created successfully', request });
+    res.status(201).json({ message: 'Request created successfully', request: populatedRequest });
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while creating the request', error });
   }
@@ -97,7 +102,7 @@ router.put('/:id/status', async (req, res) => {
 
     if (status === 'Approved') {
       const userId = request.user._id;
-      const targetPurpose = await Purpose.findOne({ name: purpose });
+      const targetPurpose = await Purpose.findById(purpose);
 
       if (targetPurpose) {
         if (!targetPurpose.canReadMembers.includes(userId)) {
@@ -109,7 +114,9 @@ router.put('/:id/status', async (req, res) => {
 
     await sendEmail('Request Status Updated', `The status of your request has been updated to ${status}.`, email);
 
-    res.status(200).json({ message: 'Status updated successfully', request });
+    const populatedRequest = await Request.findById(request._id).populate('user', 'username').populate('purpose');
+
+    res.status(200).json({ message: 'Status updated successfully', request: populatedRequest });
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while updating the status', error });
   }

@@ -61,6 +61,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     setTargetKeys([]);
     setSearchValue('');
     handleClose();
+    setCurrentPage(1);
   };
 
   if (isLoadingUsers) {

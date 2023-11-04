@@ -5,7 +5,7 @@ const { jwtMiddleware } = require('../middleware/permissions');
 
 router.get('/', async (req, res) => {
   try {
-    const articles = await Article.find().populate('organizer', 'username').exec();
+    const articles = await Article.find().populate('organizer').populate('purpose');
 
     res.json(articles);
   } catch (err) {
@@ -19,7 +19,7 @@ router.post('/new', jwtMiddleware, async (req, res) => {
     const newArticle = new Article(req.body);
     await newArticle.save();
 
-    const populatedArticle = await Article.findById(newArticle._id).populate('organizer', 'username');
+    const populatedArticle = await Article.findById(newArticle._id).populate('organizer').populate('purpose');
 
     res.json(populatedArticle);
   } catch (err) {
@@ -36,7 +36,10 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
   }
 
   await article.save();
-  res.json(article);
+
+  const populatedArticle = await Article.findById(article._id).populate('organizer').populate('purpose');
+
+  res.json(populatedArticle);
 });
 
 router.delete('/:id', jwtMiddleware, async (req, res) => {

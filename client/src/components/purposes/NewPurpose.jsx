@@ -76,18 +76,6 @@ const NewPurpose = ({ open, handleClose, refetchPurposes, user }) => {
             style={{ marginTop: '10px' }}
             onChange={e => setNewPurpose({ ...newPurpose, description: e.target.value })}
           />
-          <Select
-            mode='multiple'
-            style={{ width: '100%', marginTop: '10px' }}
-            placeholder='Viewer Permissions'
-            onChange={handleAddMember}
-            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}>
-            {users.map(user => (
-              <Option key={user._id} value={user._id}>
-                {`${user.username} (${user.email})`}
-              </Option>
-            ))}
-          </Select>
         </>
       )}
     </Modal>

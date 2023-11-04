@@ -114,8 +114,8 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
           </Typography>
           <Box className='modal-purpose'>
             <Box className='event-purpose-badge'>
-              {purposeIcons[article.purpose] || purposeIcons.DEFAULT}
-              <span style={{ fontSize: '13px' }}>{article.purpose}</span>
+              {purposeIcons[article.purpose && article.purpose.name] || purposeIcons.DEFAULT}
+              <span style={{ fontSize: '13px' }}>{article.purpose && article.purpose.name}</span>
             </Box>
           </Box>
           <Box className='modal-info'>

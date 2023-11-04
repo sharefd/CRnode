@@ -46,7 +46,7 @@ const NewArticleForm = ({
 
     setAllowedPurposes(canWrite);
     if (canWrite.length > 0) {
-      setArticle(prevArticle => ({ ...prevArticle, purpose: canWrite[0].name }));
+      setArticle(prevArticle => ({ ...prevArticle, purpose: canWrite[0]._id.toString() }));
     }
   }, [isLoading]);
 
@@ -85,7 +85,7 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
-      purpose: article.purpose ? article.purpose : allowedPurposes[0].name,
+      purpose: article.purpose ? article.purpose : allowedPurposes[0]._id.toString(),
       event_link: eventLink
     };
 
@@ -124,7 +124,7 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
-      purpose: article.purpose ? article.purpose : allowedPurposes[0].name,
+      purpose: article.purpose ? article.purpose : allowedPurposes[0]._id.toString(),
       event_link: eventLink // Update the event_link with the corrected URL
     };
 
@@ -161,7 +161,7 @@ const NewArticleForm = ({
                   Select Purpose
                 </Select.Option>
                 {allowedPurposes.map(purpose => (
-                  <Select.Option key={purpose.name} value={purpose.name}>
+                  <Select.Option key={purpose._id.toString()} value={purpose._id.toString()}>
                     {purpose.description}
                   </Select.Option>
                 ))}

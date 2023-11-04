@@ -1,26 +1,19 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Purpose = require('./models/Purpose');
-const Permission = require('./models/Permission');
+const Article = require('./models/Article');
+const Request = require('./models/Request'); // Importing the Request model
 
-async function resetPermissions() {
-  // Delete all permissions
-  await Permission.deleteMany({});
-  console.log('Deleted all permissions.');
+async function convertStringIdsToObjectIds() {
+  const articles = await Article.find();
 
-  // Fetch all purposes
-  const purposes = await Purpose.find({});
-
-  // User IDs to be added to canReadMembers and canWriteMembers arrays
-  const userIds = ['652afc81943693052e4910c0', '652afe1b58a9a2f617ea7206'];
-
-  // Update each purpose's canReadMembers and canWriteMembers arrays
-  for (const purpose of purposes) {
-    purpose.canReadMembers = [...new Set([...purpose.canReadMembers, ...userIds])];
-    purpose.canWriteMembers = [...new Set([...purpose.canWriteMembers, ...userIds])];
-    await purpose.save();
+  for (let article of articles) {
+    article.purpose = mongoose.Types.ObjectId(article.purpose);
+    await article.save();
   }
-  console.log('Updated canReadMembers and canWriteMembers for all purposes.');
+
+  console.log('Conversion complete!');
+  mongoose.disconnect();
 }
 
 mongoose
@@ -30,9 +23,10 @@ mongoose
   })
   .then(async () => {
     console.log('MongoDB connected');
-    await resetPermissions();
 
-    console.log('Migration completed');
+    // Resetting purposes for both Article and Request models
+    await convertStringIdsToObjectIds();
+
     mongoose.connection.close();
   })
   .catch(err => {

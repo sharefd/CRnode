@@ -69,23 +69,47 @@ export const navlinks = [
     Icon: History,
     endpoint: '/older-articles',
     description: 'Review past articles and provide optional feedback.'
+  }
+];
+
+export const homeLinks = [
+  {
+    label: 'Calendars',
+    Icon: PeopleAlt,
+    endpoint: '/calendars',
+    description: 'Create, manage and view calendar permissions.'
+  },
+  {
+    label: 'Requests',
+    Icon: Key,
+    endpoint: '/requests',
+    description: 'View and manage incoming calendar requests.'
+  },
+  {
+    label: 'Events',
+    Icon: EventAvailable,
+    endpoint: '/articles',
+    description: 'Access your events. Includes a calendar view.'
+  },
+  {
+    label: 'Past Rounds',
+    Icon: History,
+    endpoint: '/older-articles',
+    description: 'Review past articles and provide optional feedback.'
   },
   {
     label: 'Rounds Catalog',
     Icon: ManageSearch,
-    endpoint: '/requests/new',
-    description: 'Explore public events and request access.'
+    endpoint: '',
+    description: 'Explore public events and request access. Coming soon.'
+  },
+  {
+    label: 'Account Settings',
+    Icon: Settings,
+    endpoint: '/settings',
+    description: 'Manage your account settings.'
   }
 ];
-
-export const accountSettingsLink = {
-  label: 'Account Settings',
-  Icon: Settings,
-  endpoint: '/settings',
-  description: 'Manage your account settings.'
-};
-
-export const homeLinks = [...navlinks, accountSettingsLink];
 
 export const initialArticleData = {
   title: '',

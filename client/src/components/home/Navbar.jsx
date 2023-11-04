@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   AppBar,
@@ -21,6 +21,9 @@ import { observer } from 'mobx-react';
 import userStore from '@/stores/userStore';
 
 const Navbar = observer(() => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const isSmallScreen = useMediaQuery('(max-width:950px)');
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -31,9 +34,6 @@ const Navbar = observer(() => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-
-  const localUser = localStorage.getItem('CloudRoundsUser');
-  const user = JSON.parse(localUser);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -130,7 +130,12 @@ const Navbar = observer(() => {
     </Box>
   );
 
-  const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
+  const getInitials = user => {
+    if (user && user.firstName && user.lastName) {
+      return user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase();
+    }
+    return '';
+  };
 
   return (
     <AppBar position='static' sx={{ backgroundColor: '#0066b2', py: '2px' }}>
@@ -161,7 +166,7 @@ const Navbar = observer(() => {
                     fontSize: '14px',
                     '&:hover': { color: 'lightgray', border: '1px solid lightgray' }
                   }}>
-                  {initials}
+                  {getInitials(user)}
                 </Avatar>
               </IconButton>
               <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

@@ -13,8 +13,8 @@ const AttendedArticles = ({ isOpen, onClose }) => {
   return (
     <Modal title='Attended Articles' open={isOpen} onCancel={onClose}>
       <List>
-        {user.attended.length > 0 ? (
-          user.attended.map((article, index) => (
+        {user?.attended?.length > 0 ? (
+          user?.attended?.map((article, index) => (
             <List.Item key={index}>
               {article.title}
               <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>

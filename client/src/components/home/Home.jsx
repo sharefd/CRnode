@@ -45,8 +45,12 @@ const Home = observer(() => {
           <Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px' }}>
             {homeLinks.map((navlink, index) => (
               <Col key={index} xs={24} md={12}>
-                <a href={navlink.endpoint} style={{ textDecoration: 'none' }}>
-                  <Card className='text-center h-150 p-2 hover:bg-slate-50' hoverable>
+                <a href={navlink.endpoint || '#'} style={{ textDecoration: 'none' }}>
+                  <Card
+                    className={`text-center h-150 p-2 border-2  ${
+                      navlink.endpoint ? 'hover:bg-slate-50' : 'border-dotted hover:italic'
+                    }`}
+                    hoverable={navlink.edpoint}>
                     <div className='flex items-center justify-center mb-2'>
                       <navlink.Icon style={{ fontSize: '24px' }} />
                       <Typography.Text className='ml-2' strong>
