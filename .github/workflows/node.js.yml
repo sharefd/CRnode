@@ -20,6 +20,8 @@ jobs:
 
     - name: Add DO Droplet to SSH known hosts
       run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
         echo "142.93.60.189 $(ssh-keyscan 142.93.60.189 2>/dev/null)" >> ~/.ssh/known_hosts
 
     - name: Deploy to DigitalOcean
