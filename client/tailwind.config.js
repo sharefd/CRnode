@@ -20,7 +20,8 @@ module.exports = {
         silver: '#ecebff',
         'bubble-gum': '#ff77e9',
         bermuda: '#78dcca',
-        bluebrand: '#0066b2'
+        bluebrand: '#0066b2',
+        navbar: '#344154'
       }
     }
   },

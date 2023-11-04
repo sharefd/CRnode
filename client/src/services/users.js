@@ -42,9 +42,9 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
 export const createUser = async credentials => {
   try {
     const response = await axios.post(`${baseUrl}/api/users/register`, credentials);
-    return response.data.user;
+    return response.data;
   } catch (error) {
-    console.error('There was an error creating the user:', error);
+    return error;
   }
 };
 

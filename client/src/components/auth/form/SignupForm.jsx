@@ -24,24 +24,24 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     }
 
     setIsLoading(true);
-    try {
-      const user = await createUser(credentials);
+    const response = await createUser(credentials);
 
-      console.log(user);
-
-      setTimeout(() => {
-        setIsLoading(false);
-        setCredentials(initialCredentials);
-        setIsSignUp(false);
-        toast.success('Successfully signed up', { autoClose: 1500, pauseOnFocusLoss: false });
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response.data, {
+    setIsLoading(false);
+    if (response && response.user) {
+      toast.success('Successfully signed up', { autoClose: 1500, pauseOnFocusLoss: false });
+      setIsSignUp(false);
+      setCredentials(initialCredentials);
+    } else if (response && response.response && response.response.data) {
+      const errorMessage = response.response.data;
+      toast.error(errorMessage, {
         autoClose: 2500,
         pauseOnFocusLoss: false
       });
-      setIsLoading(false);
+    } else {
+      toast.error('An error occurred during signup', {
+        autoClose: 2500,
+        pauseOnFocusLoss: false
+      });
     }
   };
 
@@ -131,10 +131,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
         {/* <GoogleButton isSignup={true} />
             <hr className='divider' />
             <ContinueWithEmail showForm={showForm} setShowForm={setShowForm} /> */}
-        <p className='mt-8 text-center'>
-          {' '}
-          
-        </p>
+        <p className='mt-8 text-center'> </p>
       </div>
     </form>
   );
