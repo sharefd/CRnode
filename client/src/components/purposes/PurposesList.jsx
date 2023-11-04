@@ -122,12 +122,18 @@ const PurposesList = observer(() => {
   }
 
   return (
-    <div style={{ paddingInline: '10px' }}>
+    <div className='px-2 md:px-10'>
       <h1 className='my-4 text-xl'>Calendars</h1>
       <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
         + New Calendar
       </Button>
-      <Table dataSource={purposes} columns={columns} rowKey='_id' />
+      <Table
+        dataSource={purposes}
+        columns={columns}
+        rowKey='_id'
+        scroll={{ x: 'max-content' }}
+        className='full-width-mobile overflow-x-auto'
+      />
 
       <Modal title='Edit Calendar' open={open} onCancel={handleClose} onOk={handleSave}>
         {editField === 'name' && (
