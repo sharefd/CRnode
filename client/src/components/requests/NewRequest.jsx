@@ -144,26 +144,6 @@ const NewRequest = observer(() => {
                 ))}
               </TextField>
             </Grid>
-<!--
-            <Grid item xs={4}>
-              <TextField
-                id='level'
-                inputProps={{ id: 'level' }}
-                fullWidth
-                required
-                select
-                label='Level'
-                variant='outlined'
-                value={yearOfStudy}
-                onChange={e => setYearOfStudy(e.target.value)}>
-                //{YEAR_OF_STUDY_CHOICES.map((option, index) => (
-                  <MenuItem key={index} value={option}>
-                    //{option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
--->
             <Grid item xs={12}>
               <TextField
                 id='message'
