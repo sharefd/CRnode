@@ -120,7 +120,7 @@ const NewRequest = observer(() => {
           <LinearProgress />
         ) : (
           <Grid container spacing={3} sx={{ padding: 4 }}>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
               <TextField
                 id='purpose'
                 inputProps={{ id: 'purpose' }}
@@ -141,24 +141,6 @@ const NewRequest = observer(() => {
                     ) : isRequestPending(purpose.name) ? (
                       <ErrorOutlineIcon style={{ color: 'goldenrod', marginLeft: '10px' }} />
                     ) : null}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                id='level'
-                inputProps={{ id: 'level' }}
-                fullWidth
-                required
-                select
-                label='Level'
-                variant='outlined'
-                value={yearOfStudy}
-                onChange={e => setYearOfStudy(e.target.value)}>
-                {YEAR_OF_STUDY_CHOICES.map((option, index) => (
-                  <MenuItem key={index} value={option}>
-                    {option}
                   </MenuItem>
                 ))}
               </TextField>
