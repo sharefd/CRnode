@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import InviteByEmail from './InviteByEmail';
 import { handleRemoveUser } from './helpers/members';
 import CurrentMembersList from './components/CurrentMembersList';
-import UserList from './components/userList';
+import UserList from './components/UserList';
 
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, setSelectedPurpose }) => {
   const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
