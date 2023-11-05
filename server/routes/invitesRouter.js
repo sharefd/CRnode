@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
     const registrationLink = `http://cloudrounds.com/register?token=${invite.token}`;
     const emailContent = `
       <h2>Invitation to join CloudRounds</h2>
-      <p>${invite.creator} invited to join "${invite.calendar}" on our platform. Please use the registration link below to sign up and access the calendar.</p>
+      <p>${invite.creator} invited you to join "${invite.calendar}" on our platform. Please use the registration link below to sign up and access the calendar.</p>
       <a href="${registrationLink}">Register Now</a>
     `;
 
