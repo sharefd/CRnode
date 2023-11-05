@@ -105,7 +105,7 @@ router.put('/:id/status', async (req, res) => {
       const targetPurpose = await Purpose.findById(purpose);
 
       if (targetPurpose) {
-        if (!targetPurpose.canReadMembers.includes(userId)) {
+        if (!targetPurpose.canReadMembers.includes(userId.toString())) {
           targetPurpose.canReadMembers.push(userId);
           await targetPurpose.save();
         }

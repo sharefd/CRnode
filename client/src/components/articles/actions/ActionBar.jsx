@@ -24,6 +24,7 @@ const ActionBar = ({
   const [searchTerm, setSearchTerm] = useState('');
 
   const allowedPurposes = canReadPurposes.map(purpose => purpose.name);
+
   const filteredPurposes = allowedPurposes.filter(p => p && p.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const handlePurposeToggle = purpose => {

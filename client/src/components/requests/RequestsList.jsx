@@ -7,7 +7,7 @@ import {
   MoreOutlined,
   HourglassOutlined
 } from '@ant-design/icons';
-import { Button, Dropdown, Layout, Modal, Pagination, Progress, Table, Typography } from 'antd';
+import { Button, Dropdown, Layout, Modal, Pagination, Progress, Spin, Table, Typography } from 'antd';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -27,6 +27,7 @@ const RequestsList = observer(() => {
 
   const { requests, allowedRequests, isLoading: isQueryLoading, refetch } = useRequestPermissions();
   const [showUserRequests, setShowUserRequests] = useState(false);
+  const [isStatusUpdating, setIsStatusUpdating] = useState(null);
 
   useEffect(() => {
     if (isQueryLoading) return;
@@ -61,7 +62,8 @@ const RequestsList = observer(() => {
 
   const updateStatusMutation = useMutation(
     async ({ id, purpose, status }) => {
-      setIsLoading(true);
+      setIsStatusUpdating(id);
+
       const updatedRequest = { _id: id, status, email: user.email, purpose };
       await updateRequest(updatedRequest);
     },
@@ -76,12 +78,14 @@ const RequestsList = observer(() => {
         refetch();
         setLocalRequests(updatedRequests);
         userStore.setSubmittedRequests(updatedRequests.filter(r => r.user._id === user._id));
-        setIsLoading(false);
+
+        setIsStatusUpdating(null);
         handleClose();
       },
       onError: (error, variables) => {
         console.error('There was an error updating the request:', error);
-        setIsLoading(false);
+
+        setIsStatusUpdating(null);
         handleClose();
       }
     }
@@ -110,7 +114,11 @@ const RequestsList = observer(() => {
   };
 
   if (isQueryLoading || isLoading) {
-    return <Progress percent={100} status='active' />;
+    return (
+      <div className='h-screen w-full items-center justify-center align-middle'>
+        <Spin />
+      </div>
+    );
   }
 
   const displayedRequests = showUserRequests
@@ -168,8 +176,8 @@ const RequestsList = observer(() => {
                 }
               ];
 
-              return request.isApproving ? (
-                <Progress percent={100} status='active' />
+              return isStatusUpdating === request._id ? (
+                <Spin className='ml-1' />
               ) : (
                 <Dropdown menu={{ items: menuItems }} trigger={['click']}>
                   <Button icon={<MoreOutlined />} />
@@ -198,8 +206,8 @@ const RequestsList = observer(() => {
                 }
               ];
 
-              return request.isApproving ? (
-                <Progress percent={100} status='active' />
+              return isStatusUpdating === request._id ? (
+                <Spin className='ml-1' />
               ) : (
                 <Dropdown menu={{ items: menuItems }} trigger={['click']}>
                   <Button icon={<MoreOutlined />} />
@@ -248,7 +256,6 @@ const RequestsList = observer(() => {
           <Typography.Title level={2} className='mb-5'>
             {!showUserRequests ? 'Access Requests' : 'Invitations'}
           </Typography.Title>
-          {isLoading && <Progress percent={100} status='active' className='mb-5' />}
           <Table
             dataSource={
               rowsPerPage > 0
