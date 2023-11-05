@@ -322,3 +322,21 @@ a.btn2--circle {
   background-color: #f2f2f2;
   border-color: #dbdbde;
 }
+
+.login-button,
+.signup-button {
+  background-color: #64748b !important;
+  border-color: #64748b !important;
+}
+
+.login-button:hover,
+.signup-button:hover {
+  background-color: #1e293b !important;
+  border-color: #1e293b !important;
+}
+
+#login-form .ant-form-item-label,
+#signup-form .ant-form-item-label {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}

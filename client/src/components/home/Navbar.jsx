@@ -137,6 +137,10 @@ const Navbar = observer(() => {
     return '';
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <AppBar position='static' sx={{ backgroundColor: '#0066b2', py: '2px' }}>
       <Toolbar>

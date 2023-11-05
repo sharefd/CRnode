@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import InputField from '../fields/InputField';
+import { Form, Input, Button, Spin, Typography } from 'antd';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/userStore';
 import { fetchUserFeedbacks } from '@/services/feedbacks';
 import { toast } from 'react-toastify';
-import { CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { loginUser } from '@/services/users';
 
@@ -15,8 +14,7 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
   const [credentials, setCredentials] = useState(initialCredentials);
   const [fieldErrors, setFieldErrors] = useState(initialCredentials);
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsLoading(true);
 
     if (!credentials.username || !credentials.password) {
@@ -49,55 +47,52 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
       setIsLoading(false);
     }
   };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onFinish={handleSubmit}>
       <div className='scrollable-area'>
-        <div className='px-8 py-2 w-full mx-auto pt-4'>
-          <div style={{ marginTop: '30px', marginBottom: '30px' }}>
+        <div className='px-8 py-2 w-full mx-auto'>
+          <div id='login-form' style={{ marginTop: '30px', marginBottom: '30px' }}>
             {fields.map((field, index) => (
-              <InputField
+              <Form.Item
                 key={index}
-                field={field}
-                value={credentials[field.name]}
-                onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
-                error={fieldErrors[field.name]}
-              />
+                label={field.label}
+                name={field.name}
+                rules={[{ required: field.required, message: fieldErrors[field.name] }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}>
+                <Input
+                  type={field.type}
+                  value={credentials[field.name]}
+                  onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
+                />
+              </Form.Item>
             ))}
           </div>
-          {isLoading && (
+          {isLoading ? (
             <div className='flex w-full justify-center text-center'>
-              <CircularProgress size={24} />
+              <Spin />
+            </div>
+          ) : (
+            <div className='pb-4 sm:pb-8 w-full text-center'>
+              <div className='flex justify-center mt-8'>
+                <Button type='primary' htmlType='submit' className='login-button'>
+                  Login
+                </Button>
+              </div>
+              <div className='flex justify-center mt-4'>
+                <Typography.Text>
+                  New to {appName}?{' '}
+                  <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(true)}>
+                    Create account
+                  </span>
+                </Typography.Text>
+              </div>
             </div>
           )}
-          <div className='pb-4 sm:pb-8 w-full text-center'>
-            <div className='flex justify-center mt-8'>
-              {!isLoading && (
-                <Typography
-                  onClick={handleSubmit}
-                  sx={{
-                    cursor: 'pointer',
-                    px: 2,
-                    py: 1,
-                    width: '100%',
-                    color: '#fff',
-                    backgroundColor: '#64748b',
-                    '&:hover': { backgroundColor: '#1e293b' },
-                    borderRadius: '9999px'
-                  }}>
-                  Login
-                </Typography>
-              )}
-            </div>
-            <p className='mt-8 text-center'>
-              New to {appName}?{' '}
-              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(true)}>
-                Create account
-              </span>
-            </p>
-          </div>
         </div>
       </div>
-    </form>
+    </Form>
   );
 });
 
