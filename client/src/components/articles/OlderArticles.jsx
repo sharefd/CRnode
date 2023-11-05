@@ -37,6 +37,9 @@ const OlderArticles = observer(() => {
 
   const sortedArticles = sortArticlesDescending(allowedArticles);
 
+  const currentDate = new Date();
+  const filteredArticles = sortedArticles.filter(article => new Date(article.date) <= currentDate);
+
   useEffect(() => {
     if (!user || isFeedbacksQueryLoading) return;
     userStore.setFeedbacks(feedbacks);
@@ -133,7 +136,7 @@ const OlderArticles = observer(() => {
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
           <Card title='Events' bordered={false} style={{ width: '100%' }}>
             <Table
-              dataSource={sortedArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
+              dataSource={filteredArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
               pagination={false}
               rowKey={record => record._id}
               scroll={{ x: 'max-content' }}>
@@ -169,7 +172,7 @@ const OlderArticles = observer(() => {
               />
             </Table>
             <Pagination
-              total={sortedArticles.length}
+              total={filteredArticles.length}
               pageSize={rowsPerPage}
               current={page + 1}
               onChange={(page, pageSize) => handleChangePage(page, pageSize)}
