@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     await invite.save();
 
     // Send email with registration link
-    const registrationLink = `http://localhost:3000/register?token=${invite.token}`;
+    const registrationLink = `http://cloudrounds.com/register?token=${invite.token}`;
     const emailContent = `
       <h2>Invitation to join CloudRounds</h2>
       <p>${invite.creator} invited to join "${invite.calendar}" on our platform. Please use the registration link below to sign up and access the calendar.</p>
