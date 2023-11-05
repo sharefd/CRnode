@@ -7,7 +7,7 @@ const User = require('../models/User'); // Assume you have a User model
 // Fetch all purposes
 router.get('/', async (req, res) => {
   try {
-    const purposes = await Purpose.find();
+    const purposes = await Purpose.find().populate('canReadMembers');
     res.status(200).json(purposes);
   } catch (err) {
     console.error('There was an error fetching purposes:', err);

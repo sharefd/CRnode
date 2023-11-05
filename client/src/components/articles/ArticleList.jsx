@@ -22,15 +22,14 @@ const ArticleList = observer(() => {
   const [selectedOrganizers, setSelectedOrganizers] = useState([]);
   const [organizerFilter, setOrganizerFilter] = useState([]);
 
-  const [isExpanded, setIsExpanded] = useState(false);
-
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
 
-  const { allowedArticles, canReadPurposes, isLoading, refetchArticles } = useArticlePermissions();
+  const { allowedArticles, canReadPurposes, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions();
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
 
+  console.log(canReadPurposes);
   const handlePageChange = page => {
     setCurrentPage(page);
   };
@@ -91,11 +90,6 @@ const ArticleList = observer(() => {
 
   const toggleDetails = articleId => {
     setShowDetails(prevState => ({
-      ...prevState,
-      [articleId]: !prevState[articleId]
-    }));
-
-    setIsExpanded(prevState => ({
       ...prevState,
       [articleId]: !prevState[articleId]
     }));
