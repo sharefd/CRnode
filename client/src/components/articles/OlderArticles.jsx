@@ -81,14 +81,14 @@ const OlderArticles = observer(() => {
     }
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePage = (page, pageSize) => {
+    setPage(page - 1);
   };
 
   const handleChangeRowsPerPage = (current, size) => {
     setRowsPerPage(size);
 
-    setPage(0);
+    setPage(1);
   };
 
   const handleOpen = (article, feedback) => {
@@ -133,7 +133,7 @@ const OlderArticles = observer(() => {
         <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
           <Card title='Events' bordered={false} style={{ width: '100%' }}>
             <Table
-              dataSource={sortedArticles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+              dataSource={sortedArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
               pagination={false}
               rowKey={record => record._id}
               scroll={{ x: 'max-content' }}>
@@ -148,7 +148,7 @@ const OlderArticles = observer(() => {
                 dataIndex='title'
                 key='title'
                 render={title => <div style={titleStyle}>{title}</div>}
-              />{' '}
+              />
               <Table.Column title='Date' dataIndex='date' key='date' render={date => formatDate(date)} />
               <Table.Column
                 title='Attended'
@@ -172,7 +172,7 @@ const OlderArticles = observer(() => {
               total={sortedArticles.length}
               pageSize={rowsPerPage}
               current={page + 1}
-              onChange={(page, pageSize) => handleChangePage(page - 1, pageSize)}
+              onChange={(page, pageSize) => handleChangePage(page, pageSize)}
               onShowSizeChange={(current, size) => handleChangeRowsPerPage(current, size)}
               showSizeChanger
               showQuickJumper

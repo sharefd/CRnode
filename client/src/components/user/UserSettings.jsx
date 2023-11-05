@@ -179,7 +179,7 @@ const UserSettings = observer(() => {
         <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
           <Divider>LOGIN INFORMATION</Divider>
           <Space direction='vertical' style={{ width: '100%' }}>
-            {renderField('Username', 'username')}
+            {/* {renderField('Username', 'username')} */}
             {renderField('Password', 'password')}
           </Space>
 
