@@ -29,7 +29,6 @@ const ArticleList = observer(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
 
-  console.log(canReadPurposes);
   const handlePageChange = page => {
     setCurrentPage(page);
   };

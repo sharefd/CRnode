@@ -22,7 +22,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
-  const cellDate = new Date(year, month, day);
+  const isToday = day === currentDay && month === currentMonth && year === currentYear;
 
   const stopPropagation = e => {
     e.stopPropagation();
@@ -65,7 +65,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
 
   return (
     <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
-      <div className='relative w-8 h-8 flex items-center justify-center'>
+      <div className={`relative w-8 h-8 flex rounded-md items-center justify-center ${isToday ? 'bg-blue-500' : ''}`}>
         <Badge
           count={events.length}
           className='absolute bottom-5'
@@ -74,7 +74,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         <Typography.Text
           strong
           style={{
-            color: day === currentDay && month === currentMonth && year === currentYear ? 'white' : 'inherit'
+            color: isToday ? 'white' : 'inherit'
           }}>
           {day}
         </Typography.Text>
