@@ -276,3 +276,61 @@ select::placeholder {
     box-sizing: border-box;
   }
 }
+
+/* EDIT MEMBERS LIST */
+.members-container {
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .members-container {
+    flex-direction: column;
+  }
+}
+
+.member-row {
+  width: 48%;
+}
+
+.member-row.member-current {
+  background-color: #fafafa;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.member-row p {
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+.member-left {
+  padding: 0.5rem;
+  width: 43%;
+}
+
+@media (max-width: 768px) {
+  .member-row {
+    width: 100%;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .member-row:last-child {
+    border-bottom: none;
+  }
+  .member-left {
+    margin-bottom: 12px;
+  }
+}
+
+.list-item-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-list .ant-list-item-action {
+  display: flex;
+  align-items: center;
+}
