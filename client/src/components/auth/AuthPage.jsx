@@ -12,7 +12,7 @@ const AuthPage = () => {
     <div className='flex justify-center items-center h-screen pb-20 auth'>
       <div className='flex flex-col md:flex-row w-full max-w-screen-lg h-[80vh]'>
         {/* Left Column (Hidden on Mobile) */}
-        <div className='w-full md:w-1/2 bg-slate-700 p-8 flex flex-col justify-center items-center text-white md:rounded-2xl hidden md:flex'>
+        <div className='w-full md:w-1/2 bg-slate-700 p-8 flex-col justify-center items-center text-white md:rounded-2xl hidden md:flex'>
           <img src={CloudLogo} width={120} alt='App Logo' className='mb-4' />
           <h1 className='text-4xl mb-4'>Welcome to {appName}</h1>
           <p></p>

@@ -1,61 +1,102 @@
 import { useState, useEffect } from 'react';
-import { Modal, Button, List, Input, Spin, Pagination } from 'antd';
-import { useQuery } from 'react-query';
+import { Modal, Button, List, Input, Spin, Pagination, Progress } from 'antd';
+import { useQuery, useMutation } from 'react-query';
 import { fetchUsers } from '@/services/users';
 import { fetchRequests, createRequest } from '@/services/requests';
 import { removeUserFromPurpose } from '@/services/purposes';
 import { toast } from 'react-toastify';
+import { UserAddOutlined, UserDeleteOutlined, HourglassOutlined } from '@ant-design/icons';
 
 const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
   const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
-  const { data: requests, isLoading: isRequestsLoading } = useQuery('requests', fetchRequests);
+  const { data: fetchedRequests, isLoading: isRequestsLoading } = useQuery('requests', fetchRequests);
+  const [requests, setRequests] = useState([]);
+
+  const [searchValue, setSearchValue] = useState('');
+  const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
+  const [initialMembers, setInitialMembers] = useState([]);
+
+  const [isSaving, setIsSaving] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
-  const [searchValue, setSearchValue] = useState('');
 
   const handleAddUser = userId => {
     setTargetKeys(prevKeys => [...prevKeys, userId]);
   };
 
   const handleRemoveUser = async user => {
-    try {
-      await removeUserFromPurpose(selectedPurpose.name, user._id);
-      toast.success(`Success: Removed ${user.username} from ${selectedPurpose.name}.`, {
-        autoClose: 1500,
-        pauseOnFocusLoss: false
-      });
-      setTargetKeys(prevKeys => prevKeys.filter(key => key !== user._id));
-    } catch (error) {
-      toast.error(`Error while removing ${user.username} from ${selectedPurpose.name}.`, {
-        autoClose: 1500,
-        pauseOnFocusLoss: false
-      });
-
-      console.error('Error removing user:', error);
-    }
+    Modal.confirm({
+      title: 'Are you sure you want to remove this member?',
+      content: `This will remove ${user.username} from ${selectedPurpose.name}.`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        try {
+          await removeUserFromPurpose(selectedPurpose.name, user._id);
+          toast.success(`Success: Removed ${user.username} from ${selectedPurpose.name}.`, {
+            autoClose: 1500,
+            pauseOnFocusLoss: false
+          });
+          setTargetKeys(prevKeys => prevKeys.filter(key => key !== user._id));
+        } catch (error) {
+          toast.error(`Error while removing ${user.username} from ${selectedPurpose.name}.`, {
+            autoClose: 1500,
+            pauseOnFocusLoss: false
+          });
+          console.error('Error removing user:', error);
+        }
+      },
+      onCancel() {}
+    });
   };
 
+  const createRequestMutation = useMutation(createRequest, {
+    onSuccess: data => {
+      setRequests(prevRequests => [...prevRequests, data.request]);
+      toast.success(`Request for ${data.request.user.username} has been created.`, {
+        autoClose: 1500,
+        pauseOnFocusLoss: false
+      });
+    },
+    onError: error => {
+      toast.error(`Error creating request: ${error.message}`, {
+        autoClose: 1500,
+        pauseOnFocusLoss: false
+      });
+      console.error('Error creating request:', error);
+    }
+  });
+
   const handleSave = async () => {
+    setIsSaving(true);
+
     const newMembers = targetKeys.filter(key => !selectedPurpose.canReadMembers.includes(key));
     for (const memberId of newMembers) {
       const request = {
         purposeId: selectedPurpose._id,
         userId: memberId
       };
-      await createRequest(request);
+      await createRequestMutation.mutateAsync(request);
     }
     refetchPurposes();
+    setIsSaving(false);
     handleModalClose();
   };
 
   useEffect(() => {
     if (selectedPurpose) {
       setTargetKeys(selectedPurpose.canReadMembers);
+      setInitialMembers(selectedPurpose.canReadMembers);
     }
   }, [selectedPurpose]);
+
+  useEffect(() => {
+    if (fetchedRequests) {
+      setRequests(fetchedRequests);
+    }
+  }, [fetchedRequests]);
 
   const handleModalClose = () => {
     setTargetKeys([]);
@@ -73,17 +114,62 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
       return false;
     }
     return requests.some(
-      request => request.user._id === userId && request.purpose === purpose && request.status === 'Pending'
+      request => request.user._id === userId && request.purpose.name === purpose && request.status === 'Pending'
     );
   };
 
   const filteredUsers = users
-    .filter(user => user.username.includes(searchValue) && searchValue.length >= 3 && !targetKeys.includes(user._id))
+    .filter(
+      user =>
+        ((user.username.toLowerCase().includes(searchValue.toLowerCase()) && searchValue.length >= 3) ||
+          (user.email.substring(0, user.email.indexOf('@')).toLowerCase().includes(searchValue.toLowerCase()) &&
+            searchValue.length >= 5)) &&
+        !targetKeys.includes(user._id) &&
+        (selectedPurpose ? !hasPendingRequest(user._id, selectedPurpose.name) : true)
+    )
     .slice(0, 5);
 
-  const currentMembers = users.filter(user => targetKeys.includes(user._id));
+  const currentMembers = users.filter(
+    user => targetKeys.includes(user._id) || (selectedPurpose && hasPendingRequest(user._id, selectedPurpose.name))
+  );
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedMembers = currentMembers.slice(startIndex, startIndex + itemsPerPage);
+
+  const hasChanges = JSON.stringify(initialMembers) !== JSON.stringify(targetKeys);
+
+  const FooterButtons = () => (
+    <div key='buttons' className='mb-3'>
+      <Button key='back' onClick={handleModalClose}>
+        Cancel
+      </Button>
+      <Button key='submit' ghost className='submit-blue-button' type='primary' onClick={handleSave}>
+        Save
+      </Button>
+    </div>
+  );
+
+  const FooterPagination = () => (
+    <Pagination
+      key='pagination'
+      current={currentPage}
+      onChange={setCurrentPage}
+      total={currentMembers.length}
+      pageSize={itemsPerPage}
+      hideOnSinglePage
+      simple
+    />
+  );
+
+  const modalFooterContent = () => {
+    if (isSaving) {
+      return [<Spin key='footer-progress' />, <FooterPagination key='footer-pagination' />];
+    } else if (hasChanges) {
+      return [<FooterButtons key='footer-buttons' />, <FooterPagination key='footer-pagination' />];
+    } else {
+      return [<FooterPagination key='footer-pagination' />];
+    }
+  };
 
   return (
     <Modal
@@ -91,56 +177,59 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
       title={selectedPurpose && selectedPurpose.name}
       open={open}
       onCancel={handleModalClose}
-      footer={[
-        <Button key='back' onClick={handleModalClose}>
-          Cancel
-        </Button>,
-        <Button key='submit' ghost className='submit-blue-button' type='primary' onClick={handleSave}>
-          Save
-        </Button>
-      ]}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ width: '45%' }}>
+      footer={modalFooterContent()}>
+      <div className='members-container' style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className='member-row member-left'>
           <Input placeholder='Search users' value={searchValue} onChange={e => setSearchValue(e.target.value)} />
           <List
+            className='custom-list'
             dataSource={filteredUsers}
             renderItem={user => (
               <List.Item
                 key={user._id}
                 actions={[
-                  <Button
-                    disabled={hasPendingRequest(user._id, selectedPurpose.name)}
-                    onClick={() => handleAddUser(user._id)}>
-                    Add
-                  </Button>
+                  <UserAddOutlined
+                    className='text-xl text-blue-300 hover:text-blue-500'
+                    onClick={() => handleAddUser(user._id)}
+                  />
                 ]}
                 style={hasPendingRequest(user._id, selectedPurpose.name) ? { color: 'gray' } : {}}>
-                {user.username}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  {user.username}
+                  <br />
+                  <i style={{ fontSize: 'smaller' }}>{user.email}</i>
+                </div>
               </List.Item>
             )}
           />
         </div>
-        <div style={{ width: '50%', position: 'relative', minHeight: '370px' }}>
-          <h4>Current members</h4>
+        <div className='member-row member-current' style={{ position: 'relative', minHeight: '370px' }}>
+          <p className='member-row-title'>Current members</p>
           <List
+            className='custom-list'
             style={{ overflow: 'auto', maxHeight: '370px' }}
             dataSource={paginatedMembers}
             renderItem={user => (
-              <List.Item key={user._id} actions={[<Button onClick={() => handleRemoveUser(user)}>Remove</Button>]}>
-                {user.username}
+              <List.Item
+                key={user._id}
+                actions={[
+                  hasPendingRequest(user._id, selectedPurpose.name) ? (
+                    <HourglassOutlined className='text-lg text-gray-400' />
+                  ) : (
+                    <UserDeleteOutlined
+                      className='text-xl text-red-300 hover:text-red-500'
+                      onClick={() => handleRemoveUser(user)}
+                    />
+                  )
+                ]}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  {user.username}
+                  <br />
+                  <i style={{ fontSize: 'smaller' }}>{user.email}</i>
+                </div>
               </List.Item>
             )}
           />
-          <div style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
-            <Pagination
-              current={currentPage}
-              onChange={setCurrentPage}
-              total={currentMembers.length}
-              pageSize={itemsPerPage}
-              hideOnSinglePage
-              simple
-            />
-          </div>
         </div>
       </div>
     </Modal>
