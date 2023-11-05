@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DeleteOutlined, EditOutlined, UserSwitchOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Progress, Table } from 'antd';
+import { Button, Input, Modal, Spin, Table } from 'antd';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 import { deletePurpose, updatePurpose } from '@/services/purposes';
 import EditMemberList from './EditMemberList';
 import NewPurpose from './NewPurpose';
+import { useMutation } from 'react-query';
 
 const PurposesList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -19,8 +20,33 @@ const PurposesList = observer(() => {
 
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
+  const [purposes, setPurposes] = useState(null);
 
-  const { canWritePurposes: purposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
+  const { canWritePurposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setPurposes(canWritePurposes);
+    }
+  }, [isLoading, canWritePurposes]);
+
+  const updatePurposeMutation = useMutation(updatePurpose, {
+    onSuccess: updatedPurpose => {
+      setPurposes(prevPurposes => {
+        const index = prevPurposes.findIndex(purpose => purpose._id === updatedPurpose._id);
+
+        if (index !== -1) {
+          const updatedPurposes = [...prevPurposes];
+          updatedPurposes[index] = updatedPurpose;
+          return updatedPurposes;
+        }
+
+        return prevPurposes;
+      });
+    }
+  });
+
+  const deletePurposeMutation = useMutation(deletePurpose);
 
   const handleOpen = (purpose = null, field) => {
     setSelectedPurpose(purpose);
@@ -41,8 +67,7 @@ const PurposesList = observer(() => {
   };
 
   const handleSave = async () => {
-    await updatePurpose(selectedPurpose._id, newPurpose);
-    await refetchPurposes();
+    await updatePurposeMutation.mutateAsync(selectedPurpose._id, newPurpose);
     handleClose();
   };
 
@@ -55,9 +80,11 @@ const PurposesList = observer(() => {
       cancelText: 'No',
       async onOk() {
         try {
-          await deletePurpose(purposeId);
-          console.log(`Purpose deleted`);
+          await deletePurposeMutation.mutateAsync(purposeId);
           await refetchPurposes();
+          setPurposes(prevPurposes => prevPurposes.filter(purpose => purpose._id !== purposeId));
+
+          console.log(`Purpose deleted`);
         } catch (error) {
           console.error('Error deleting purpose:', error);
         }
@@ -67,6 +94,13 @@ const PurposesList = observer(() => {
       }
     });
   };
+
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  const createdPurposes = purposes?.filter(purpose => purpose.creator === user._id) || [];
+  const memberPurposes = purposes?.filter(purpose => purpose.creator !== user._id) || [];
 
   const columns = [
     {
@@ -117,19 +151,39 @@ const PurposesList = observer(() => {
     }
   ];
 
-  if (isLoading) {
-    return <Progress percent={100} status='active' />;
-  }
+  const memberColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, record) => <>{text}</>
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+      render: (text, record) => <>{text}</>
+    }
+  ];
 
   return (
     <div className='px-2 md:px-10'>
-      <h1 className='my-4 text-xl'>Calendars</h1>
+      <h1 className='my-4 text-xl'>Your Calendars</h1>
       <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
         + New Calendar
       </Button>
       <Table
-        dataSource={purposes}
+        dataSource={createdPurposes}
         columns={columns}
+        rowKey='_id'
+        scroll={{ x: 'max-content' }}
+        className='full-width-mobile overflow-x-auto'
+      />
+
+      <h1 className='my-4 text-xl'>Member Of</h1>
+      <Table
+        dataSource={memberPurposes}
+        columns={memberColumns}
         rowKey='_id'
         scroll={{ x: 'max-content' }}
         className='full-width-mobile overflow-x-auto'
@@ -157,7 +211,8 @@ const PurposesList = observer(() => {
         open={openNewPurpose}
         handleClose={() => setOpenNewPurpose(false)}
         refetchPurposes={refetchPurposes}
-        user={user}
+        userId={user._id}
+        setPurposes={setPurposes}
       />
       <EditMemberList
         open={openMemberList}

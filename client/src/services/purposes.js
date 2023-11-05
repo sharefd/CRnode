@@ -59,9 +59,10 @@ export const updatePurpose = async (purposeId, editedPurpose) => {
   }
 };
 
-export const createPurpose = async (userId, purpose) => {
+export const createPurpose = async purpose => {
   try {
-    const response = await axios.post(`${baseUrl}/api/purposes/new`, { userId, purpose });
+    console.log(purpose);
+    const response = await axios.post(`${baseUrl}/api/purposes/new`, purpose);
     console.log('Purpose created:', response.data);
     return response.data;
   } catch (error) {

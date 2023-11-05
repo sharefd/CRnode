@@ -26,7 +26,7 @@ const RequestsList = observer(() => {
   const [localRequests, setLocalRequests] = useState([]);
 
   const { requests, allowedRequests, isLoading: isQueryLoading, refetch } = useRequestPermissions();
-  const [showUserRequests, setShowUserRequests] = useState(false);
+  const [showUserRequests, setShowUserRequests] = useState(true);
   const [isStatusUpdating, setIsStatusUpdating] = useState(null);
 
   useEffect(() => {

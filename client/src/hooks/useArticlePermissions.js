@@ -34,7 +34,6 @@ const useArticlePermissions = () => {
         .filter(Boolean);
 
       setCanReadPurposes(uniqueCanReadPurposes);
-      console.log(uniqueCanReadPurposes);
 
       const uniqueAllowedPurposes = uniqueCanReadPurposes.map(purpose => purpose.name);
       setAllowedPurposes(uniqueAllowedPurposes);

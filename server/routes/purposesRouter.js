@@ -43,10 +43,11 @@ router.get('/:purposeId', async (req, res) => {
 
 router.post('/new', jwtMiddleware, async (req, res) => {
   try {
-    const { userId, purpose } = req.body;
-    purpose.canReadMembers.push(userId.toString());
-    purpose.canWriteMembers.push(userId.toString());
-    purpose.creator = userId;
+    const purpose = req.body;
+
+    if (!purpose) {
+      return res.status(400).send('Purpose data is missing');
+    }
 
     const newPurpose = new Purpose(purpose);
     await newPurpose.save();
