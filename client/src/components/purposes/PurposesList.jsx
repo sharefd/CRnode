@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { DeleteOutlined, EditOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, UserSwitchOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, Spin, Table } from 'antd';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 import { deletePurpose, updatePurpose } from '@/services/purposes';
@@ -45,6 +45,32 @@ const PurposesList = observer(() => {
       });
     }
   });
+
+  const handleLeave = async purpose => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this purpose?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      async onOk() {
+        try {
+          const updatedCanReadMembers = purpose.canReadMembers.filter(memberId => memberId !== user._id);
+          const updatedPurpose = {
+            ...purpose,
+            canReadMembers: updatedCanReadMembers
+          };
+          await updatePurposeMutation.mutateAsync(purpose._id, updatedPurpose);
+          refetchPurposes();
+        } catch (error) {
+          console.error('Error leaving purpose:', error);
+        }
+      },
+      onCancel() {
+        return;
+      }
+    });
+  };
 
   const deletePurposeMutation = useMutation(deletePurpose);
 
@@ -144,7 +170,7 @@ const PurposesList = observer(() => {
         <DeleteOutlined
           onMouseEnter={e => (e.currentTarget.style.color = 'red')}
           onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          onClick={() => handleDelete(record._id)}
+          onClick={() => handleLeave(record)}
           className='cursor-pointer text-lg'
         />
       )
@@ -163,6 +189,19 @@ const PurposesList = observer(() => {
       dataIndex: 'description',
       key: 'description',
       render: (text, record) => <>{text}</>
+    },
+    {
+      title: 'Leave',
+      key: 'leave',
+      width: '34%',
+      render: (text, record) => (
+        <UsergroupDeleteOutlined
+          onMouseEnter={e => (e.currentTarget.style.color = 'red')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
+          onClick={() => handleDelete(record._id)}
+          className='cursor-pointer text-xl'
+        />
+      )
     }
   ];
 
