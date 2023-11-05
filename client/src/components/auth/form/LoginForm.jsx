@@ -83,7 +83,7 @@ const LoginForm = observer(({ fields, setIsSignUp, appName }) => {
               <div className='flex justify-center mt-4'>
                 <Typography.Text>
                   New to {appName}?{' '}
-                  <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(true)}>
+                  <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => navigate('/register')}>
                     Create account
                   </span>
                 </Typography.Text>

@@ -7,7 +7,10 @@ const User = require('../models/User'); // Assume you have a User model
 // Fetch all purposes
 router.get('/', async (req, res) => {
   try {
-    const purposes = await Purpose.find().populate('canReadMembers');
+    const purposes = await Purpose.find()
+      .populate('creator', 'username email firstName lastName')
+      .populate('canReadMembers', 'username email')
+      .populate('canWriteMembers', 'username email');
     res.status(200).json(purposes);
   } catch (err) {
     console.error('There was an error fetching purposes:', err);
@@ -21,7 +24,10 @@ router.get('/user/:userId', async (req, res) => {
     const userId = req.params.userId;
     const purposes = await Purpose.find({
       $or: [{ canReadMembers: userId }, { canWriteMembers: userId }]
-    });
+    })
+      .populate('creator', 'username email firstName lastName')
+      .populate('canReadMembers', 'username email')
+      .populate('canWriteMembers', 'username email');
     res.status(200).json(purposes);
   } catch (err) {
     console.error('There was an error fetching purposes:', err);
@@ -32,7 +38,10 @@ router.get('/user/:userId', async (req, res) => {
 router.get('/:purposeId', async (req, res) => {
   try {
     const purposeId = req.params.purposeId;
-    const purpose = await Purpose.findById(purposeId).populate('canReadMembers').populate('canWriteMembers');
+    const purpose = await Purpose.findById(purposeId)
+      .populate('creator', 'username email firstName lastName')
+      .populate('canReadMembers', 'username email')
+      .populate('canWriteMembers', 'username email');
 
     res.status(200).json(purpose);
   } catch (err) {

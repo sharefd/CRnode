@@ -2,9 +2,15 @@ import { useEffect, useState } from 'react';
 import { fetchPurposes } from '@/services/purposes';
 import { useQuery } from 'react-query';
 
-const useSettingsPermissions = () => {
-  const localUser = localStorage.getItem('CloudRoundsUser');
-  const user = JSON.parse(localUser);
+const useSettingsPermissions = passedUser => {
+  const [user, setUser] = useState(passedUser);
+
+  useEffect(() => {
+    if (!passedUser) {
+      const localUser = localStorage.getItem('CloudRoundsUser');
+      setUser(JSON.parse(localUser));
+    }
+  }, [user]);
 
   const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
@@ -20,19 +26,13 @@ const useSettingsPermissions = () => {
   });
 
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
-
-    const filterData = async () => {
-      const canWrite = data?.filter(purpose => purpose.canWriteMembers.includes(user?._id.toString())) || [];
+    if (!isLoading) {
+      const canWrite = data?.filter(purpose => purpose.canWriteMembers.map(u => u._id).includes(user?._id.toString()));
       setCanWritePurposes(canWrite);
 
-      const canRead = data?.filter(purpose => purpose.canReadMembers.includes(user?._id.toString())) || [];
+      const canRead = data?.filter(purpose => purpose.canReadMembers.map(u => u._id).includes(user?._id));
       setCanReadPurposes(canRead);
-    };
-
-    filterData();
+    }
   }, [isLoading]);
 
   return {

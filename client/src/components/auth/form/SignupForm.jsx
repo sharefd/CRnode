@@ -1,19 +1,32 @@
 import { Form, Input, Button, Select, Spin } from 'antd';
 import { createUser } from '@/services/users';
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
+import { getInviteByToken, registerWithToken } from '@/services/invites';
+
 const { Option } = Select;
 
 const SignupForm = observer(({ fields, setIsSignUp }) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
 
   const handleSubmit = async () => {
     const values = form.getFieldsValue();
 
     setIsLoading(true);
-    const response = await createUser(values);
+
+    let response;
+    if (token) {
+      response = await registerWithToken({ ...values, token });
+    } else {
+      response = await createUser(values);
+    }
 
     setIsLoading(false);
     if (response && response.user) {
@@ -33,6 +46,18 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      getInviteByToken(token)
+        .then(invite => {
+          form.setFieldsValue({ email: invite.email });
+        })
+        .catch(err => {
+          console.error('Error fetching invite:', err);
+        });
+    }
+  }, []);
 
   return (
     <Form form={form} onFinish={handleSubmit} initialValues={{ university: '' }}>
@@ -67,7 +92,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
                     ))}
                 </Select>
               ) : (
-                <Input type={field.type} />
+                <Input type={field.type} disabled={field.name === 'email' && token} />
               )}
             </Form.Item>
           ))}
@@ -81,7 +106,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
             )}
             <p className='text-center py-8'>
               Already have an account?{' '}
-              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => setIsSignUp(false)}>
+              <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => navigate('/login')}>
                 Login
               </span>
             </p>

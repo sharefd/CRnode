@@ -1,56 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Modal, Button, List, Input, Spin, Pagination, Progress } from 'antd';
+import { Modal, Button, Input, Spin, Pagination } from 'antd';
 import { useQuery, useMutation } from 'react-query';
 import { fetchUsers } from '@/services/users';
 import { fetchRequests, createRequest } from '@/services/requests';
-import { removeUserFromPurpose } from '@/services/purposes';
 import { toast } from 'react-toastify';
-import { UserAddOutlined, UserDeleteOutlined, HourglassOutlined } from '@ant-design/icons';
+import InviteByEmail from './InviteByEmail';
+import { handleRemoveUser } from './helpers/members';
+import CurrentMembersList from './components/CurrentMembersList';
+import UserList from './components/userList';
 
-const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose }) => {
+const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, setSelectedPurpose }) => {
   const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
   const { data: fetchedRequests, isLoading: isRequestsLoading } = useQuery('requests', fetchRequests);
   const [requests, setRequests] = useState([]);
-
   const [searchValue, setSearchValue] = useState('');
-  const [targetKeys, setTargetKeys] = useState(selectedPurpose ? selectedPurpose.canReadMembers : []);
+  const [targetKeys, setTargetKeys] = useState([]);
   const [initialMembers, setInitialMembers] = useState([]);
-
+  const [isEmailModalOpen, setEmailModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  const handleAddUser = userId => {
-    setTargetKeys(prevKeys => [...prevKeys, userId]);
-  };
-
-  const handleRemoveUser = async user => {
-    Modal.confirm({
-      title: 'Are you sure you want to remove this member?',
-      content: `This will remove ${user.username} from ${selectedPurpose.name}.`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk: async () => {
-        try {
-          await removeUserFromPurpose(selectedPurpose.name, user._id);
-          toast.success(`Success: Removed ${user.username} from ${selectedPurpose.name}.`, {
-            autoClose: 1500,
-            pauseOnFocusLoss: false
-          });
-          setTargetKeys(prevKeys => prevKeys.filter(key => key !== user._id));
-        } catch (error) {
-          toast.error(`Error while removing ${user.username} from ${selectedPurpose.name}.`, {
-            autoClose: 1500,
-            pauseOnFocusLoss: false
-          });
-          console.error('Error removing user:', error);
-        }
-      },
-      onCancel() {}
-    });
-  };
 
   const createRequestMutation = useMutation(createRequest, {
     onSuccess: data => {
@@ -80,6 +49,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
       };
       await createRequestMutation.mutateAsync(request);
     }
+
     refetchPurposes();
     setIsSaving(false);
     handleModalClose();
@@ -87,8 +57,9 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
 
   useEffect(() => {
     if (selectedPurpose) {
-      setTargetKeys(selectedPurpose.canReadMembers);
-      setInitialMembers(selectedPurpose.canReadMembers);
+      const members = selectedPurpose.canReadMembers.map(u => u._id);
+      setTargetKeys(members);
+      setInitialMembers(members);
     }
   }, [selectedPurpose]);
 
@@ -130,11 +101,23 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
     .slice(0, 5);
 
   const currentMembers = users.filter(
-    user => targetKeys.includes(user._id) || (selectedPurpose && hasPendingRequest(user._id, selectedPurpose.name))
+    user =>
+      targetKeys.includes(user._id) ||
+      hasPendingRequest(
+        user._id,
+        selectedPurpose || hasPendingRequest(user._id, selectedPurpose && selectedPurpose.name)
+      )
   );
 
+  const unregisteredEmails = selectedPurpose
+    ? selectedPurpose.emailMemberList.filter(email => !users.some(user => user.email === email))
+    : [];
+
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedMembers = currentMembers.slice(startIndex, startIndex + itemsPerPage);
+
+  const currentAndUnregistered = [...currentMembers, ...unregisteredEmails];
+
+  const paginatedMembers = currentAndUnregistered.slice(startIndex, startIndex + itemsPerPage);
 
   const hasChanges = JSON.stringify(initialMembers) !== JSON.stringify(targetKeys);
 
@@ -179,56 +162,25 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose })
       onCancel={handleModalClose}
       footer={modalFooterContent()}>
       <div className='members-container' style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div className='member-row member-left'>
+        <div className='member-row member-left flex flex-col'>
           <Input placeholder='Search users' value={searchValue} onChange={e => setSearchValue(e.target.value)} />
-          <List
-            className='custom-list'
-            dataSource={filteredUsers}
-            renderItem={user => (
-              <List.Item
-                key={user._id}
-                actions={[
-                  <UserAddOutlined
-                    className='text-xl text-blue-300 hover:text-blue-500'
-                    onClick={() => handleAddUser(user._id)}
-                  />
-                ]}
-                style={hasPendingRequest(user._id, selectedPurpose.name) ? { color: 'gray' } : {}}>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  {user.username}
-                  <br />
-                  <i style={{ fontSize: 'smaller' }}>{user.email}</i>
-                </div>
-              </List.Item>
-            )}
+          <UserList users={filteredUsers} setTargetKeys={setTargetKeys} />
+          <InviteByEmail
+            selectedPurpose={selectedPurpose}
+            setSelectedPurpose={setSelectedPurpose}
+            isEmailModalOpen={isEmailModalOpen}
+            setEmailModalOpen={setEmailModalOpen}
+            createRequestMutation={createRequestMutation}
+            refetchPurposes={refetchPurposes}
           />
         </div>
         <div className='member-row member-current' style={{ position: 'relative', minHeight: '370px' }}>
           <p className='member-row-title'>Current members</p>
-          <List
-            className='custom-list'
-            style={{ overflow: 'auto', maxHeight: '370px' }}
-            dataSource={paginatedMembers}
-            renderItem={user => (
-              <List.Item
-                key={user._id}
-                actions={[
-                  hasPendingRequest(user._id, selectedPurpose.name) ? (
-                    <HourglassOutlined className='text-lg text-gray-400' />
-                  ) : (
-                    <UserDeleteOutlined
-                      className='text-xl text-red-300 hover:text-red-500'
-                      onClick={() => handleRemoveUser(user)}
-                    />
-                  )
-                ]}>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  {user.username}
-                  <br />
-                  <i style={{ fontSize: 'smaller' }}>{user.email}</i>
-                </div>
-              </List.Item>
-            )}
+          <CurrentMembersList
+            members={paginatedMembers}
+            handleRemoveUser={handleRemoveUser}
+            hasPendingRequest={hasPendingRequest}
+            selectedPurpose={selectedPurpose}
           />
         </div>
       </div>

@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { DeleteOutlined, EditOutlined, UserSwitchOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, Spin, Table } from 'antd';
 import useSettingsPermissions from '@/hooks/useSettingsPermissions';
 import { deletePurpose, updatePurpose } from '@/services/purposes';
 import EditMemberList from './EditMemberList';
 import NewPurpose from './NewPurpose';
 import { useMutation } from 'react-query';
+import { getColumns, getMemberColums } from './components/columns';
 
 const PurposesList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -20,9 +20,9 @@ const PurposesList = observer(() => {
 
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
-  const [purposes, setPurposes] = useState(null);
+  const [purposes, setPurposes] = useState([]);
 
-  const { canWritePurposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
+  const { canWritePurposes, canReadPurposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
 
   useEffect(() => {
     if (!isLoading) {
@@ -124,86 +124,12 @@ const PurposesList = observer(() => {
   if (isLoading) {
     return <Spin />;
   }
+  const createdPurposes = purposes?.filter(purpose => purpose.creator._id === user._id) || [];
+  const memberPurposes = canReadPurposes?.filter(purpose => purpose.creator._id !== user._id) || [];
 
-  const createdPurposes = purposes?.filter(purpose => purpose.creator === user._id) || [];
-  const memberPurposes = purposes?.filter(purpose => purpose.creator !== user._id) || [];
+  const columns = getColumns(handleOpen, handleOpenMemberList, handleLeave);
 
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => (
-        <>
-          {text} <EditOutlined className='cursor-pointer' onClick={() => handleOpen(record, 'name')} />
-        </>
-      )
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text, record) => (
-        <>
-          {text} <EditOutlined className='cursor-pointer' onClick={() => handleOpen(record, 'description')} />
-        </>
-      )
-    },
-
-    {
-      title: 'Edit Members',
-      key: 'editMembers',
-      width: '18%',
-      render: (text, record) => (
-        <UserSwitchOutlined
-          onMouseEnter={e => (e.currentTarget.style.color = 'blue')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          className='cursor-pointer text-lg'
-          onClick={() => handleOpenMemberList(record)}
-        />
-      )
-    },
-    {
-      title: 'Delete',
-      key: 'delete',
-      render: (text, record) => (
-        <DeleteOutlined
-          onMouseEnter={e => (e.currentTarget.style.color = 'red')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          onClick={() => handleLeave(record)}
-          className='cursor-pointer text-lg'
-        />
-      )
-    }
-  ];
-
-  const memberColumns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => <>{text}</>
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text, record) => <>{text}</>
-    },
-    {
-      title: 'Leave',
-      key: 'leave',
-      width: '34%',
-      render: (text, record) => (
-        <UsergroupDeleteOutlined
-          onMouseEnter={e => (e.currentTarget.style.color = 'red')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          onClick={() => handleDelete(record._id)}
-          className='cursor-pointer text-xl'
-        />
-      )
-    }
-  ];
+  const memberColumns = getMemberColums(handleDelete);
 
   return (
     <div className='px-2 md:px-10'>
@@ -257,6 +183,7 @@ const PurposesList = observer(() => {
         open={openMemberList}
         handleClose={() => setOpenMemberList(false)}
         selectedPurpose={selectedPurpose}
+        setSelectedPurpose={setSelectedPurpose}
         refetchPurposes={refetchPurposes}
         user={user}
       />

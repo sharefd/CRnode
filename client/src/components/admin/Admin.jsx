@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Container, Button, TextField, List, ListItem, ListItemText, Modal, Box } from '@mui/material';
+import { Container, Button, List, ListItem, ListItemText, Modal } from '@mui/material';
 import EditPermissions from './EditPermissions';
 import { fetchUsers } from '@/services/users';
 import LoadingSpinner from '../ui/LoadingSpinner';
