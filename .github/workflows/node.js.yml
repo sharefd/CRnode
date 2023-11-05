@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CloudRounds CI/CD
 
 on:
   # push:
