@@ -3,7 +3,7 @@ import resourceStore from '@/stores/resourceStore';
 import { compareDates } from '@/utils/dates';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://142.93.60.189:3003' : '';
+const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 
 export const updateRequest = async request => {
   try {
