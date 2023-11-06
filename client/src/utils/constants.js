@@ -75,19 +75,19 @@ export const navlinks = [
 
 export const homeLinks = [
   {
-    label: '1. Manage',
+    label: 'Manage',
     Icon: PeopleAlt,
     endpoint: '/manage',
     description: 'Create and manage your calendars. Invite others to collaborate.',
   },
   {
-    label: '2. Calendar',
+    label: 'Calendar',
     Icon: EventAvailable,
     endpoint: '/calendar',
     description: 'Access your calendars and view your events.',
   },
   {
-    label: '3. Requests',
+    label: 'Requests',
     Icon: Key,
     endpoint: '/requests',
     description: 'View and manage incoming calendar requests.',

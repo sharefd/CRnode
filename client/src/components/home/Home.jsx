@@ -50,10 +50,9 @@ const Home = observer(() => {
 
 
 
-
-<Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px', paddingBottom: '20px'}}>
+<Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px', paddingBottom: '20px' }}>
   {homeLinks.map((navlink, index) => (
-    <Col key={index} xs={24} sm={12} md={8}>
+    <Col key={index} xs={24} sm={20} md={20}>
       <div style={{ maxWidth: '300px' }}>
         <a href={navlink.endpoint || '#'} style={{ textDecoration: 'none', display: 'block' }}>
           <Card
@@ -62,6 +61,9 @@ const Home = observer(() => {
             }`}
             hoverable={navlink.endpoint}
           >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+              <Typography.Text style={{ marginTop: '-25px' }}>Step {index + 1}</Typography.Text>
+            </div>
             <div className='flex items-center justify-center mb-2'>
               <navlink.Icon style={{ fontSize: '24px' }} />
               <Typography.Text className='ml-2' strong>
@@ -75,6 +77,7 @@ const Home = observer(() => {
     </Col>
   ))}
 </Row>
+
 
 
 
