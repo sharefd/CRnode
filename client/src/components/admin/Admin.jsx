@@ -1,70 +1,159 @@
+import useSuperAdmin from '@/hooks/useSuperAdmin';
+import { bulkUpdatePurposes, fetchPurposes } from '@/services/purposes';
+import { Button, Modal, Spin, Table, Typography } from 'antd';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { Container, Button, List, ListItem, ListItemText, Modal } from '@mui/material';
-import EditPermissions from './EditPermissions';
-import { fetchUsers } from '@/services/users';
-import LoadingSpinner from '../ui/LoadingSpinner';
-import useArticlePermissions from '@/hooks/useArticlePermissions';
+import { useMutation, useQuery } from 'react-query';
+import MemberList from './MemberList';
+import AccessDenied from './AccessDenied';
 
 const Admin = () => {
-  const { data: users, isLoading: isLoadingUsers } = useQuery('users', fetchUsers);
-  const { purposes, isLoading: isLoadingPurposes } = useArticlePermissions();
-
+  const { data, isLoading: isLoadingPurposes } = useQuery('purposes', () => fetchPurposes());
   const [openModal, setOpenModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [usersPermissions, setUsersPermissions] = useState(null);
+  const [selectedPurpose, setSelectedPurpose] = useState(null);
 
-  const toggleModal = user => {
-    const userWithPermissions = usersPermissions.find(up => up.user._id === user._id);
-    setCurrentUser(userWithPermissions);
-    setOpenModal(!openModal);
-  };
+  const [purposes, setPurposes] = useState([]);
+
+  const { isSuperAdmin, isLoading: isSuperAdminCheckLoading, isError } = useSuperAdmin();
 
   useEffect(() => {
-    if (!users || !purposes) return;
-    const perms = users.map(user => {
-      return {
-        user,
-        canReadPermissions:
-          purposes?.filter(purpose => purpose.canReadMembers.includes(user._id.toString())).map(p => p.name) || [],
-        canWritePermissions:
-          purposes?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())).map(p => p.name) || []
-      };
-    });
-    setUsersPermissions(perms);
-  }, [isLoadingUsers, isLoadingPurposes]);
+    if (!isLoadingPurposes) {
+      setPurposes(data);
+    }
+  }, [isLoadingPurposes]);
 
-  if (isLoadingUsers || isLoadingPurposes) {
-    return <LoadingSpinner />;
+  const mutation = useMutation(bulkUpdatePurposes, {
+    onSuccess: data => {
+      setPurposes(prevPurposes => prevPurposes.map(p => (p._id === data._id ? data : p)));
+      console.log('Purposes/permissions updated successfully');
+      closeModal();
+    },
+    onError: error => {
+      console.error('Error updating purposes/permissions:', error);
+    }
+  });
+
+  const handleSavePermissions = () => {
+    mutation.mutate(selectedPurpose);
+  };
+
+  const handlePermissionChange = (memberId, type) => {
+    setPurposes(prevPurposes => {
+      return prevPurposes.map(p => {
+        if (p._id === selectedPurpose._id) {
+          const updatedPurpose = { ...p };
+          if (type === 'canRead') {
+            if (updatedPurpose.canReadMembers.includes(memberId)) {
+              updatedPurpose.canReadMembers = updatedPurpose.canReadMembers.filter(id => id !== memberId);
+            } else {
+              updatedPurpose.canReadMembers.push(memberId);
+            }
+          } else if (type === 'canWrite') {
+            if (updatedPurpose.canWriteMembers.includes(memberId)) {
+              updatedPurpose.canWriteMembers = updatedPurpose.canWriteMembers.filter(id => id !== memberId);
+            } else {
+              updatedPurpose.canWriteMembers.push(memberId);
+            }
+          }
+          return updatedPurpose;
+        }
+        return p;
+      });
+    });
+  };
+
+  if (mutation.isLoading) {
+    return <Spin />;
+  }
+
+  const renderMemberCount = members => members?.length || 0;
+
+  const columns = [
+    {
+      title: 'Purpose',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Can View',
+      dataIndex: 'canReadMembers',
+      key: 'canReadMembers',
+      render: renderMemberCount
+    },
+    {
+      title: 'Can Write',
+      dataIndex: 'canWriteMembers',
+      key: 'canWriteMembers',
+      render: renderMemberCount
+    },
+    {
+      title: 'Creator',
+      dataIndex: ['creator', 'username'],
+      key: 'creator'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Button
+          onClick={() => {
+            setSelectedPurpose(record);
+            setOpenModal(true);
+          }}>
+          Edit Permissions
+        </Button>
+      )
+    }
+  ];
+
+  const handleCloseModal = () => {
+    setSelectedPurpose(null);
+    setOpenModal(false);
+  };
+
+  if (isLoadingPurposes || isSuperAdminCheckLoading) {
+    return <Spin />;
+  }
+
+  if (isError || !isSuperAdmin) {
+    return <AccessDenied />;
   }
 
   return (
-    <Container>
-      <List>
-        {usersPermissions &&
-          usersPermissions.map(up => (
-            <ListItem key={up.user._id}>
-              <ListItemText primary={up.user.username} secondary={`Permissions: ${up.canReadPermissions.join(', ')}`} />
-              <Button onClick={() => toggleModal(up.user)}>Edit Permissions</Button>
-            </ListItem>
-          ))}
-      </List>
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        aria-labelledby='modal-title'
-        aria-describedby='modal-description'>
-        <div>
-          <EditPermissions
-            purposes={purposes}
-            userPermissions={currentUser}
-            setUsersPermissions={setUsersPermissions}
-            setUser={setCurrentUser}
-            closeModal={() => setOpenModal(false)}
-          />
-        </div>
-      </Modal>
-    </Container>
+    <div>
+      <Table dataSource={purposes} columns={columns} rowKey='_id' />
+      {selectedPurpose && (
+        <Modal
+          title={`Edit Permissions for ${selectedPurpose.name}`}
+          open={openModal}
+          onOk={handleSavePermissions}
+          onCancel={handleCloseModal}
+          footer={[
+            <Button key='back' onClick={handleCloseModal}>
+              Cancel
+            </Button>,
+            <Button key='submit' type='primary' onClick={handleSavePermissions}>
+              Save
+            </Button>
+          ]}>
+          <div>
+            <Typography.Text>Can Read Members ({renderMemberCount(selectedPurpose.canReadMembers)})</Typography.Text>
+            <MemberList
+              members={selectedPurpose.canReadMembers || []}
+              type='canRead'
+              handlePermissionChange={handlePermissionChange}
+            />
+          </div>
+          <div>
+            <Typography.Text>Can Write Members ({renderMemberCount(selectedPurpose.canWriteMembers)})</Typography.Text>
+            <MemberList
+              members={selectedPurpose.canWriteMembers || []}
+              type='canWrite'
+              handlePermissionChange={handlePermissionChange}
+            />
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 };
 

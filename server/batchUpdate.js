@@ -4,19 +4,27 @@ const Purpose = require('./models/Purpose');
 const Article = require('./models/Article');
 const Request = require('./models/Request'); // Importing the Request model
 
-async function updateCreator() {
-  const defaultCreatorId = '652afc81943693052e4910c0';
-
+async function updatePurposesUniqueMembers() {
   try {
-    // Find all purposes without a creator and set the default creator
-    const result = await Purpose.updateMany(
-      { creator: { $exists: false } }, // filter: purposes without a creator
-      { $set: { creator: defaultCreatorId } } // update: set the default creator
-    );
+    const purposes = await Purpose.find();
 
-    console.log(`${result.nModified} purposes updated with default creator.`);
-  } catch (err) {
-    console.error('Error updating purposes with default creator:', err);
+    for (const purpose of purposes) {
+      const uniqueCanReadMembers = [...new Set(purpose.canReadMembers.map(member => member.toString()))];
+      const uniqueCanWriteMembers = [...new Set(purpose.canWriteMembers.map(member => member.toString()))];
+
+      if (
+        uniqueCanReadMembers.length !== purpose.canReadMembers.length ||
+        uniqueCanWriteMembers.length !== purpose.canWriteMembers.length
+      ) {
+        purpose.canReadMembers = uniqueCanReadMembers;
+        purpose.canWriteMembers = uniqueCanWriteMembers;
+        await purpose.save();
+      }
+    }
+
+    console.log('All purposes have been updated with unique members.');
+  } catch (error) {
+    console.error('Failed to update purposes:', error);
   }
 }
 
@@ -28,12 +36,11 @@ mongoose
   .then(async () => {
     console.log('MongoDB connected');
 
-    // Remove emailList field for all records in the Purpose collection
-    await updateCreator();
+    await updatePurposesUniqueMembers();
 
     mongoose.connection.close();
   })
   .catch(err => {
-    console.log(err);
+    console.error(err);
     mongoose.connection.close();
   });

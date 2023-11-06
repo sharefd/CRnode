@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const BASE_URL = isDevelopment ? 'http://localhost:3003' : '';
+const BASE_URL = isDevelopment ? 'http://142.93.60.189:3003' : '';
 
 export const createInvite = async inviteData => {
   try {

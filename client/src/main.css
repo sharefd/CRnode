@@ -98,25 +98,6 @@ p.MuiTypography-root {
   font-size: 16px;
 }
 
-/* TIME PICKER - NewArticle */
-.MuiMultiSectionDigitalClock-root::-webkit-scrollbar {
-  width: 5px;
-  /* display: none; */
-}
-
-.MuiMultiSectionDigitalClock-root::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-.MuiMultiSectionDigitalClock-root::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.MuiMultiSectionDigitalClock-root {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
 /* Article List Show Details Button */
 .additional-details {
   display: none;

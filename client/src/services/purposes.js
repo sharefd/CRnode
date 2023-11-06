@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
+const baseUrl = isDevelopment ? 'http://142.93.60.189:3003' : '';
 
 export const fetchPurposes = async userId => {
   let response;
