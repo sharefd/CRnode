@@ -40,29 +40,44 @@ const Home = observer(() => {
     <div style={{ marginLeft: '16px', marginTop: '16px' }}>
       {user ? (
         <>
-          <Typography.Title level={4}>Welcome, {user ? user.firstName : 'None'}.</Typography.Title>
-          <Typography.Text>To get started, navigate to My Calendar and create an event.</Typography.Text>
-          <Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px' }}>
-            {homeLinks.map((navlink, index) => (
-              <Col key={index} xs={24} md={12}>
-                <a href={navlink.endpoint || '#'} style={{ textDecoration: 'none' }}>
-                  <Card
-                    className={`text-center h-150 p-2 border-2  ${
-                      navlink.endpoint ? 'hover:bg-slate-50' : 'border-dotted hover:italic'
-                    }`}
-                    hoverable={navlink.edpoint}>
-                    <div className='flex items-center justify-center mb-2'>
-                      <navlink.Icon style={{ fontSize: '24px' }} />
-                      <Typography.Text className='ml-2' strong>
-                        {navlink.label}
-                      </Typography.Text>
-                    </div>
-                    <Typography.Text style={{ marginTop: '8px' }}>{navlink.description}</Typography.Text>
-                  </Card>
-                </a>
-              </Col>
-            ))}
-          </Row>
+      <Typography.Title level={4}>
+  Welcome, {user ? user.firstName : 'None'}.
+</Typography.Title>
+<Typography variant='body'>Getting started in 3 simple steps:</Typography>
+<Typography variant='body'>1. Navigate to 'Manage' and create a new calendar. Select or invite users to view your calendars.</Typography>
+<Typography variant='body'>2. Create and view your events in 'Calendar.'</Typography>
+<Typography variant='body'>3. Check if anyone has invited you to collaborate in 'Requests.'</Typography>
+
+
+
+
+<Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px', paddingBottom: '20px'}}>
+  {homeLinks.map((navlink, index) => (
+    <Col key={index} xs={24} sm={12} md={8}>
+      <div style={{ maxWidth: '300px' }}>
+        <a href={navlink.endpoint || '#'} style={{ textDecoration: 'none', display: 'block' }}>
+          <Card
+            className={`text-center h-150 p-2 border-2  ${
+              navlink.endpoint ? 'hover:bg-slate-50' : 'border-dotted hover:italic'
+            }`}
+            hoverable={navlink.endpoint}
+          >
+            <div className='flex items-center justify-center mb-2'>
+              <navlink.Icon style={{ fontSize: '24px' }} />
+              <Typography.Text className='ml-2' strong>
+                {navlink.label}
+              </Typography.Text>
+            </div>
+            <Typography.Text style={{ marginTop: '8px' }}>{navlink.description}</Typography.Text>
+          </Card>
+        </a>
+      </div>
+    </Col>
+  ))}
+</Row>
+
+
+
         </>
       ) : (
         <Typography.Title level={4} style={{ color: 'gray' }}>

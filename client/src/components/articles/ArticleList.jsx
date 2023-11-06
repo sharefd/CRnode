@@ -18,7 +18,7 @@ const ArticleList = observer(() => {
 
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
-  const [selectedPurposes, setSelectedPurposes] = useState([]);
+  const [selectedPurposes, setSelectedPurposes] = useState([]); 
   const [selectedOrganizers, setSelectedOrganizers] = useState([]);
   const [organizerFilter, setOrganizerFilter] = useState([]);
 
