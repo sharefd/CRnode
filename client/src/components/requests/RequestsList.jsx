@@ -247,7 +247,6 @@ const RequestsList = observer(() => {
 
   return (
     <Layout className='w-full mx-auto h-screen'>
-      <Content className='p-4 mt-16'>
         <div className='w-full bg-white p-6 min-h-[280px] text-center full-width-mobile'>
           <Button onClick={toggleView} className='mb-5'>
             {!showUserRequests ? 'View Invitations' : 'View Access Requests'}
@@ -278,7 +277,6 @@ const RequestsList = observer(() => {
             className='mt-5'
           />
         </div>
-      </Content>
     </Layout>
   );
 });
