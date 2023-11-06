@@ -3,7 +3,7 @@
   <img src="./client/src/assets/images/banner.png" alt="CloudRounds Logo" width="100%" style="clip-path: inset(40px 0 40px 0);">
 </p>
 
-CloudRounds is a comprehensive solution designed to assist medical professionals, coordinators, and other stakeholders in managing, viewing, and accessing medical rounds and events in a more intuitive manner.
+CloudRounds is a comprehensive solution designed to assist medical learners, professionals, coordinators, and other stakeholders in managing, viewing, and accessing medical rounds, seminars, and educational events in a more intuitive manner. 
 
 ## Features
 
@@ -21,7 +21,7 @@ Secure login and signup functionality to ensure only authorized users can access
 Provides administrators with the ability to manage user permissions and oversee platform activities.
 
 ### Article Management
-Allows users to view, create, and manage articles related to medical rounds and events.
+Allows users to view, create, and manage articles related to seminars, rounds, and events.
 
 
 
