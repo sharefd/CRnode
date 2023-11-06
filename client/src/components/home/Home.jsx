@@ -62,7 +62,7 @@ const Home = observer(() => {
             hoverable={navlink.endpoint}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-              <Typography.Text style={{ marginTop: '-25px' }}>Step {index + 1}</Typography.Text>
+             
             </div>
             <div className='flex items-center justify-center mb-2'>
               <navlink.Icon style={{ fontSize: '24px' }} />
