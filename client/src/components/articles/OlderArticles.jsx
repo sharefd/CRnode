@@ -132,9 +132,7 @@ const OlderArticles = observer(() => {
 
   return (
     <Layout>
-      <Content style={{ padding: '0 50px', marginTop: '64px' }}>
-        <div style={{ background: '#fff', padding: 24, minHeight: 280, textAlign: 'center' }}>
-          <Card title='Events' bordered={false} style={{ width: '100%' }}>
+          <Card title='Previous Events' bordered={false} style={{ width: '100%', textAlign: 'center'  }}>
             <Table
               dataSource={filteredArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
               pagination={false}
@@ -201,8 +199,6 @@ const OlderArticles = observer(() => {
               rows={4}
             />
           </Modal>
-        </div>
-      </Content>
     </Layout>
   );
 });

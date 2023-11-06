@@ -47,10 +47,17 @@ export const eventColors = ['#0056b3', '#2673FF', '#4D9BFF', '#80C7FF', '#B3E0FF
 
 export const navlinks = [
   {
-    label: 'Calendars',
+    label: 'Manage',
     Icon: PeopleAlt,
-    endpoint: '/calendars',
-    description: 'Create, manage and view calendar permissions.'
+    endpoint: '/manage',
+    description: 'Create and manage and view calendar permissions.'
+  },
+ 
+  {
+    label: 'Calendar',
+    Icon: EventAvailable,
+    endpoint: '/calendar',
+    description: 'Access your events. Includes a calendar view.'
   },
   {
     label: 'Requests',
@@ -59,57 +66,72 @@ export const navlinks = [
     description: 'View and manage incoming calendar requests.'
   },
   {
-    label: 'Events',
-    Icon: EventAvailable,
-    endpoint: '/articles',
-    description: 'Access your events. Includes a calendar view.'
-  },
-  {
     label: 'Past Rounds',
     Icon: History,
-    endpoint: '/older-articles',
+    endpoint: '/past-events',
     description: 'Review past articles and provide optional feedback.'
   }
 ];
 
 export const homeLinks = [
   {
-    label: 'Calendars',
+    label: 'Step 1: Manage',
     Icon: PeopleAlt,
-    endpoint: '/calendars',
-    description: 'Create, manage and view calendar permissions.'
+    endpoint: '/manage',
+    description: 'Create and manage your calendars. Invite others to collaborate.',
   },
   {
-    label: 'Requests',
+    label: 'Step 2: Calendar',
+    Icon: EventAvailable,
+    endpoint: '/calendar',
+    description: 'Access your calendars and view your events.',
+  },
+  {
+    label: 'Step 3: Requests',
     Icon: Key,
     endpoint: '/requests',
-    description: 'View and manage incoming calendar requests.'
+    description: 'View and manage incoming calendar requests.',
   },
-  {
-    label: 'Events',
-    Icon: EventAvailable,
-    endpoint: '/articles',
-    description: 'Access your events. Includes a calendar view.'
-  },
-  {
-    label: 'Past Rounds',
-    Icon: History,
-    endpoint: '/older-articles',
-    description: 'Review past articles and provide optional feedback.'
-  },
-  {
-    label: 'Rounds Catalog',
-    Icon: ManageSearch,
-    endpoint: '',
-    description: 'Coming soon.'
-  },
-  {
-    label: 'Account Settings',
-    Icon: Settings,
-    endpoint: '/settings',
-    description: 'Manage your account settings.'
-  }
+    // {
+  //   label: 'Past Events',
+  //   Icon: History,
+  //   endpoint: '/past-events',
+  //   description: 'Review past articles and provide optional feedback.'
+  // },
+  // {
+  //   label: 'Rounds Catalog',
+  //   Icon: ManageSearch,
+  //   endpoint: '',
+  //   description: 'Coming soon.'
+  // },
+  // {
+  //   label: 'Account Settings',
+  //   Icon: Settings,
+  //   endpoint: '/settings',
+  //   description: 'Manage your account settings.'
+  // }
 ];
+
+// Apply CSS styles to achieve a vertical layout
+homeLinks.forEach((link) => {
+  link.containerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  };
+
+  link.labelStyle = {
+    fontWeight: 'bold',
+  };
+
+  link.descriptionStyle = {
+    textAlign: 'center',
+  };
+});
+
+  
+
+
 
 export const initialArticleData = {
   title: '',

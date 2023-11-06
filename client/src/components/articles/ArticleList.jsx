@@ -18,7 +18,7 @@ const ArticleList = observer(() => {
 
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
-  const [selectedPurposes, setSelectedPurposes] = useState([]);
+  const [selectedPurposes, setSelectedPurposes] = useState([]); 
   const [selectedOrganizers, setSelectedOrganizers] = useState([]);
   const [organizerFilter, setOrganizerFilter] = useState([]);
 
@@ -142,7 +142,13 @@ const ArticleList = observer(() => {
         setOrganizerFilter={setOrganizerFilter}
       />
       <div style={{ padding: '0 16px' }}>
-        <Row gutter={16} className='custom-flex'>
+<Row gutter={16} className='custom-flex'>
+  <Col xs={24} lg={12} className='calendar-col'>
+    <div className='max-w-full overflow-x-auto'>
+      <ArticleCalendar articles={localArticles} />
+    </div>
+  </Col>
+            
           <Col xs={24} lg={12} className='article-list-col order-list'>
             {currentArticles.map((article, index) => (
               <Card key={index} style={{ marginBottom: '16px' }}>
@@ -208,11 +214,7 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
-          <Col xs={24} lg={12} className='calendar-col order-calendar'>
-            <div className='max-w-full overflow-x-auto'>
-              <ArticleCalendar articles={localArticles} />
-            </div>
-          </Col>
+     
         </Row>
       </div>
       <NewArticleForm
