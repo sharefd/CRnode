@@ -4,12 +4,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ...colors,
-        sky: colors.sky,
-        stone: colors.stone,
-        neutral: colors.neutral,
-        gray: colors.gray,
-        slate: colors.slate,
         transparent: 'transparent',
         current: 'currentColor',
         white: '#ffffff',

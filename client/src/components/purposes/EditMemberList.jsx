@@ -85,7 +85,11 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
       return false;
     }
     return requests.some(
-      request => request.user._id === userId && request.purpose.name === purpose && request.status === 'Pending'
+      request =>
+        request.user._id === userId &&
+        request.purpose &&
+        request.purpose.name === purpose &&
+        request.status === 'Pending'
     );
   };
 
