@@ -254,6 +254,12 @@ select::placeholder {
 }
 
 /* Mobile view */
+@media (max-width: 1199px) {
+  .flex-col-reverse {
+    flex-direction: column-reverse;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .ant-table {
     font-size: 12px;

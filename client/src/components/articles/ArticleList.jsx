@@ -142,8 +142,8 @@ const ArticleList = observer(() => {
         setOrganizerFilter={setOrganizerFilter}
       />
       <div style={{ padding: '0 16px' }}>
-        <Row gutter={16} className='flex-col md:flex-row'>
-          <Col span={24} md={14} className='order-2 md:order-1'>
+        <Row gutter={16} className='custom-flex'>
+          <Col xs={24} lg={12} className='article-list-col order-list'>
             {currentArticles.map((article, index) => (
               <Card key={index} style={{ marginBottom: '16px' }}>
                 <Row gutter={8}>
@@ -208,7 +208,7 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
-          <Col span={24} md={10} className='order-1 md:order-2 mb-4 md:mb-0 px-4 md:px-0'>
+          <Col xs={24} lg={12} className='calendar-col order-calendar'>
             <div className='max-w-full overflow-x-auto'>
               <ArticleCalendar articles={localArticles} />
             </div>

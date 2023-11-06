@@ -84,7 +84,13 @@ const ArticleCalendar = ({ articles }) => {
       <div
         id='calendar-head'
         className='flex items-center justify-between bg-bluebrand text-white min-w-[420px] rounded-t-xl'>
-        <Button id='prev-month' onClick={() => changeMonth(-1)} icon={<LeftOutlined />} />
+        <Button
+          id='prev-month'
+          ghost
+          className='calendar-chevron'
+          onClick={() => changeMonth(-1)}
+          icon={<LeftOutlined />}
+        />
 
         <Button
           onClick={goToToday}
@@ -107,7 +113,13 @@ const ArticleCalendar = ({ articles }) => {
           {`${monthNames[month]} ${year}`}
         </span>
 
-        <Button id='next-month' onClick={() => changeMonth(1)} icon={<RightOutlined />} />
+        <Button
+          id='next-month'
+          ghost
+          className='calendar-chevron'
+          onClick={() => changeMonth(1)}
+          icon={<RightOutlined />}
+        />
       </div>
       <Table id='calendar-body' dataSource={calendarData} pagination={false}>
         <Table.Column title='Sun' dataIndex='0' key='0' />
