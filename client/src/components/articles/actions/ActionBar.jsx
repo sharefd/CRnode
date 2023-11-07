@@ -144,7 +144,7 @@ const ActionBar = ({
           <span style={{ marginRight: '8px' }}>
             <FcCalendar />
           </span>
-          <span style={{ fontWeight: 'bold' }}>Create Event</span>{' '}
+          <span style={{    fontWeight: 'bold' }}>Create Event</span>{' '}
         </Button>
         <p className='text-gray-600 text-sm'>{currentTime}</p>
       </Space>
