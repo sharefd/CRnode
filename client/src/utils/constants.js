@@ -78,13 +78,13 @@ export const homeLinks = [
     label: 'Step 1: Manage',
     Icon: PeopleAlt,
     endpoint: '/manage',
-    description: 'Create and manage your calendars. Invite others to collaborate.',
+    description: 'Create a calendar. Select or invite users to view your calendar.',
   },
   {
     label: 'Step 2: Calendar',
     Icon: EventAvailable,
     endpoint: '/calendar',
-    description: 'Access your calendars and view your events.',
+    description: 'See your calendar in action. View and create events.',
   },
   {
     label: 'Step 3: Requests',
