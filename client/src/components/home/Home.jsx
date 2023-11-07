@@ -44,11 +44,6 @@ const Home = observer(() => {
   Welcome, {user ? user.firstName : 'None'}.
 </Typography.Title>
 <Typography variant='body'>Getting started in 3 simple steps:</Typography>
-<Typography variant='body'>1. Navigate to 'Manage' and create a new calendar. Select or invite users to view your calendars.</Typography>
-<Typography variant='body'>2. Create and view your events in 'Calendar.'</Typography>
-<Typography variant='body'>3. Check if anyone has invited you to collaborate in 'Requests.'</Typography>
-
-
 
 <Row gutter={[16, 16]} style={{ marginTop: '16px', paddingLeft: '32px', paddingRight: '32px', paddingBottom: '20px' }}>
   {homeLinks.map((navlink, index) => (
