@@ -92,12 +92,12 @@ export const homeLinks = [
     endpoint: '/requests',
     description: 'View and manage incoming calendar requests.',
   },
-    // {
-  //   label: 'Past Events',
-  //   Icon: History,
-  //   endpoint: '/past-events',
-  //   description: 'Review past articles and provide optional feedback.'
-  // },
+//     {
+//     label: 'Past Events',
+//     Icon: History,
+//     endpoint: '/past-events',
+//     description: 'Review past articles and provide optional feedback.'
+//   },
   // {
   //   label: 'Rounds Catalog',
   //   Icon: ManageSearch,
