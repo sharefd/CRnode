@@ -84,7 +84,7 @@ export const homeLinks = [
     label: 'Step 2: Calendar',
     Icon: EventAvailable,
     endpoint: '/calendar',
-    description: 'See your calendar in action. View and create events.',
+    description: 'View and create events. See your calendar in action.',
   },
   {
     label: 'Step 3: Requests',
