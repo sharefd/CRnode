@@ -52,7 +52,6 @@ const NewArticleForm = ({
       return;
     }
     const canWrite = filterPurposesForUser();
-    console.log(canWrite);
 
     setAllowedPurposes(canWrite);
     if (canWrite.length > 0) {

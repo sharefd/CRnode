@@ -42,7 +42,7 @@ export const getColumns = (handleOpen, handleOpenMemberList, handleLeave) => {
         <DeleteOutlined
           onMouseEnter={e => (e.currentTarget.style.color = 'red')}
           onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          onClick={() => handleLeave(record)}
+          onClick={() => handleLeave(record._id)}
           className='cursor-pointer text-lg'
         />
       )
@@ -50,7 +50,7 @@ export const getColumns = (handleOpen, handleOpenMemberList, handleLeave) => {
   ];
 };
 
-export const getMemberColums = handleDelete => {
+export const getMemberColums = handleLeave => {
   return [
     {
       title: 'Name',
@@ -72,7 +72,7 @@ export const getMemberColums = handleDelete => {
         <UsergroupDeleteOutlined
           onMouseEnter={e => (e.currentTarget.style.color = 'red')}
           onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
-          onClick={() => handleDelete(record._id)}
+          onClick={() => handleLeave(record)}
           className='cursor-pointer text-xl'
         />
       )

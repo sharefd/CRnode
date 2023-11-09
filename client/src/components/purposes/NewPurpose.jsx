@@ -3,7 +3,7 @@ import { Modal, Input, Button, Spin } from 'antd';
 import { createPurpose } from '@/services/purposes';
 import { useMutation } from 'react-query';
 
-const NewPurpose = ({ open, handleClose, userId, setPurposes }) => {
+const NewPurpose = ({ open, handleClose, userId, setPurposes, refetchPurposes }) => {
   const [loading, setLoading] = useState(false);
   const [newPurpose, setNewPurpose] = useState({
     name: '',
@@ -13,15 +13,30 @@ const NewPurpose = ({ open, handleClose, userId, setPurposes }) => {
     creator: userId
   });
 
-  const createPurposeMutation = useMutation(createPurpose);
+  const createPurposeMutation = useMutation(createPurpose, {
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: async data => {
+      await refetchPurposes();
+      setPurposes(prevPurposes => [...prevPurposes, data]);
+      setLoading(false);
+      handleClose();
+    },
+    onError: () => {
+      setLoading(false);
+    }
+  });
 
   const handleSave = async () => {
-    try {
-      const createdPurpose = await createPurposeMutation.mutateAsync(newPurpose);
-      setPurposes(prevPurposes => [...prevPurposes, createdPurpose]);
-      handleClose();
-    } catch (error) {
-      console.error('Error while saving:', error);
+    if (!loading) {
+      setLoading(true);
+      try {
+        await createPurposeMutation.mutateAsync(newPurpose);
+      } catch (error) {
+        console.error('Error while saving:', error);
+        setLoading(false);
+      }
     }
   };
 
@@ -34,7 +49,13 @@ const NewPurpose = ({ open, handleClose, userId, setPurposes }) => {
         <Button key='back' onClick={handleClose}>
           Cancel
         </Button>,
-        <Button key='submit' ghost type='primary' onClick={handleSave} className='new-calendar-button'>
+        <Button
+          key='submit'
+          ghost
+          type='primary'
+          loading={loading}
+          onClick={handleSave}
+          className='new-calendar-button'>
           Save
         </Button>
       ]}>

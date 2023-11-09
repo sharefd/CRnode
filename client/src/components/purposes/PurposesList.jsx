@@ -46,9 +46,16 @@ const PurposesList = observer(() => {
     }
   });
 
+  const deletePurposeMutation = useMutation(deletePurpose, {
+    onSuccess: (_, variables) => {
+      const { purposeId } = variables;
+      setPurposes(prevPurposes => prevPurposes.filter(purpose => purpose._id !== purposeId));
+    }
+  });
+
   const handleLeave = async purpose => {
     Modal.confirm({
-      title: 'Are you sure you want to delete this purpose?',
+      title: 'Are you sure you want to delete this calendar?',
       content: 'This action cannot be undone.',
       okText: 'Yes',
       okType: 'danger',
@@ -72,8 +79,6 @@ const PurposesList = observer(() => {
     });
   };
 
-  const deletePurposeMutation = useMutation(deletePurpose);
-
   const handleOpen = (purpose = null, field) => {
     setSelectedPurpose(purpose);
     setNewPurpose({ name: purpose.name, description: purpose.description });
@@ -88,7 +93,7 @@ const PurposesList = observer(() => {
 
   const handleClose = () => {
     setOpen(false);
-    setNewPurpose('');
+    setNewPurpose({ name: '', description: '' });
     setSelectedPurpose(null);
   };
 
@@ -126,10 +131,8 @@ const PurposesList = observer(() => {
   }
   const createdPurposes = purposes?.filter(purpose => purpose.creator._id === user._id) || [];
   const memberPurposes = canReadPurposes?.filter(purpose => purpose.creator._id !== user._id) || [];
-
-  const columns = getColumns(handleOpen, handleOpenMemberList, handleLeave);
-
-  const memberColumns = getMemberColums(handleDelete);
+  const memberColumns = getMemberColums(handleLeave);
+  const columns = getColumns(handleOpen, handleOpenMemberList, handleDelete);
 
   return (
     <div className='px-2 md:px-10'>
@@ -174,10 +177,11 @@ const PurposesList = observer(() => {
 
       <NewPurpose
         open={openNewPurpose}
-        handleClose={() => setOpenNewPurpose(false)}
+        createdPurposes={createdPurposes}
+        setPurposes={setPurposes}
         refetchPurposes={refetchPurposes}
         userId={user._id}
-        setPurposes={setPurposes}
+        handleClose={() => setOpenNewPurpose(false)}
       />
       <EditMemberList
         open={openMemberList}

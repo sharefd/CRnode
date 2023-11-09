@@ -38,6 +38,7 @@ const useSettingsPermissions = passedUser => {
   return {
     purposes: data,
     canWritePurposes,
+    setCanWritePurposes,
     canReadPurposes,
     isLoading,
     refetchPurposes,

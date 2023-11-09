@@ -72,7 +72,7 @@ export const createPurpose = async purpose => {
 
 export const deletePurpose = async purposeId => {
   try {
-    const response = await axios.delete(`${baseUrl}/api/purposes/${purposeId}`);
+    const response = await axios.delete(`${baseUrl}/api/purposes/purpose/${purposeId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting purpose:', error);
@@ -81,7 +81,7 @@ export const deletePurpose = async purposeId => {
 
 export const deleteUserFromPurpose = async (userId, purposeId) => {
   try {
-    const response = await axios.delete(`${baseUrl}/api/purposes/${purposeId}/user/${userId}`);
+    const response = await axios.delete(`${baseUrl}/api/purposes/purpose/${purposeId}/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting user from purpose:', error);

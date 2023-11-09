@@ -59,9 +59,14 @@ router.post('/new', jwtMiddleware, async (req, res) => {
     }
 
     const newPurpose = new Purpose(purpose);
-    await newPurpose.save();
+    const createdPurpose = await newPurpose.save();
 
-    res.status(201).json(newPurpose);
+    const fetchedPurpose = await Purpose.findById(createdPurpose._id)
+      .populate('creator', 'username email firstName lastName')
+      .populate('canReadMembers', 'username email')
+      .populate('canWriteMembers', 'username email');
+
+    res.status(201).json(fetchedPurpose);
   } catch (err) {
     console.error('Error creating purpose:', err);
     res.status(500).send('Internal Server Error');
@@ -142,7 +147,7 @@ router.put('/update/:id', jwtMiddleware, async (req, res) => {
   }
 });
 
-router.delete('/:purposeId/user/:userId', jwtMiddleware, async (req, res) => {
+router.delete('/purpose/:purposeId/user/:userId', jwtMiddleware, async (req, res) => {
   try {
     const { purposeId, userId } = req.params;
     const purpose = await Purpose.findById(purposeId);
@@ -163,7 +168,7 @@ router.delete('/:purposeId/user/:userId', jwtMiddleware, async (req, res) => {
   }
 });
 
-router.delete('/:purposeId', jwtMiddleware, async (req, res) => {
+router.delete('/purpose/:purposeId', jwtMiddleware, async (req, res) => {
   try {
     const purposeId = req.params.purposeId;
     const purpose = await Purpose.findByIdAndDelete(purposeId);
