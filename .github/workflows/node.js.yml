@@ -25,8 +25,8 @@ jobs:
     - name: Deploy to DigitalOcean
       env:
         DO_SSH_KEY: ${{ secrets.DO_SSH_PRIVATE_KEY }}
-        DO_HOST: 142.93.60.189
-        DO_USERNAME: deployer
+        DO_HOST: ${{ secrets.DO_HOST }}
+        DO_USERNAME: ${{ secrets.DO_USERNAME }}
       run: |
         echo "$DO_SSH_KEY" > private_key.pem
         chmod 600 private_key.pem
