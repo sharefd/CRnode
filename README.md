@@ -24,6 +24,6 @@ Provides administrators with the ability to manage user permissions and oversee 
 Allows users to view, create, and manage articles related to seminars, rounds, and events.
 
 ### Events Catalog
-Organizers can opt to have their calendar featured in a public catalog that users can request access too, potentially increasing their audience and reach. 
+Organizers can opt to have their calendar featured in a public catalog that users can request access to, potentially increasing their audience and reach. 
 
 
