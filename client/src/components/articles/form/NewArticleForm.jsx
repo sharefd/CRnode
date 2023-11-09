@@ -38,11 +38,21 @@ const NewArticleForm = ({
     refetch: refetchPurposes
   } = useQuery(['userPurposes', user._id], () => fetchPurposes(user._id));
 
+  const filterPurposesForUser = () => {
+    const canWritePurposes = purposes?.filter(purpose => {
+      const canWriteMembers = purpose.canWriteMembers.map(u => u._id);
+      return canWriteMembers.includes(user._id.toString());
+    });
+
+    return canWritePurposes;
+  };
+
   useEffect(() => {
     if (isLoading) {
       return;
     }
-    const canWrite = purposes?.filter(purpose => purpose.canWriteMembers.includes(user._id.toString())) || [];
+    const canWrite = filterPurposesForUser();
+    console.log(canWrite);
 
     setAllowedPurposes(canWrite);
     if (canWrite.length > 0) {
@@ -55,7 +65,6 @@ const NewArticleForm = ({
       setArticle(selectedArticle);
       const [startTime, endTime] = extractTimesFromDuration(selectedArticle.duration);
       setTimeRange([startTime, endTime]);
-      console.log(selectedArticle);
     } else {
       setArticle(initialArticleData);
     }
@@ -162,7 +171,7 @@ const NewArticleForm = ({
                 </Select.Option>
                 {allowedPurposes.map(purpose => (
                   <Select.Option key={purpose._id.toString()} value={purpose._id.toString()}>
-                    {purpose.description}
+                    {purpose.name}
                   </Select.Option>
                 ))}
               </Select>
