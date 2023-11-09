@@ -141,7 +141,7 @@ const ArticleList = observer(() => {
         organizerFilter={organizerFilter}
         setOrganizerFilter={setOrganizerFilter}
       />
-      <div style={{ padding: '0 16px' }}>e
+      <div style={{ padding: '0 16px' }}>
 <Row gutter={16} className='custom-flex'>
   <Col xs={24} lg={12} className='calendar-col'>
     <div className='max-w-full overflow-x-auto'>
