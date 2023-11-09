@@ -70,7 +70,6 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
   }, [fetchedRequests]);
 
   const handleModalClose = () => {
-    setTargetKeys([]);
     setSearchValue('');
     handleClose();
     setCurrentPage(1);
