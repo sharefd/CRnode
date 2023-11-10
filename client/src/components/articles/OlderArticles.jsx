@@ -3,7 +3,7 @@ import { toggleAttending } from '@/services/users';
 import userStore from '@/stores/userStore';
 import { formatDate } from '@/utils/dates';
 import { AddCircle, Edit } from '@mui/icons-material';
-import { Layout, Card, Table, Checkbox, Pagination, Modal, Input, Button, Spin } from 'antd';
+import { Layout, Card, Table, Checkbox, Pagination, Modal, Input, Button, Spin, Typography } from 'antd';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -129,8 +129,12 @@ const OlderArticles = observer(() => {
 
   return (
     <Layout>
-      <Card title='Previous Events' bordered={false} style={{ width: '100%', textAlign: 'center' }}>
+      <Card bordered={false} className='w-full text-center'>
+        <Typography.Title level={2} className='mt-4'>
+          Previous Events
+        </Typography.Title>
         <Table
+          className='mt-8'
           dataSource={filteredArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
           pagination={false}
           rowKey={record => record._id}

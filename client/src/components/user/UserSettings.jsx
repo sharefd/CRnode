@@ -212,13 +212,13 @@ const UserSettings = observer(() => {
           {user && (
             <List>
               <List.Item>
-                Can View:
+                Subscribed to:
                 <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
                   {canReadPurposes && canReadPurposes.map(p => p.name).join(', ')}
                 </span>
               </List.Item>
               <List.Item>
-                Can Create:
+                Your Calendars:
                 <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
                   {canWritePurposes && canWritePurposes.map(p => p.name).join(', ')}
                 </span>
