@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/User');
+const Article = require('../models/Article');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtMiddleware } = require('../middleware/permissions');
@@ -184,6 +186,7 @@ router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
     }
 
     await user.save();
+
     res.status(200).json({ message: 'Successfully updated attendance', attended: user.attended });
   } catch (err) {
     res.status(500).send(err);
