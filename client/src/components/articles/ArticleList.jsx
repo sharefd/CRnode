@@ -131,7 +131,7 @@ const ArticleList = observer(() => {
         <Row gutter={16} className='custom-flex'>
           <Col xs={24} lg={12} className='calendar-col'>
             <div className='max-w-full overflow-x-auto'>
-              <ArticleCalendar articles={localArticles} />
+              <ArticleCalendar articles={currentArticles} />
             </div>
           </Col>
 
