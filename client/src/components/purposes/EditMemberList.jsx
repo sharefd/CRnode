@@ -5,7 +5,6 @@ import { fetchUsers } from '@/services/users';
 import { fetchRequests, createRequest } from '@/services/requests';
 import { toast } from 'react-toastify';
 import InviteByEmail from './InviteByEmail';
-import { handleRemoveUser } from './helpers/members';
 import CurrentMembersList from './components/CurrentMembersList';
 import UserList from './components/UserList';
 
@@ -16,6 +15,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
   const [searchValue, setSearchValue] = useState('');
   const [targetKeys, setTargetKeys] = useState([]);
   const [initialMembers, setInitialMembers] = useState([]);
+  const [deltaTargetKeys, setDeltaTargetKeys] = useState([]);
   const [isEmailModalOpen, setEmailModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +49,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
       };
       await createRequestMutation.mutateAsync(request);
     }
-
+    setDeltaTargetKeys(0);
     refetchPurposes();
     setIsSaving(false);
     handleModalClose();
@@ -122,8 +122,6 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
 
   const paginatedMembers = currentAndUnregistered.slice(startIndex, startIndex + itemsPerPage);
 
-  const hasChanges = JSON.stringify(initialMembers) !== JSON.stringify(targetKeys);
-
   const FooterButtons = () => (
     <div key='buttons' className='mb-3'>
       <Button key='back' onClick={handleModalClose}>
@@ -150,7 +148,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
   const modalFooterContent = () => {
     if (isSaving) {
       return [<Spin key='footer-progress' />, <FooterPagination key='footer-pagination' />];
-    } else if (hasChanges) {
+    } else if (deltaTargetKeys.length > 0) {
       return [<FooterButtons key='footer-buttons' />, <FooterPagination key='footer-pagination' />];
     } else {
       return [<FooterPagination key='footer-pagination' />];
@@ -167,7 +165,7 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
       <div className='members-container' style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div className='member-row member-left flex flex-col'>
           <Input placeholder='Search users' value={searchValue} onChange={e => setSearchValue(e.target.value)} />
-          <UserList users={filteredUsers} setTargetKeys={setTargetKeys} />
+          <UserList users={filteredUsers} setTargetKeys={setTargetKeys} setDeltaTargetKeys={setDeltaTargetKeys} />
           <InviteByEmail
             selectedPurpose={selectedPurpose}
             setSelectedPurpose={setSelectedPurpose}
@@ -181,9 +179,11 @@ const EditMemberList = ({ open, handleClose, refetchPurposes, selectedPurpose, s
           <p className='member-row-title'>Current members</p>
           <CurrentMembersList
             members={paginatedMembers}
-            handleRemoveUser={handleRemoveUser}
             hasPendingRequest={hasPendingRequest}
             selectedPurpose={selectedPurpose}
+            setTargetKeys={setTargetKeys}
+            deltaTargetKeys={deltaTargetKeys}
+            setDeltaTargetKeys={setDeltaTargetKeys}
           />
         </div>
       </div>

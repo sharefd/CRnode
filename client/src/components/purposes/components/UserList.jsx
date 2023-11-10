@@ -1,9 +1,10 @@
 import { List } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 
-const UserList = ({ users, setTargetKeys }) => {
+const UserList = ({ users, setTargetKeys, setDeltaTargetKeys }) => {
   const handleAddUser = userId => {
     setTargetKeys(prevKeys => [...prevKeys, userId]);
+    setDeltaTargetKeys(prev => [...prev, userId]);
   };
 
   return (
