@@ -52,7 +52,7 @@ export const navlinks = [
     endpoint: '/manage',
     description: 'Create and manage and view calendar permissions.'
   },
- 
+
   {
     label: 'Calendar',
     Icon: EventAvailable,
@@ -78,26 +78,26 @@ export const homeLinks = [
     label: 'Step 1: Manage',
     Icon: PeopleAlt,
     endpoint: '/manage',
-    description: 'Create a calendar. Select or invite users to view your calendar.',
+    description: 'Create a calendar. Select or invite users to view your calendar.'
   },
   {
     label: 'Step 2: Calendar',
     Icon: EventAvailable,
     endpoint: '/calendar',
-    description: 'View and create events. See your calendar in action.',
+    description: 'View and create events. See your calendar in action.'
   },
   {
     label: 'Step 3: Requests',
     Icon: Key,
     endpoint: '/requests',
-    description: 'View and manage incoming calendar requests.',
-  },
-//     {
-//     label: 'Past Events',
-//     Icon: History,
-//     endpoint: '/past-events',
-//     description: 'Review past articles and provide optional feedback.'
-//   },
+    description: 'View and manage incoming calendar requests.'
+  }
+  //     {
+  //     label: 'Past Events',
+  //     Icon: History,
+  //     endpoint: '/past-events',
+  //     description: 'Review past articles and provide optional feedback.'
+  //   },
   // {
   //   label: 'Rounds Catalog',
   //   Icon: ManageSearch,
@@ -113,25 +113,21 @@ export const homeLinks = [
 ];
 
 // Apply CSS styles to achieve a vertical layout
-homeLinks.forEach((link) => {
+homeLinks.forEach(link => {
   link.containerStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   };
 
   link.labelStyle = {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   };
 
   link.descriptionStyle = {
-    textAlign: 'center',
+    textAlign: 'center'
   };
 });
-
-  
-
-
 
 export const initialArticleData = {
   title: '',
@@ -144,5 +140,6 @@ export const initialArticleData = {
   speaker: '',
   additional_details: '',
   location: '',
-  meetingType: 'Virtual'
+  meetingType: 'Virtual',
+  organizer: ''
 };

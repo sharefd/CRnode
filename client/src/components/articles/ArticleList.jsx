@@ -1,16 +1,16 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { deleteArticle, sortArticles, updateArticle } from '@/services/articles';
+import { purposeIcons } from '@/components/ui/PurposeIcons';
+import useArticlePermissions from '@/hooks/useArticlePermissions';
+import { deleteArticle, sortArticles } from '@/services/articles';
+import { formatDate } from '@/utils/dates';
 import { Edit } from '@mui/icons-material';
+import { Button, Card, Col, Divider, Modal, Pagination, Row } from 'antd';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import ArticleCalendar from './calendar/ArticleCalendar';
-import { purposeIcons } from '@/components/ui/PurposeIcons';
-import { formatDate } from '@/utils/dates';
-import useArticlePermissions from '@/hooks/useArticlePermissions';
 import NewArticleForm from './form/NewArticleForm';
-import { Row, Col, Card, Button, Divider, Pagination, Modal } from 'antd';
 
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -18,7 +18,7 @@ const ArticleList = observer(() => {
 
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showDetails, setShowDetails] = useState({});
-  const [selectedPurposes, setSelectedPurposes] = useState([]); 
+  const [selectedPurposes, setSelectedPurposes] = useState([]);
   const [selectedOrganizers, setSelectedOrganizers] = useState([]);
   const [organizerFilter, setOrganizerFilter] = useState([]);
 
@@ -56,15 +56,6 @@ const ArticleList = observer(() => {
     }
   });
 
-  const updateMutation = useMutation(updateArticle, {
-    onSuccess: updatedArticle => {
-      const index = localArticles.findIndex(article => article._id === updatedArticle._id);
-      const updatedArticles = [...localArticles];
-      updatedArticles[index] = { ...updatedArticle, organizer: { user: user._id, username: user.username } };
-      setLocalArticles(updatedArticles);
-    }
-  });
-
   const handleDelete = async articleId => {
     Modal.confirm({
       title: 'Are you sure you want to delete this article?',
@@ -80,11 +71,6 @@ const ArticleList = observer(() => {
         return;
       }
     });
-  };
-
-  const handleSave = async editedArticle => {
-    setSelectedArticle(null);
-    updateMutation.mutate(editedArticle);
   };
 
   const toggleDetails = articleId => {
@@ -142,13 +128,13 @@ const ArticleList = observer(() => {
         setOrganizerFilter={setOrganizerFilter}
       />
       <div style={{ padding: '0 16px' }}>
-<Row gutter={16} className='custom-flex'>
-  <Col xs={24} lg={12} className='calendar-col'>
-    <div className='max-w-full overflow-x-auto'>
-      <ArticleCalendar articles={localArticles} />
-    </div>
-  </Col>
-            
+        <Row gutter={16} className='custom-flex'>
+          <Col xs={24} lg={12} className='calendar-col'>
+            <div className='max-w-full overflow-x-auto'>
+              <ArticleCalendar articles={localArticles} />
+            </div>
+          </Col>
+
           <Col xs={24} lg={12} className='article-list-col order-list'>
             {currentArticles.map((article, index) => (
               <Card key={index} style={{ marginBottom: '16px' }}>
@@ -214,7 +200,6 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
-     
         </Row>
       </div>
       <NewArticleForm
@@ -224,7 +209,7 @@ const ArticleList = observer(() => {
         setLocalArticles={setLocalArticles}
         refetchArticles={refetchArticles}
         selectedArticle={selectedArticle}
-        onSave={handleSave}
+        setSelectedArticle={setSelectedArticle}
         onDelete={handleDelete}
       />
     </div>

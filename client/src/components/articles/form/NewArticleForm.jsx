@@ -10,6 +10,7 @@ import { initialArticleData } from '@/utils/constants';
 import './NewArticleForm.css';
 import dayjs from 'dayjs';
 import { extractTimesFromDuration } from '@/utils/dates';
+import { updateArticle } from '@/services/articles';
 
 const NewArticleForm = ({
   open,
@@ -18,7 +19,7 @@ const NewArticleForm = ({
   localArticles,
   setLocalArticles,
   selectedArticle,
-  onSave,
+  setSelectedArticle,
   onDelete
 }) => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -30,7 +31,7 @@ const NewArticleForm = ({
   const [article, setArticle] = useState(initialArticleData);
 
   const [date, setDate] = useState(dayjs());
-  const [timeRange, setTimeRange] = useState([dayjs('12:00 PM', 'hh:mm A'), dayjs('12:00 PM', 'hh:mm A')]);
+  const [timeRange, setTimeRange] = useState([dayjs('8:00 AM', 'hh:mm A'), dayjs('9:00 AM', 'hh:mm A')]);
 
   const {
     data: purposes,
@@ -69,16 +70,8 @@ const NewArticleForm = ({
     }
   }, [selectedArticle]);
 
-  const createMutation = useMutation(createArticle, {
-    onSuccess: newArticle => {
-      const allArticles = [...localArticles, newArticle];
-      setLocalArticles(sortArticles(allArticles));
-      refetchArticles();
-      onClose();
-    }
-  });
-
   const handleSave = async e => {
+    console.log('Saving Edited article');
     let eventLink = article.event_link;
     if (!eventLink.startsWith('https://')) {
       eventLink = `https://${eventLink}`;
@@ -93,11 +86,53 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
-      purpose: article.purpose ? article.purpose : allowedPurposes[0]._id.toString(),
+      purpose: article.purpose,
       event_link: eventLink
     };
 
-    onSave(payload);
+    try {
+      const updatedArticle = await updateArticle(payload);
+      const updatedArticles = localArticles.map(a => (a._id === updatedArticle._id ? updatedArticle : a));
+      setLocalArticles(sortArticles(updatedArticles));
+      setSelectedArticle(null);
+    } catch (error) {
+      console.error(error);
+      setSelectedArticle(null);
+    }
+  };
+
+  const handleSubmit = async e => {
+    console.log('Submitting new article');
+    let eventLink = article.event_link;
+    if (!eventLink.startsWith('https://')) {
+      eventLink = `https://${eventLink}`;
+    }
+
+    const [start, end] = timeRange;
+    const startTimeFormatted = start.format('h:mm A');
+    const endTimeFormatted = end.format('h:mm A');
+
+    const payload = {
+      ...article,
+      date: date,
+      duration: `${startTimeFormatted} - ${endTimeFormatted}`,
+      organizer: user._id,
+      event_link: eventLink // Update the event_link with the corrected URL
+    };
+
+    if (!payload.title) {
+      console.error('Title is required');
+      return;
+    }
+
+    try {
+      const newArticle = await createArticle(payload);
+      const allArticles = [...localArticles, newArticle];
+      setLocalArticles(sortArticles(allArticles));
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleAddPurpose = async () => {
@@ -112,38 +147,6 @@ const NewArticleForm = ({
     setNewPurpose({ name: '', description: '' });
     refetchPurposes();
     setShowAddPurposeModal(false);
-  };
-
-  const handleSubmit = async e => {
-    console.log('Submitting new article');
-    let eventLink = article.event_link;
-    if (!eventLink.startsWith('https://')) {
-      eventLink = `https://${eventLink}`;
-    }
-
-    const [start, end] = timeRange;
-    const startTimeFormatted = start.format('h:mm A');
-    const endTimeFormatted = end.format('h:mm A');
-
-    console.log(`${startTimeFormatted} - ${endTimeFormatted}`);
-
-    const payload = {
-      ...article,
-      date: date,
-      duration: `${startTimeFormatted} - ${endTimeFormatted}`,
-      organizer: user._id,
-      purpose: article.purpose ? article.purpose : allowedPurposes[0]._id.toString(),
-      event_link: eventLink // Update the event_link with the corrected URL
-    };
-
-    console.log(payload);
-
-    if (!payload.title) {
-      console.error('Title is required');
-      return;
-    }
-
-    createMutation.mutate(payload);
   };
 
   if (!user || !allowedPurposes) {
@@ -164,7 +167,7 @@ const NewArticleForm = ({
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false}>
-              <Select value={article.purpose} onChange={value => setArticle({ ...article, purpose: value })}>
+              <Select value={article.purpose._id} onChange={value => setArticle({ ...article, purpose: value })}>
                 <Select.Option value='' disabled>
                   Select Purpose
                 </Select.Option>
@@ -191,7 +194,7 @@ const NewArticleForm = ({
           <Form.Item label='Date and Time' labelCol={{ span: 24 }} colon={false}>
             <Row gutter={16}>
               <Col span={8}>
-                <DatePicker onChange={setDate} />
+                <DatePicker value={dayjs(article.date)} onChange={setDate} />
               </Col>
               <Col span={12}>
                 <TimePicker.RangePicker
