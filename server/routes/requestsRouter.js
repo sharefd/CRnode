@@ -30,14 +30,15 @@ router.post('/bulk-new', async (req, res) => {
       user: user._id
     }));
 
-    await Request.insertMany(requests);
-
     // Send email to each user
     for (let user of users) {
       await sendEmail('New Request Submitted', 'A new request has been submitted.', user.email);
     }
 
-    const populatedRequests = await Request.find({ _id: { $in: requests.map(r => r._id) } })
+    const insertedRequests = await Request.insertMany(requests);
+    const requestIds = insertedRequests.map(req => req._id);
+
+    const populatedRequests = await Request.find({ _id: { $in: requestIds } })
       .populate('user', 'username')
       .populate('purpose');
 
@@ -124,11 +125,6 @@ router.put('/:id/status', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: 'Invalid request ID' });
-  }
-
   try {
     const request = await Request.findById(id);
 
