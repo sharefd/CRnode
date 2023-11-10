@@ -7,6 +7,8 @@ import EditMemberList from './EditMemberList';
 import NewPurpose from './NewPurpose';
 import { useMutation } from 'react-query';
 import { getColumns, getMemberColums } from './components/columns';
+import { removeUserFromPurpose } from '../../services/purposes';
+import { toast } from 'react-toastify';
 
 const PurposesList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -20,31 +22,32 @@ const PurposesList = observer(() => {
 
   const [newPurpose, setNewPurpose] = useState({ name: '', description: '' });
   const [selectedPurpose, setSelectedPurpose] = useState(null);
+
   const [purposes, setPurposes] = useState([]);
+  const [memberPurposes, setMemberPurposes] = useState([]);
 
   const { canWritePurposes, canReadPurposes, isLoading, refetchPurposes } = useSettingsPermissions(user);
 
   useEffect(() => {
     if (!isLoading) {
       setPurposes(canWritePurposes);
+      const canRead = canReadPurposes?.filter(purpose => purpose.creator._id !== user._id) || [];
+      setMemberPurposes(canRead);
     }
-  }, [isLoading, canWritePurposes]);
+  }, [isLoading, canWritePurposes, canReadPurposes]);
 
-  const updatePurposeMutation = useMutation(updatePurpose, {
-    onSuccess: updatedPurpose => {
-      setPurposes(prevPurposes => {
-        const index = prevPurposes.findIndex(purpose => purpose._id === updatedPurpose._id);
-
-        if (index !== -1) {
-          const updatedPurposes = [...prevPurposes];
-          updatedPurposes[index] = updatedPurpose;
-          return updatedPurposes;
-        }
-
-        return prevPurposes;
-      });
+  const handleSave = async () => {
+    try {
+      const data = await updatePurpose(selectedPurpose._id, newPurpose);
+      console.log(data.updatedPurpose);
+      setPurposes(data.purposes);
+      handleClose();
+      toast.success(`Purpose ${selectedPurpose.name} updated.`);
+    } catch (error) {
+      toast.error(`Error updating ${selectedPurpose.name}.`);
+      console.error('Error updating purpose:', error);
     }
-  });
+  };
 
   const deletePurposeMutation = useMutation(deletePurpose, {
     onSuccess: (_, variables) => {
@@ -55,22 +58,26 @@ const PurposesList = observer(() => {
 
   const handleLeave = async purpose => {
     Modal.confirm({
-      title: 'Are you sure you want to delete this calendar?',
+      title: 'Are you sure you want to leave this calendar?',
       content: 'This action cannot be undone.',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       async onOk() {
         try {
-          const updatedCanReadMembers = purpose.canReadMembers.filter(memberId => memberId !== user._id);
-          const updatedPurpose = {
-            ...purpose,
-            canReadMembers: updatedCanReadMembers
-          };
-          await updatePurposeMutation.mutateAsync(purpose._id, updatedPurpose);
-          refetchPurposes();
+          await removeUserFromPurpose(purpose.name, user._id);
+          await refetchPurposes();
+          setMemberPurposes(prevPurposes => prevPurposes.filter(p => p._id !== purpose._id));
+          toast.success(`Successfully left calendar.`, {
+            autoClose: 1500,
+            pauseOnFocusLoss: false
+          });
         } catch (error) {
-          console.error('Error leaving purpose:', error);
+          toast.error(`Error leaving calendar.`, {
+            autoClose: 1500,
+            pauseOnFocusLoss: false
+          });
+          console.error('Error leaving calendar:', error);
         }
       },
       onCancel() {
@@ -95,11 +102,6 @@ const PurposesList = observer(() => {
     setOpen(false);
     setNewPurpose({ name: '', description: '' });
     setSelectedPurpose(null);
-  };
-
-  const handleSave = async () => {
-    await updatePurposeMutation.mutateAsync(selectedPurpose._id, newPurpose);
-    handleClose();
   };
 
   const handleDelete = purposeId => {
@@ -130,7 +132,6 @@ const PurposesList = observer(() => {
     return <Spin />;
   }
   const createdPurposes = purposes?.filter(purpose => purpose.creator._id === user._id) || [];
-  const memberPurposes = canReadPurposes?.filter(purpose => purpose.creator._id !== user._id) || [];
   const memberColumns = getMemberColums(handleLeave);
   const columns = getColumns(handleOpen, handleOpenMemberList, handleDelete);
 

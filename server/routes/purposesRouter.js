@@ -125,7 +125,7 @@ router.put('/remove-user', jwtMiddleware, async (req, res) => {
 
     await purpose.save();
 
-    res.status(200).json({ message: 'User removed successfully' });
+    res.status(200).json({ message: 'User removed successfully', purpose: purpose });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -139,8 +139,12 @@ router.put('/update/:id', jwtMiddleware, async (req, res) => {
     if (!updatedPurpose) {
       return res.status(404).json({ message: 'Purpose not found' });
     }
+    const purposes = await Purpose.find()
+      .populate('creator', 'username email firstName lastName')
+      .populate('canReadMembers', 'username email')
+      .populate('canWriteMembers', 'username email');
 
-    res.status(200).json(updatedPurpose);
+    res.status(200).json({ updatedPurpose, purposes });
   } catch (err) {
     console.error('Error updating purpose:', err);
     res.status(500).send('Internal Server Error');
