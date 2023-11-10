@@ -73,6 +73,16 @@ export const navlinks = [
   }
 ];
 
+export const sideMenuLinks = [
+  ...navlinks,
+  {
+    label: 'Settings',
+    Icon: Settings,
+    endpoint: '/settings',
+    description: 'Manage your account settings.'
+  }
+];
+
 export const homeLinks = [
   {
     label: 'Step 1: Manage',

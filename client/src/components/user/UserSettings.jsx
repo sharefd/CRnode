@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { Avatar, List, Card, Button, Progress, Input, Typography } from 'antd';
+import { Avatar, List, Card, Button, Input, Typography, Spin } from 'antd';
 import { Modal, Space, Divider, Select } from 'antd';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -160,7 +160,7 @@ const UserSettings = observer(() => {
   );
 
   if (isLoading || !user) {
-    return <Progress />;
+    return <Spin />;
   }
 
   const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';

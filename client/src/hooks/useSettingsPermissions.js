@@ -10,7 +10,7 @@ const useSettingsPermissions = passedUser => {
       const localUser = localStorage.getItem('CloudRoundsUser');
       setUser(JSON.parse(localUser));
     }
-  }, [user]);
+  }, [passedUser]);
 
   const [canWritePurposes, setCanWritePurposes] = useState([]);
   const [canReadPurposes, setCanReadPurposes] = useState([]);
@@ -26,14 +26,14 @@ const useSettingsPermissions = passedUser => {
   });
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && user) {
       const canWrite = data?.filter(purpose => purpose.canWriteMembers.map(u => u._id).includes(user?._id.toString()));
       setCanWritePurposes(canWrite);
 
       const canRead = data?.filter(purpose => purpose.canReadMembers.map(u => u._id).includes(user?._id));
       setCanReadPurposes(canRead);
     }
-  }, [isLoading]);
+  }, [isLoading, user]);
 
   return {
     purposes: data,

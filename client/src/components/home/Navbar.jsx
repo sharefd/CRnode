@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   AppBar,
@@ -15,7 +15,7 @@ import {
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { navlinks as links } from '@/utils/constants';
+import { navlinks as links, sideMenuLinks } from '@/utils/constants';
 import CloudLogo from '@/assets/images/logo.png';
 import { observer } from 'mobx-react';
 import userStore from '@/stores/userStore';
@@ -110,7 +110,7 @@ const Navbar = observer(() => {
       role='presentation'
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}>
-      <div>{links.map((link, index) => navlink(link, index, true))}</div>
+      <div>{sideMenuLinks.map((link, index) => navlink(link, index, true))}</div>
       <Divider sx={{ borderWidth: '3px', backgroundColor: '#7793b1', mx: 1 }} />
       <Box
         sx={{
