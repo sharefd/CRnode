@@ -65,7 +65,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
 
   return (
     <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
-      <div className={`relative w-8 h- flex rounded-md items-center justify-center ${isToday ? 'bg-blue-600' : ''}`}>
+      <div className={`relative w-8 h- flex rounded-md items-center justify-center ${isToday ? 'bg-blue-500' : ''}`}>
         <Badge
           count={events.length}
           className='absolute bottom-5'

@@ -11,7 +11,7 @@ const AttendedArticles = ({ isOpen, onClose }) => {
   }
 
   return (
-    <Modal title='Attended Articles' open={isOpen} onCancel={onClose}>
+    <Modal title='Attended Articles' visible={isOpen} onCancel={onClose} okButtonProps={{ style: { display: 'none' } }} cancelButtonProps={{ style: { display: '' } }}>
       <List>
         {user?.attended?.length > 0 ? (
           user?.attended?.map((article, index) => (

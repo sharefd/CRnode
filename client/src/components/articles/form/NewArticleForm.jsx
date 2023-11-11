@@ -193,7 +193,7 @@ const NewArticleForm = ({
         <Col span={24}>
           <Form.Item label='Date and Time' labelCol={{ span: 24 }} colon={false}>
             <Row gutter={16}>
-              <Col span={8}>
+              <Col span={12}>
                 <DatePicker value={dayjs(article.date)} onChange={setDate} />
               </Col>
               <Col span={12}>
@@ -210,7 +210,7 @@ const NewArticleForm = ({
         </Col>
 
         <Row gutter={24}>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label='Meeting Type' labelCol={{ span: 24 }} colon={false}>
               <Select value={article.meetingType} onChange={value => setArticle({ ...article, meetingType: value })}>
                 <Select.Option value='Virtual'>Virtual</Select.Option>
@@ -221,7 +221,7 @@ const NewArticleForm = ({
           </Col>
 
           {article.meetingType !== 'In-Person' && (
-            <Col span={16}>
+            <Col span={12}>
               <Form.Item label='Meeting Details' labelCol={{ span: 24 }} colon={false}>
                 <Row gutter={16}>
                   <Col span={9}>
@@ -231,7 +231,7 @@ const NewArticleForm = ({
                       onChange={e => setArticle({ ...article, meeting_id: e.target.value })}
                     />
                   </Col>
-                  <Col span={9}>
+                  <Col span={15}>
                     <Input
                       placeholder='Passcode'
                       value={article.passcode}
