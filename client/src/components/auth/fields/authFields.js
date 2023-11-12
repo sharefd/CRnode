@@ -1,12 +1,4 @@
-export const UNIVERSITY_CHOICES = [
-  { value: '', label: 'Select University' },
-  { value: 'McMaster', label: 'McMaster University' },
-  { value: 'Toronto', label: 'University of Toronto' },
-  { value: 'Western', label: 'University of Western Ontario' },
-  { value: 'Ottawa', label: 'Ottawa University' },
-  { value: 'Queens', label: "Queen's University" },
-  { value: 'Other', label: 'Other' }
-];
+import { UNIVERSITY_CHOICES, universityDomainMap, genericDomains } from '@/utils/constants';
 
 export const loginFields = [
   { name: 'username', label: 'Username or Email', type: 'text', required: true },
@@ -34,3 +26,22 @@ export const signupFields = [
   { name: 'password', label: 'Password', type: 'password', required: true },
   { name: 'passwordConfirmation', label: 'Confirm Password', type: 'password', required: true }
 ];
+
+export const generateEmailSuggestions = (inputValue, domainList) => {
+  if (inputValue.includes('@')) {
+    const [localPart, domainPart] = inputValue.split('@');
+
+    if (!domainPart) {
+      return domainList.map(domain => `${localPart}@${domain}`);
+    }
+
+    return domainList.filter(domain => domain.startsWith(domainPart)).map(domain => `${localPart}@${domain}`);
+  }
+
+  return domainList.map(domain => `${inputValue}@${domain}`);
+};
+
+export const getDomainSuggestions = university => {
+  const universityDomains = universityDomainMap[university] || [];
+  return [...new Set([...genericDomains, ...universityDomains])];
+};

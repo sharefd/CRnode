@@ -3,13 +3,44 @@ import { SettingOutlined } from '@ant-design/icons';
 
 export const UNIVERSITY_CHOICES = [
   { value: '', label: 'Select University' },
-  { value: 'McMaster', label: 'McMaster University' },
-  { value: 'Toronto', label: 'University of Toronto' },
-  { value: 'Western', label: 'University of Western Ontario' },
-  { value: 'Ottawa', label: 'Ottawa University' },
-  { value: 'Queens', label: "Queen's University" },
+  { value: 'Dalhousie University', label: 'Dalhousie University' },
+  { value: 'Ottawa University', label: 'Ottawa University' },
+  { value: 'McGill University', label: 'McGill University' },
+  { value: 'McMaster University', label: 'McMaster University' },
+  { value: 'University of Toronto', label: 'University of Toronto' },
+  { value: 'University of Western Ontario', label: 'University of Western Ontario' },
+  { value: 'University of Manitoba', label: 'University of Manitoba' },
+  { value: 'University of British Columbia', label: 'University of British Columbia' },
   { value: 'Other', label: 'Other' }
 ];
+
+export const domainSuggestions = [
+  'mail.utoronto.ca',
+  'utoronto.ca',
+  'medportal.ca',
+  'mcgill.ca',
+  'usask.ca',
+  'ualberta.ca',
+  'uwo.ca',
+  'queensu.ca',
+  'uba.ca',
+  'uottawa.ca',
+  'dal.ca'
+];
+
+export const universityDomainMap = {
+  'Dalhousie University': ['dal.ca'],
+  'Ottawa University': ['uottawa.ca'],
+  'McGill University': ['mcgill.ca'],
+  'McMaster University': ['medportal.ca'],
+  'University of Toronto': ['mail.utoronto.ca', 'utoronto.ca'],
+  'University of Western Ontario': ['uwo.ca'],
+  'University of Manitoba': ['umanitoba.ca'],
+  'University of British Columbia': ['ubc.ca'],
+  Other: []
+};
+
+export const genericDomains = ['gmail.com'];
 
 export const YEAR_OF_STUDY_CHOICES = [
   'PGY1',

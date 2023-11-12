@@ -5,25 +5,13 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { getInviteByToken, registerWithToken } from '@/services/invites';
+import { getDomainSuggestions, generateEmailSuggestions } from '../fields/authFields';
 
 const { Option } = Select;
 
-function generateEmailSuggestions(inputValue, domainList) {
-  if (inputValue.includes('@')) {
-    const [localPart, domainPart] = inputValue.split('@');
-
-    if (!domainPart) {
-      return domainList.map(domain => `${localPart}@${domain}`);
-    }
-
-    return domainList.filter(domain => domain.startsWith(domainPart)).map(domain => `${localPart}@${domain}`);
-  }
-
-  return domainList.map(domain => `${inputValue}@${domain}`);
-}
-
 const SignupForm = observer(({ fields, setIsSignUp }) => {
   const [emailSuggestions, setEmailSuggestions] = useState([]);
+  const [selectedUniversity, setSelectedUniversity] = useState('');
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -75,8 +63,23 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     }
   }, []);
 
+  const onUniversityChange = value => {
+    setSelectedUniversity(value);
+
+    const currentEmailValue = form.getFieldValue('email');
+
+    if (currentEmailValue) {
+      const domainSuggestions = getDomainSuggestions(value);
+      setEmailSuggestions(generateEmailSuggestions(currentEmailValue, domainSuggestions));
+    }
+  };
+
   const onEmailSearch = value => {
-    const domainSuggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca'];
+    if (value === '') {
+      setEmailSuggestions([]);
+      return;
+    }
+    const domainSuggestions = getDomainSuggestions(selectedUniversity);
     setEmailSuggestions(generateEmailSuggestions(value, domainSuggestions));
   };
 
@@ -111,7 +114,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}>
               {field.type === 'select' ? (
-                <Select>
+                <Select onChange={onUniversityChange}>
                   {field.choices &&
                     field.choices.map((choice, i) => (
                       <Option key={i} value={choice.value} disabled={!choice.value}>
