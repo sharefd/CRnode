@@ -10,7 +10,7 @@ const { Option } = Select;
 
 const SignupForm = observer(({ fields, setIsSignUp }) => {
   const [emailSuggestions, setEmailSuggestions] = useState([]);
-    
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
@@ -61,6 +61,9 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     }
   }, []);
 
+  const usernameField = fields.find(field => field.name === 'username');
+  const usernameRules = usernameField ? usernameField.rules : [];
+
   return (
     <Form form={form} onFinish={handleSubmit} initialValues={{ university: '' }}>
       <div className='p-8 w-full mx-auto'>
@@ -71,20 +74,23 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
               key={index}
               label={field.label}
               name={field.name}
-              rules={[
-                { required: true, message: 'This field is required' },
-                field.name === 'passwordConfirmation' && {
-                  validator: (_, value) => {
-                    if (!value || form.getFieldValue('password') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('Passwords do not match'));
-                  }
-                }
-              ].filter(Boolean)}
+              rules={
+                field.name === 'username'
+                  ? usernameRules
+                  : [
+                      { required: true, message: 'This field is required' },
+                      field.name === 'passwordConfirmation' && {
+                        validator: (_, value) => {
+                          if (!value || form.getFieldValue('password') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Passwords do not match'));
+                        }
+                      }
+                    ].filter(Boolean)
+              }
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}>
-                    
               {field.type === 'select' ? (
                 <Select>
                   {field.choices &&
@@ -94,22 +100,19 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
                       </Option>
                     ))}
                 </Select>
+              ) : field.name === 'email' ? (
+                <AutoComplete
+                  options={emailSuggestions.map(email => ({ value: email }))}
+                  onSearch={value => {
+                    // Generate email suggestions based on the user input
+                    const suggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca']; // Add other domains as needed
+                    setEmailSuggestions(suggestions.map(domain => `${value}@${domain}`));
+                  }}>
+                  <Input type={field.type} disabled={field.name === 'email' && token} />
+                </AutoComplete>
               ) : (
-                field.name === 'email' ? (
-        <AutoComplete
-            options={emailSuggestions.map((email) => ({ value: email }))}
-            onSearch={(value) => {
-                // Generate email suggestions based on the user input
-                const suggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca']; // Add other domains as needed
-                setEmailSuggestions(suggestions.map((domain) => `${value}@${domain}`));
-            }}
-        >
-            <Input type={field.type} disabled={field.name === 'email' && token} />
-        </AutoComplete>
-    ) : (
-        <Input type={field.type} disabled={field.name === 'email' && token} />
-    )
-)}
+                <Input type={field.type} disabled={field.name === 'email' && token} />
+              )}
             </Form.Item>
           ))}
           <div className='mt-8 w-full text-center'>

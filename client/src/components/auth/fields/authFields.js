@@ -14,7 +14,19 @@ export const loginFields = [
 ];
 
 export const signupFields = [
-  { name: 'username', label: 'Username', type: 'text', required: true },
+  {
+    name: 'username',
+    label: 'Username',
+    type: 'text',
+    required: true,
+    rules: [
+      { required: true, message: 'Username is required' },
+      {
+        pattern: /^[A-Za-z][A-Za-z0-9]*$/,
+        message: 'Username must start with a letter and contain only alphanumeric characters'
+      }
+    ]
+  },
   { name: 'firstName', label: 'First Name', type: 'text', required: true },
   { name: 'lastName', label: 'Last Name', type: 'text', required: true },
   { name: 'university', label: 'University', type: 'select', required: true, choices: UNIVERSITY_CHOICES },
