@@ -8,6 +8,20 @@ import { getInviteByToken, registerWithToken } from '@/services/invites';
 
 const { Option } = Select;
 
+function generateEmailSuggestions(inputValue, domainList) {
+  if (inputValue.includes('@')) {
+    const [localPart, domainPart] = inputValue.split('@');
+
+    if (!domainPart) {
+      return domainList.map(domain => `${localPart}@${domain}`);
+    }
+
+    return domainList.filter(domain => domain.startsWith(domainPart)).map(domain => `${localPart}@${domain}`);
+  }
+
+  return domainList.map(domain => `${inputValue}@${domain}`);
+}
+
 const SignupForm = observer(({ fields, setIsSignUp }) => {
   const [emailSuggestions, setEmailSuggestions] = useState([]);
 
@@ -61,6 +75,11 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     }
   }, []);
 
+  const onEmailSearch = value => {
+    const domainSuggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca'];
+    setEmailSuggestions(generateEmailSuggestions(value, domainSuggestions));
+  };
+
   const usernameField = fields.find(field => field.name === 'username');
   const usernameRules = usernameField ? usernameField.rules : [];
 
@@ -101,13 +120,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
                     ))}
                 </Select>
               ) : field.name === 'email' ? (
-                <AutoComplete
-                  options={emailSuggestions.map(email => ({ value: email }))}
-                  onSearch={value => {
-                    // Generate email suggestions based on the user input
-                    const suggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca']; // Add other domains as needed
-                    setEmailSuggestions(suggestions.map(domain => `${value}@${domain}`));
-                  }}>
+                <AutoComplete options={emailSuggestions.map(email => ({ value: email }))} onSearch={onEmailSearch}>
                   <Input type={field.type} disabled={field.name === 'email' && token} />
                 </AutoComplete>
               ) : (
