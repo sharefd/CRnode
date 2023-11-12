@@ -63,7 +63,18 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const isEmail = input => {
+      const emailRegex = /\S+@\S+\.\S+/;
+      return emailRegex.test(input);
+    };
+
+    let user;
+    if (isEmail(username)) {
+      user = await User.findOne({ email: username });
+    } else {
+      user = await User.findOne({ username });
+    }
+
     if (!user) {
       return res.status(404).send('User not found');
     }
