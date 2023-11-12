@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { jwtMiddleware } = require('../middleware/permissions');
 const Purpose = require('../models/Purpose');
-const User = require('../models/User'); // Assume you have a User model
+const Request = require('../models/Request');
 
 // Fetch all purposes
 router.get('/', async (req, res) => {
@@ -160,6 +160,14 @@ router.delete('/purpose/:purposeId/user/:userId', jwtMiddleware, async (req, res
       return res.status(404).send('Purpose not found');
     }
 
+    const requests = await Request.find();
+    const requestsToDelete = requests.filter(
+      request => request.purpose.toString() === purposeId && request.user.toString() === userId
+    );
+    if (requestsToDelete.length > 0) {
+      await Request.deleteMany({ _id: { $in: requestsToDelete.map(request => request._id) } });
+    }
+
     purpose.canReadMembers = purpose.canReadMembers.filter(id => id.toString() !== userId);
     purpose.canWriteMembers = purpose.canWriteMembers.filter(id => id.toString() !== userId);
 
@@ -179,6 +187,12 @@ router.delete('/purpose/:purposeId', jwtMiddleware, async (req, res) => {
 
     if (!purpose) {
       return res.status(404).send('Purpose not found');
+    }
+
+    const requests = await Request.find();
+    const requestsToDelete = requests.filter(request => request.purpose.toString() === purposeId);
+    if (requestsToDelete.length > 0) {
+      await Request.deleteMany({ _id: { $in: requestsToDelete.map(request => request._id) } });
     }
 
     res.status(200).json({ message: 'Purpose deleted successfully' });
