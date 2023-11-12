@@ -9,7 +9,7 @@ export const UNIVERSITY_CHOICES = [
 ];
 
 export const loginFields = [
-  { name: 'username', label: 'Username', type: 'text', required: true },
+  { name: 'username', label: 'Username or Email', type: 'text', required: true },
   { name: 'password', label: 'Password', type: 'password', required: true }
 ];
 
