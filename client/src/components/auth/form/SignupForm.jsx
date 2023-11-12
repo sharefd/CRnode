@@ -1,4 +1,4 @@
-import { Form, Input, Button, Select, Spin } from 'antd';
+import { Form, Input, Button, Select, Spin, AutoComplete } from 'antd';
 import { createUser } from '@/services/users';
 import { observer } from 'mobx-react-lite';
 import { useState, useEffect } from 'react';
@@ -9,6 +9,8 @@ import { getInviteByToken, registerWithToken } from '@/services/invites';
 const { Option } = Select;
 
 const SignupForm = observer(({ fields, setIsSignUp }) => {
+  const [emailSuggestions, setEmailSuggestions] = useState([]);
+    
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
@@ -82,6 +84,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
               ].filter(Boolean)}
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}>
+                    
               {field.type === 'select' ? (
                 <Select>
                   {field.choices &&
@@ -92,8 +95,21 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
                     ))}
                 </Select>
               ) : (
-                <Input type={field.type} disabled={field.name === 'email' && token} />
-              )}
+                field.name === 'email' ? (
+        <AutoComplete
+            options={emailSuggestions.map((email) => ({ value: email }))}
+            onSearch={(value) => {
+                // Generate email suggestions based on the user input
+                const suggestions = ['gmail.com', 'mail.utoronto.ca', 'utoronto.ca', 'medportal.ca']; // Add other domains as needed
+                setEmailSuggestions(suggestions.map((domain) => `${value}@${domain}`));
+            }}
+        >
+            <Input type={field.type} disabled={field.name === 'email' && token} />
+        </AutoComplete>
+    ) : (
+        <Input type={field.type} disabled={field.name === 'email' && token} />
+    )
+)}
             </Form.Item>
           ))}
           <div className='mt-8 w-full text-center'>
