@@ -134,6 +134,27 @@ div#calendar-cell {
   width: 100%;
 }
 
+.today-button {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 30px;
+  margin-left: 10px;
+}
+
+.today-button .today-text {
+  visibility: visible;
+  position: absolute;
+  left: 0;
+}
+
+.today-button .today-icon {
+  position: absolute !important;
+  visibility: hidden;
+  display: none;
+}
+
 @media (min-width: 900px) and (max-width: 990px) {
   .order-calendar {
     order: 0 !important;
@@ -185,6 +206,21 @@ div#calendar-cell {
 
 /* Mobile-specific styles */
 @media (max-width: 899px) {
+  .today-button {
+    padding: 5px 15px;
+    height: 24px;
+  }
+
+  .today-button .today-text {
+    visibility: hidden;
+    display: none;
+  }
+
+  .today-button .today-icon {
+    visibility: visible;
+    display: block;
+  }
+
   .order-calendar {
     order: 0 !important;
   }
@@ -218,6 +254,12 @@ div#calendar-cell {
 
   #calendar-body {
     min-width: auto;
+    width: 100%; /* Adjust width to be 100% */
+  }
+
+  #calendar-body th,
+  #calendar-body td {
+    padding: 5px;
   }
 
   #current-month-year {
@@ -231,18 +273,21 @@ div#calendar-cell {
   }
 
   #calendar-body td {
-    height: 50px;
-    padding: 5px;
+    height: 40px;
+    width: 14%; /* Assign equal width to each day column */
   }
-
   #calendar-cell .ant-typography {
     font-size: 16px;
   }
+  #calendar-cell .ant-typography {
+    font-size: 14px; /* Adjust font size */
+  }
   sup.ant-scroll-number.ant-badge-count {
     height: 12px !important;
-    padding: 4px 4px !important;
+    padding: 4px 3px !important;
     border: 1px solid #2877cc !important;
     border-radius: 50% !important;
+    top: 5px !important;
     left: 15px !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -261,6 +306,16 @@ div#calendar-cell {
 }
 
 @media (max-width: 400px) {
+  .today-button .today-text {
+    visibility: hidden;
+    display: none;
+  }
+
+  .today-button .today-icon {
+    visibility: visible;
+    display: block;
+  }
+
   .order-calendar {
     order: 0 !important;
   }
@@ -307,20 +362,21 @@ div#calendar-cell {
   }
 
   #calendar-body td {
-    height: 40px;
-    width: 30px;
-    padding: 5px;
+    height: 39px;
+    width: 14%; /* Maintain equal width for each day column */
   }
 
   #calendar-cell .ant-typography {
-    font-size: 14px;
+    font-size: 13px; /* Further reduce font size */
   }
+
   sup.ant-scroll-number.ant-badge-count {
     height: 12px !important;
-    padding: 4px 4px !important;
+    padding: 4px 3px !important;
     border: 1px solid #2877cc !important;
     border-radius: 50% !important;
-    left: 15px !important;
+    top: 6px !important;
+    left: 13px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;

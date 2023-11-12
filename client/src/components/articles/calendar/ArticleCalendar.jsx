@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Table } from 'antd';
 import CalendarCell from './CalendarCell';
 import { monthNames } from '@/utils/constants';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, CalendarOutlined } from '@ant-design/icons';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
@@ -81,9 +81,7 @@ const ArticleCalendar = ({ articles }) => {
 
   return (
     <div id='calendar-container' className='flex flex-col'>
-      <div
-        id='calendar-head'
-        className='flex items-center justify-between bg-bluebrand text-white min-w-[420px] rounded-t-xl'>
+      <div id='calendar-head' className='flex items-center justify-between bg-bluebrand text-white rounded-t-xl'>
         <Button
           id='prev-month'
           ghost
@@ -98,8 +96,10 @@ const ArticleCalendar = ({ articles }) => {
             borderColor: 'white',
             backgroundColor: 'white',
             color: '#1976d2'
-          }}>
-          TODAY
+          }}
+          className='today-button'>
+          <CalendarOutlined className='today-icon' />
+          <span className='today-text'>TODAY</span>
         </Button>
 
         <span
