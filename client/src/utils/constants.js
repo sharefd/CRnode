@@ -3,14 +3,26 @@ import { SettingOutlined } from '@ant-design/icons';
 
 export const UNIVERSITY_CHOICES = [
   { value: '', label: 'Select University' },
-  { value: 'Dalhousie University', label: 'Dalhousie University' },
-  { value: 'Ottawa University', label: 'Ottawa University' },
-  { value: 'McGill University', label: 'McGill University' },
+ 
   { value: 'McMaster University', label: 'McMaster University' },
   { value: 'University of Toronto', label: 'University of Toronto' },
   { value: 'University of Western Ontario', label: 'University of Western Ontario' },
+  { value: 'University of Ottawa', label: 'University of Ottawa' },
+    { value: 'Dalhousie University', label: 'Dalhousie University' },
+      { value: 'McGill University', label: 'McGill University' },
+
+
   { value: 'University of Manitoba', label: 'University of Manitoba' },
-  { value: 'University of British Columbia', label: 'University of British Columbia' },
+  { value: 'University of Saskatchewan', label: 'University of Saskatchewan' },
+  { value: 'University of Calgary', label: 'University of Calgary' }, 
+  { value: 'University of Alberta', label: 'University of Alberta' },    
+    { value: 'University of British Columbia', label: 'University of British Columbia' },
+    
+    { value: 'Université de Montréal', label: 'Université de Montréal' },
+        { value: ' Northern Ontario School of Medicine University', label: 'Northern Ontario School of Medicine University' },
+
+    
+    
   { value: 'Other', label: 'Other' }
 ];
 
@@ -32,9 +44,9 @@ export const universityDomainMap = {
   'Dalhousie University': ['dal.ca'],
   'Ottawa University': ['uottawa.ca'],
   'McGill University': ['mcgill.ca'],
-  'McMaster University': ['medportal.ca'],
+  'McMaster University': ['mcmaster.ca', 'medportal.ca'],
   'University of Toronto': ['mail.utoronto.ca', 'utoronto.ca'],
-  'University of Western Ontario': ['uwo.ca'],
+  'University of Western Ontario': ['uwo.ca', 'meds.uwo.ca'],
   'University of Manitoba': ['umanitoba.ca'],
   'University of British Columbia': ['ubc.ca'],
   Other: []
