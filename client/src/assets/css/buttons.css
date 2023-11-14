@@ -325,6 +325,8 @@ a.btn2--circle {
 
 .login-button,
 .signup-button {
+  width: 100%;
+  height: 36px;
   background-color: #64748b !important;
   border-color: #64748b !important;
 }

@@ -33,8 +33,6 @@ div.auth {
   }
 }
 
-
-
 hr {
   display: block;
   unicode-bidi: isolate;
@@ -90,4 +88,28 @@ hr.divider:after {
 
 .authButton-hover:hover {
   background-color: #2e67d2;
+}
+
+.signup-form .requiredLabel,
+#login-form .requiredLabel,
+#resetPassword-form .requiredLabel {
+  color: #565564;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.signup-form .requiredLabel::before,
+#resetPassword-form .requiredLabel::before {
+  display: inline-block;
+  margin-inline-end: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  line-height: 1;
+  content: '*';
+}
+
+.authform-title {
+  font: bold 20px 'Mona Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin-bottom: 40px;
+  color: #1a3991;
 }
