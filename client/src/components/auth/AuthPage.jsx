@@ -26,10 +26,6 @@ const AuthPage = () => {
           
         {/* Small Screen Welcome Div */}
 <div className='w-full bg-blue-950 p-4 text-white text-center md:hidden'>
-    
-         
-
-    
   <div>    
        <img src={CloudLogo} width={20} alt='App Logo' className='ml-2'> </img>
       

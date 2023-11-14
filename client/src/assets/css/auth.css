@@ -27,6 +27,14 @@ div.auth {
   background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
+@media (max-width: 767px) {
+  div.auth {
+    background: linear-gradient(#172554 50%, #ffffff 51%); /* Sharp transition from #172554 to white */
+  }
+}
+
+
+
 hr {
   display: block;
   unicode-bidi: isolate;
