@@ -7,7 +7,7 @@ import Autoprefixer from 'autoprefixer';
 
 export default defineConfig({
   plugins: [
-    million.vite({ auto: true }),
+    // million.vite({ auto: true, mute: true }),
     react(),
     Fonts({
       google: {

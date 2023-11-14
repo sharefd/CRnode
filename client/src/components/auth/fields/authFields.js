@@ -16,6 +16,13 @@ export const signupFields = [
       {
         pattern: /^[A-Za-z][A-Za-z0-9]*$/,
         message: 'Username must start with a letter and contain only alphanumeric characters'
+      },
+      {
+        min: 3,
+        message: 'Username must be at least 3 characters long'
+      },
+      {
+        autofill: false
       }
     ]
   },

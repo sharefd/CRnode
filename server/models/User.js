@@ -9,7 +9,9 @@ const UserSchema = new mongoose.Schema({
   university: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   purposes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purpose' }],
-  attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }]
+  attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
+  resetToken: { type: String },
+  resetTokenExpiry: { type: Number }
 });
 
 module.exports = mongoose.model('User', UserSchema);
