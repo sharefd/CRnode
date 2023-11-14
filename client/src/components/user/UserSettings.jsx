@@ -191,12 +191,12 @@ const UserSettings = observer(() => {
             {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
           </Space>
 
-          <Divider>ATTENDED ARTICLES</Divider>
+          <Divider>ATTENDED EVENTS</Divider>
           <List>
             {user.attended.length > 0 ? (
               <>
                 <Typography.Text>
-                  You have attended {user.attended.length} articles.
+                  You have attended {user.attended.length} events.
                   <Button type='link' onClick={() => setIsAttendedModalOpen(true)}>
                     View Details
                   </Button>
