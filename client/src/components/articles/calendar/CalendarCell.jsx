@@ -12,6 +12,8 @@ import {
 import { formatDate } from '@/utils/dates';
 
 import { purposeIcons } from '@/components/ui/PurposeIcons';
+import { EnvironmentOutlined } from '@ant-design/icons';
+
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
@@ -48,6 +50,10 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
   const article = events[currentEventIndex] || {};
+  const isInPersonMeeting = article.meetingType === 'In-Person';
+  const isHybridMeeting = article.meetingType === 'Hybrid';
+    
+
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -98,35 +104,59 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
             {formatDate(article.date)} @ {article.duration}
           </div>
 
-          <div className='flex items-center mb-5 space-x-4'>
-            <LinkOutlined />
-            <Button
-              onClick={e => {
-                handleCopyToClipboard(article.event_link);
-                stopPropagation(e);
-              }}>
-              <div className='flex items-center'>
-                <CopyOutlined />
-                <span className='ml-2'>Copy Link</span>
-              </div>
-            </Button>
-            <Button
-              onClick={e => {
-                window.open(article.event_link, '_blank');
-                stopPropagation(e);
-              }}
-              className='border'>
-              <div className='flex items-center'>
-                <UsergroupAddOutlined />
-                <span className='ml-2'>Join Meeting</span>
-              </div>
-            </Button>
-          </div>
-
           <div className='flex items-center mb-5'>
-            <LockOutlined className='mr-2' />
-            Meeting ID: {article.meeting_id || 'None'} | Passcode: {article.passcode || 'None'}
-          </div>
+           {isInPersonMeeting ? (
+            <div className='flex items-center mb-2'>
+              <EnvironmentOutlined className='mr-2' />
+              <span>{article.location}</span>
+            </div>
+          ) : (
+            <div className={`flex items-center space-x-4 mb-0`}>
+              <LinkOutlined />
+              <Button
+                onClick={e => {
+                  handleCopyToClipboard(article.event_link);
+                  stopPropagation(e);
+                }}>
+                <div className='flex items-center'>
+                  <CopyOutlined />
+                  <span className='ml-2'>Copy Link</span>
+                </div>
+              </Button>
+              <Button
+                onClick={e => {
+                  window.open(article.event_link, '_blank');
+                  stopPropagation(e);
+                }}
+                className='border'>
+                <div className='flex items-center'>
+                  <UsergroupAddOutlined />
+                  <span className='ml-2'>Join Meeting</span>
+                </div>
+                  
+              </Button>
+            </div>
+          )}
+              
+            </div>
+            
+           {!isInPersonMeeting && (
+  <div className='flex items-center mb-5'>
+    <LockOutlined className='mr-2' />
+    <span>
+      Meeting ID: {article.meeting_id || 'None'} | Passcode: {article.passcode || 'None'}
+    </span>
+    
+    {isHybridMeeting && (
+      <div className='flex items-center mb-2'>
+        <EnvironmentOutlined className='mr-2' />
+        <span>{article.location}</span>
+      </div>
+    )}
+  </div>
+)}
+            
+          
 
           <div className='flex justify-between items-center'>
             <Button
