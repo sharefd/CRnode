@@ -7,10 +7,11 @@ const ActionBar = ({
   selectedPurposes,
   setSelectedPurposes,
   toggleNewArticleModal,
-  canReadPurposes,
   selectedOrganizers,
   organizerFilter,
-  setOrganizerFilter
+  setOrganizerFilter,
+  userPurposes,
+  emptyPurposes
 }) => {
   const now = new Date();
   const formattedTime = now.toLocaleTimeString([], {
@@ -23,7 +24,7 @@ const ActionBar = ({
   const [showSidebar, setShowSidebar] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const allowedPurposes = canReadPurposes.map(purpose => purpose.name);
+  const allowedPurposes = userPurposes.map(purpose => purpose.name);
 
   const filteredPurposes = allowedPurposes.filter(p => p && p.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -107,6 +108,7 @@ const ActionBar = ({
         <Space direction='vertical' className='w-full mt-4'>
           {filteredPurposes.map(purpose => (
             <Checkbox
+              disabled={emptyPurposes.includes(purpose)}
               key={purpose}
               checked={selectedPurposes.includes(purpose)}
               onChange={() => handlePurposeToggle(purpose)}>

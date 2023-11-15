@@ -26,7 +26,7 @@ const Navbar = observer(() => {
     userStore.setArticles([]);
     userStore.setSubmittedRequests([]);
     userStore.setFeedbacks([]);
-    userStore.setPermissions([]);
+    userStore.setPurposes([]);
     userStore.setCanRead([]);
     userStore.setCanWrite([]);
     localStorage.removeItem('CloudRoundsToken');

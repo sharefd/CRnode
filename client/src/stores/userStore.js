@@ -5,7 +5,7 @@ class UserStore {
   articles = [];
   submittedRequests = [];
   feedbacks = [];
-  permissions = [];
+  purposes = [];
   canRead = [];
   canWrite = [];
   attended = [];
@@ -36,10 +36,6 @@ class UserStore {
 
   setFeedbacks(feedbacks) {
     this.feedbacks = feedbacks;
-  }
-
-  setPermissions(permissions) {
-    this.permissions = permissions;
   }
 
   setCanRead(canRead) {

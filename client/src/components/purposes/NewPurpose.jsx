@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Input, Button, Spin } from 'antd';
 import { createPurpose } from '@/services/purposes';
 import { useMutation } from 'react-query';
+import userStore from '@/stores/userStore';
 
 const NewPurpose = ({ open, handleClose, userId, setPurposes, refetchPurposes }) => {
   const [loading, setLoading] = useState(false);
@@ -19,8 +20,13 @@ const NewPurpose = ({ open, handleClose, userId, setPurposes, refetchPurposes })
     },
     onSuccess: async data => {
       await refetchPurposes();
-      setPurposes(prevPurposes => [...prevPurposes, data]);
+      setPurposes(prevPurposes => {
+        const newPurposes = [...prevPurposes, data];
+        userStore.setPurposes(newPurposes);
+        return newPurposes;
+      });
       setLoading(false);
+
       handleClose();
     },
     onError: () => {

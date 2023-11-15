@@ -11,6 +11,7 @@ import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import NewArticleForm from './form/NewArticleForm';
+import { getPurposesWithoutArticles } from '@/utils/articleHelpers';
 
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -26,7 +27,8 @@ const ArticleList = observer(() => {
   const [localArticles, setLocalArticles] = useState([]);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
 
-  const { allowedArticles, canReadPurposes, isLoading, refetchArticles } = useArticlePermissions();
+  const { userPurposes, allowedArticles, canReadPurposes, isLoading, refetchArticles, refetchPurposes } =
+    useArticlePermissions();
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
 
@@ -100,11 +102,30 @@ const ArticleList = observer(() => {
 
   const handleArticleUpdate = async updatedArticle => {
     setIsUpdateLoading(true);
+
     const updatedArticles = localArticles.map(article =>
       article._id === updatedArticle._id ? updatedArticle : article
     );
-    setLocalArticles(updatedArticles);
-    await refetchArticles();
+    setLocalArticles(sortArticles(updatedArticles));
+
+    const oldPurposeName = localArticles.find(a => a._id === updatedArticle._id).purpose.name;
+    const newPurposeName = userPurposes.find(p => updatedArticle.purpose._id === p._id).name;
+
+    const oldPurposeStillInUse = updatedArticles.some(article => article.purpose.name === oldPurposeName);
+
+    let newSelectedPurposes = selectedPurposes.slice();
+
+    // if no articles remain for that purpose, remove it from selected purposes
+    if (!oldPurposeStillInUse && newSelectedPurposes.includes(oldPurposeName)) {
+      newSelectedPurposes = newSelectedPurposes.filter(purpose => purpose !== oldPurposeName);
+    }
+
+    if (!newSelectedPurposes.includes(newPurposeName)) {
+      newSelectedPurposes.push(newPurposeName);
+    }
+
+    setSelectedPurposes(newSelectedPurposes);
+
     setIsUpdateLoading(false);
   };
 
@@ -114,7 +135,6 @@ const ArticleList = observer(() => {
     const allArticles = [...localArticles, newArticle];
 
     setLocalArticles(sortArticles(allArticles));
-    await refetchArticles();
     setIsUpdateLoading(false);
   };
 
@@ -135,6 +155,8 @@ const ArticleList = observer(() => {
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
+  const purposesWithoutArticles = getPurposesWithoutArticles(localArticles, userPurposes);
+
   const isMeetingJoinable = article => {
     if (article.meetingType === 'Hybrid' || article.meetingType === 'Virtual') {
       return article.event_link || (article.meeting_id && article.passcode);
@@ -147,13 +169,14 @@ const ArticleList = observer(() => {
       <ActionBar
         user={user}
         mostRecentArticle={currentArticles[0]}
-        canReadPurposes={canReadPurposes}
         selectedPurposes={selectedPurposes}
         setSelectedPurposes={setSelectedPurposes}
         toggleNewArticleModal={toggleNewArticleModal}
         selectedOrganizers={selectedOrganizers}
         organizerFilter={organizerFilter}
         setOrganizerFilter={setOrganizerFilter}
+        userPurposes={userPurposes}
+        emptyPurposes={purposesWithoutArticles}
       />
       <div style={{ padding: '0 16px' }}>
         <Row gutter={16} className='custom-flex'>
