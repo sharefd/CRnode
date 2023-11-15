@@ -4,12 +4,13 @@ import { createPurpose, fetchPurposes } from '@/services/purposes';
 import { initialArticleData } from '@/utils/constants';
 import { extractTimesFromDuration } from '@/utils/dates';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, TimePicker } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import NewPurposeDialog from '../actions/NewPurposeDialog';
 import './NewArticleForm.css';
+import TimeRangePicker from './TimeRangePicker';
 
 const NewArticleForm = ({
   open,
@@ -29,7 +30,14 @@ const NewArticleForm = ({
   const [article, setArticle] = useState(initialArticleData);
 
   const [date, setDate] = useState(dayjs());
-  const [timeRange, setTimeRange] = useState([dayjs('8:00 AM', 'hh:mm A'), dayjs('9:00 AM', 'hh:mm A')]);
+  const [timeRange, setTimeRange] = useState(() => {
+    if (selectedArticle) {
+      const [startTime, endTime] = extractTimesFromDuration(selectedArticle.duration);
+      return [startTime, endTime];
+    } else {
+      return ['', ''];
+    }
+  });
   const [articlePurpose, setArticlePurpose] = useState((selectedArticle && selectedArticle.purpose) || null);
 
   const {
@@ -67,8 +75,8 @@ const NewArticleForm = ({
       setTimeRange([startTime, endTime]);
     } else {
       setArticlePurpose(null);
-
       setArticle(initialArticleData);
+      setTimeRange(['', '']);
     }
   }, [selectedArticle]);
 
@@ -157,6 +165,7 @@ const NewArticleForm = ({
   const onModalClose = () => {
     setSelectedArticle(null);
     setArticlePurpose(null);
+    setTimeRange(['', '']);
     setArticle(initialArticleData);
     onClose();
   };
@@ -216,7 +225,7 @@ const NewArticleForm = ({
                   }}
                 />
               </Col>
-              <Col span={12}>
+              {/* <Col span={12}>
                 <TimePicker.RangePicker
                   value={timeRange}
                   onChange={setTimeRange}
@@ -224,6 +233,9 @@ const NewArticleForm = ({
                   minuteStep={5}
                   use12Hours
                 />
+              </Col> */}
+              <Col span={12}>
+                <TimeRangePicker value={timeRange} onChange={newRange => setTimeRange(newRange)} />
               </Col>
             </Row>
           </Form.Item>

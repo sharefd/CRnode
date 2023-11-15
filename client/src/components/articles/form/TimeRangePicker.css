@@ -1,0 +1,18 @@
+.time-slot {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.time-slot:hover {
+  background-color: #f0f0f0;
+  color: #1890ff;
+}
+
+.time-slot.selected {
+  background-color: #1890ff;
+  color: white;
+  border-radius: 4px;
+}
+
+.ant-message {
+  z-index: 2200 !important;
+}
