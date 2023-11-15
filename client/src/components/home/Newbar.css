@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 940px) {
   #navbar-animmenu * {
     display: none;
   }
@@ -18,7 +18,7 @@
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 941px) {
   #navbar-animmenu {
     display: flex;
   }
@@ -130,4 +130,24 @@
 .hori-selector .left:before {
   bottom: 0;
   left: -25px;
+}
+
+.drawer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.drawer-item:hover {
+  background-color: #f0f0f0;
+}
+
+.drawer-item.active {
+  background-color: #e6e6e6;
+  color: #004085;
 }

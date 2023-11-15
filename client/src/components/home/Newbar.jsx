@@ -6,7 +6,8 @@ import { LogoutOutlined, MenuOutlined, SettingOutlined, HomeOutlined, UserOutlin
 import CloudLogo from '@/assets/images/logo.png';
 import { navlinks as links, sideMenuLinks } from '@/utils/constants';
 import './Newbar.css';
-import { Avatar, Dropdown, Drawer, List } from 'antd';
+import { Avatar, Dropdown, Drawer, List, Typography } from 'antd';
+const { Paragraph, Text } = Typography;
 
 const Newbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -74,26 +75,30 @@ const Newbar = observer(() => {
     return '';
   };
 
+  const isActive = path => location.pathname === path;
+
   const drawerItems = [
     ...sideMenuLinks.map(link => ({
       key: link.endpoint,
       content: (
         <button
           type='button'
+          className={`drawer-item ${isActive(link.endpoint) ? 'active' : ''}`}
           onClick={() => {
             navigate(link.endpoint);
             setDrawerVisible(false);
           }}>
-          <link.Icon />
-          {link.label}
+          <link.Icon className='text-lg' />
+          <span className='mt-1'>{link.label}</span>
         </button>
       )
     })),
     {
       key: 'logout',
       content: (
-        <button type='button' onClick={handleLogout}>
-          <LogoutOutlined /> Log Out
+        <button type='button' className={`drawer-item`} onClick={handleLogout}>
+          <LogoutOutlined className='text-lg' />
+          <span className='mt-1'>Log Out</span>
         </button>
       )
     }
@@ -155,17 +160,17 @@ const Newbar = observer(() => {
 
       <Drawer
         title={
-          <div className='flex items-center text-gray-700 justify-start'>
-            <Avatar>{getInitials(user)}</Avatar>
-            <span className='ml-2'>{user.username}</span>
+          <div className='flex items-center text-gray-700 justify-center'>
+            <Text code className='text-lg'>
+              Menu
+            </Text>
           </div>
         }
         placement='right'
         closable={false}
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
-        width={250}
-        style={{ border: 'none' }}>
+        width={150}>
         <List
           itemLayout='horizontal'
           dataSource={drawerItems}
@@ -203,7 +208,7 @@ const Newbar = observer(() => {
         </ul>
       </div>
       <div id='navbar-mobile'>
-        <button className='p-3 text-white md:hidden' onClick={handleNavCollapse}>
+        <button className='p-3 text-white' onClick={handleNavCollapse}>
           <MenuOutlined />
         </button>
       </div>
