@@ -6,7 +6,8 @@ import { LogoutOutlined, MenuOutlined, SettingOutlined, HomeOutlined, UserOutlin
 import CloudLogo from '@/assets/images/logo.png';
 import { navlinks as links, sideMenuLinks } from '@/utils/constants';
 import './Newbar.css';
-import { Avatar, Dropdown } from 'antd';
+import { Avatar, Dropdown, Drawer, List, Typography } from 'antd';
+const { Paragraph, Text } = Typography;
 
 const Newbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -16,6 +17,7 @@ const Newbar = observer(() => {
   const navbarRef = useRef(null);
   const horiSelectorRef = useRef(null);
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +42,9 @@ const Newbar = observer(() => {
     return () => window.removeEventListener('resize', updateActiveIndicator);
   }, [activeIndex]);
 
-  const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+  const handleNavCollapse = () => {
+    setDrawerVisible(!drawerVisible);
+  };
 
   const handleLogout = () => {
     userStore.setUser(null);
@@ -71,26 +75,30 @@ const Newbar = observer(() => {
     return '';
   };
 
+  const isActive = path => location.pathname === path;
+
   const drawerItems = [
     ...sideMenuLinks.map(link => ({
       key: link.endpoint,
       content: (
         <button
           type='button'
+          className={`drawer-item ${isActive(link.endpoint) ? 'active' : ''}`}
           onClick={() => {
             navigate(link.endpoint);
             setDrawerVisible(false);
           }}>
-          <link.Icon />
-          {link.label}
+          <link.Icon className='text-lg' />
+          <span className='mt-1'>{link.label}</span>
         </button>
       )
     })),
     {
       key: 'logout',
       content: (
-        <button type='button' onClick={handleLogout}>
-          <LogoutOutlined /> Log Out
+        <button type='button' className={`drawer-item`} onClick={handleLogout}>
+          <LogoutOutlined className='text-lg' />
+          <span className='mt-1'>Log Out</span>
         </button>
       )
     }
@@ -149,9 +157,26 @@ const Newbar = observer(() => {
           <span className='text-white text-lg ml-2'>CloudRounds</span>
         </Link>
       </div>
-      <button className='p-3 text-white md:hidden' onClick={handleNavCollapse}>
-        <MenuOutlined />
-      </button>
+
+      <Drawer
+        title={
+          <div className='flex items-center text-gray-700 justify-center'>
+            <Text code className='text-lg'>
+              Menu
+            </Text>
+          </div>
+        }
+        placement='right'
+        closable={false}
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={150}>
+        <List
+          itemLayout='horizontal'
+          dataSource={drawerItems}
+          renderItem={item => <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>}
+        />
+      </Drawer>
       <div id='navbar-animmenu'>
         <ul className='show-dropdown main-navbar'>
           <div
@@ -181,6 +206,11 @@ const Newbar = observer(() => {
             </li>
           ))}
         </ul>
+      </div>
+      <div id='navbar-mobile'>
+        <button className='p-3 text-white' onClick={handleNavCollapse}>
+          <MenuOutlined />
+        </button>
       </div>
     </nav>
   );

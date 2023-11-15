@@ -81,6 +81,17 @@
   background-image: none;
 }
 
+.join-meeting-btn {
+  background-color: #4caf50;
+  padding: 6px 15px;
+}
+
+.join-meeting-btn:hover,
+.join-meeting-btn:active {
+  color: #fff;
+  background-color: #45a049;
+}
+
 .purple-outline {
   color: rgba(0, 0, 0, 0.88);
   border-color: #6c7ce7;

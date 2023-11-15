@@ -35,6 +35,10 @@ const Navbar = observer(() => {
     navigate('/login');
   };
 
+  const toggleDrawer = () => {
+    setDrawerVisible(!drawerVisible);
+  };
+
   const handleSettingsClick = () => {
     navigate('/settings');
   };
@@ -134,33 +138,34 @@ const Navbar = observer(() => {
             />
           </div>
 
+          <Drawer
+            title={
+              <div className='flex items-center text-gray-700 justify-start'>
+                <Avatar>{getInitials(user)}</Avatar>
+                <span className='ml-2'>{user.username}</span>
+              </div>
+            }
+            placement='right'
+            closable={false}
+            onClose={() => setDrawerVisible(false)}
+            open={drawerVisible}
+            width={250}
+            style={{ border: 'none' }}>
+            <List
+              itemLayout='horizontal'
+              dataSource={drawerItems}
+              renderItem={item => (
+                <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>
+              )}
+            />
+          </Drawer>
           <div className={styles['navbar-mobile']}>
-            <Button type='text' onClick={() => setDrawerVisible(true)}>
-              <MenuOutlined className='text-white' />
-            </Button>
+            <button className='p-3 text-white md:hidden' onClick={toggleDrawer}>
+              <MenuOutlined />
+            </button>
           </div>
         </>
       )}
-
-      <Drawer
-        title={
-          <div className='flex items-center text-gray-700 justify-start'>
-            <Avatar>{getInitials(user)}</Avatar>
-            <span className='ml-2'>{user.username}</span>
-          </div>
-        }
-        placement='right'
-        closable={false}
-        onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        width={250}
-        style={{ border: 'none' }}>
-        <List
-          itemLayout='horizontal'
-          dataSource={drawerItems}
-          renderItem={item => <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>}
-        />
-      </Drawer>
     </Header>
   );
 });

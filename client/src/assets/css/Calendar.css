@@ -1,7 +1,7 @@
 :root {
   --white-color: #fff;
   --calendar-chevron-hover-color: #b6cfe7;
-  --calendar-header-footer-color: #221c69;
+  --calendar-header-footer-color: #5161ce;
   --calendar-cell-font-size: 16px;
   --mobile-calendar-cell-font-size: 14px;
   --badge-height: 12px;
@@ -113,7 +113,6 @@
 sup.ant-scroll-number.ant-badge-count {
   height: 13px !important;
   padding: 7.5px 5.5px !important;
-  border: 1px solid var(--calendar-header-footer-color);
   border-radius: var(--badge-border-radius);
   left: 16px !important;
   display: inline-flex !important;
@@ -194,7 +193,6 @@ div#calendar-cell {
   sup.ant-scroll-number.ant-badge-count {
     height: 13px !important;
     padding: 4.5px 4.3px !important;
-    border: 1px solid var(--calendar-header-footer-color);
     border-radius: var(--badge-border-radius);
     left: 15.5px !important;
     display: inline-flex !important;
@@ -281,7 +279,6 @@ div#calendar-cell {
   sup.ant-scroll-number.ant-badge-count {
     height: var(--badge-height) !important;
     padding: var(--badge-padding) !important;
-    border: 1px solid var(--calendar-header-footer-color) !important;
     border-radius: var(--badge-border-radius) !important;
     left: 15px !important;
     display: inline-flex !important;

@@ -114,6 +114,13 @@ const ArticleList = observer(() => {
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
+  const isMeetingJoinable = article => {
+    if (article.meetingType === 'Hybrid' || article.meetingType === 'Virtual') {
+      return article.event_link || (article.meeting_id && article.passcode);
+    }
+    return false;
+  };
+
   return (
     <div>
       <ActionBar
@@ -145,19 +152,25 @@ const ArticleList = observer(() => {
                   </Col>
                   <Col span={18}>
                     <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
+
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
-                      <button
-                        type='primary'
-                        href={article.meetingType !== 'In-Person' ? article.event_link : undefined}
-                        target='_blank'
-                        disabled={article.meetingType === 'In-Person'}
-                        className='basic-btn purple-light-full'>
-                        {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
-                      </button>
+                      {isMeetingJoinable(article) ? (
+                        <a
+                          href={article.event_link}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='basic-btn join-meeting-btn'>
+                          {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
+                        </a>
+                      ) : (
+                        <button className='basic-btn bg-[#5161ce]'>Virtual</button>
+                      )}
+
                       <button className='basic-btn gray-outline' onClick={() => toggleDetails(article._id)}>
                         More Details
                       </button>
                     </div>
+
                     {showDetails[article._id] && (
                       <>
                         {article.meetingType !== 'In-Person' ? (
