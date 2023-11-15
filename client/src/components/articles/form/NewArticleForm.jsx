@@ -1,26 +1,24 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { Modal, Input, Select, Button, DatePicker, TimePicker, Form, Row, Col } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { createArticle, sortArticles } from '@/services/articles';
-import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { createArticle, updateArticle } from '@/services/articles';
 import { createPurpose, fetchPurposes } from '@/services/purposes';
-import NewPurposeDialog from '../actions/NewPurposeDialog';
 import { initialArticleData } from '@/utils/constants';
-import './NewArticleForm.css';
-import dayjs from 'dayjs';
 import { extractTimesFromDuration } from '@/utils/dates';
-import { updateArticle } from '@/services/articles';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, TimePicker } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import NewPurposeDialog from '../actions/NewPurposeDialog';
+import './NewArticleForm.css';
 
 const NewArticleForm = ({
   open,
   onClose,
-  refetchArticles,
-  localArticles,
-  setLocalArticles,
   selectedArticle,
   setSelectedArticle,
-  onDelete
+  onDelete,
+  onArticleUpdate,
+  onCreateArticle
 }) => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
@@ -32,6 +30,7 @@ const NewArticleForm = ({
 
   const [date, setDate] = useState(dayjs());
   const [timeRange, setTimeRange] = useState([dayjs('8:00 AM', 'hh:mm A'), dayjs('9:00 AM', 'hh:mm A')]);
+  const [articlePurpose, setArticlePurpose] = useState((selectedArticle && selectedArticle.purpose) || null);
 
   const {
     data: purposes,
@@ -63,9 +62,12 @@ const NewArticleForm = ({
   useEffect(() => {
     if (selectedArticle) {
       setArticle(selectedArticle);
+      setArticlePurpose(selectedArticle.purpose);
       const [startTime, endTime] = extractTimesFromDuration(selectedArticle.duration);
       setTimeRange([startTime, endTime]);
     } else {
+      setArticlePurpose(null);
+
       setArticle(initialArticleData);
     }
   }, [selectedArticle]);
@@ -86,14 +88,13 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
-      purpose: article.purpose,
+      purpose: articlePurpose._id,
       event_link: eventLink
     };
 
     try {
       const updatedArticle = await updateArticle(payload);
-      const updatedArticles = localArticles.map(a => (a._id === updatedArticle._id ? updatedArticle : a));
-      setLocalArticles(sortArticles(updatedArticles));
+      onArticleUpdate(updatedArticle);
       setSelectedArticle(null);
     } catch (error) {
       console.error(error);
@@ -117,6 +118,7 @@ const NewArticleForm = ({
       date: date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
+      purpose: articlePurpose._id,
       event_link: eventLink // Update the event_link with the corrected URL
     };
 
@@ -127,8 +129,7 @@ const NewArticleForm = ({
 
     try {
       const newArticle = await createArticle(payload);
-      const allArticles = [...localArticles, newArticle];
-      setLocalArticles(sortArticles(allArticles));
+      onCreateArticle(newArticle);
       onClose();
     } catch (error) {
       console.error(error);
@@ -153,8 +154,15 @@ const NewArticleForm = ({
     return <LoadingSpinner />;
   }
 
+  const onModalClose = () => {
+    setSelectedArticle(null);
+    setArticlePurpose(null);
+    setArticle(initialArticleData);
+    onClose();
+  };
+
   return (
-    <Modal open={open} onCancel={onClose} footer={null} className='new-article-form'>
+    <Modal open={open} onCancel={onModalClose} footer={null} className='new-article-form'>
       <Form onFinish={selectedArticle ? handleSave : handleSubmit} className='compact-form'>
         <Form.Item label='Title' labelCol={{ span: 24 }} colon={false}>
           <Input
@@ -167,12 +175,14 @@ const NewArticleForm = ({
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false}>
-              <Select value={article.purpose._id} onChange={value => setArticle({ ...article, purpose: value })}>
+              <Select
+                value={(articlePurpose && articlePurpose._id) || ''}
+                onChange={value => setArticlePurpose({ ...articlePurpose, _id: value })}>
                 <Select.Option value='' disabled>
                   Select Purpose
                 </Select.Option>
                 {allowedPurposes.map(purpose => (
-                  <Select.Option key={purpose._id.toString()} value={purpose._id.toString()}>
+                  <Select.Option key={purpose._id} value={purpose._id}>
                     {purpose.name}
                   </Select.Option>
                 ))}
@@ -194,7 +204,17 @@ const NewArticleForm = ({
           <Form.Item label='Date and Time' labelCol={{ span: 24 }} colon={false}>
             <Row gutter={16}>
               <Col span={12}>
-                <DatePicker value={dayjs(article.date)} onChange={setDate} />
+                <DatePicker
+                  value={dayjs(article.date)}
+                  onChange={dateValue => {
+                    if (!dateValue) {
+                      setDate(dayjs(article.date));
+                      return;
+                    }
+                    setDate(dateValue);
+                    setArticle({ ...article, date: dayjs(dateValue) });
+                  }}
+                />
               </Col>
               <Col span={12}>
                 <TimePicker.RangePicker

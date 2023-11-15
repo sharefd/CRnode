@@ -121,6 +121,7 @@ sup.ant-scroll-number.ant-badge-count {
   min-width: 13px !important;
   line-height: 23px !important;
   background-color: var(--calendar-header-footer-color);
+  bottom: 6px;
 }
 
 .calendar-badge {
@@ -289,7 +290,7 @@ div#calendar-cell {
   }
 
   .calendar-badge {
-    bottom: 12px;
+    bottom: 14px;
   }
 
   .purpose-badge p {

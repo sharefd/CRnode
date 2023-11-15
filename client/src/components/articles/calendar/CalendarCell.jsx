@@ -68,7 +68,10 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
 
   return (
     <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
-      <div className={`relative w-8 h- flex rounded-md items-center justify-center ${isToday ? 'bg-[#5161ce]' : ''}`}>
+      <div
+        className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
+          isToday ? 'border border-[#5161ce]' : ''
+        }`}>
         <Badge
           count={events.length}
           className='absolute calendar-badge'
@@ -77,7 +80,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         <Typography.Text
           strong
           style={{
-            color: isToday ? 'white' : 'inherit'
+            color: isToday ? '#000' : 'inherit'
           }}>
           {day}
         </Typography.Text>
