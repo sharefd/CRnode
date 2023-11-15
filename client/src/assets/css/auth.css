@@ -2,8 +2,10 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --btn-bg-color: #0d0c22;
-  --btn-bg-color-hover: #565564;
+  --primary-color: #5161ce;
+  --hover-color: #4655b3;
+  --btn-bg-color: var(--primary-color);
+  --btn-bg-color-hover: var(--hover-color);
   --btn-text-color: #fff;
   --btn-text-color-hover: #fff;
   --btn-border-color: var(--btn-bg-color);
@@ -30,6 +32,10 @@ div.auth {
 @media (max-width: 767px) {
   div.auth {
     background: linear-gradient(#172554 50%, #ffffff 51%); /* Sharp transition from #172554 to white */
+  }
+  h1,
+  .authform-title {
+    font-size: 24px;
   }
 }
 
@@ -76,18 +82,19 @@ hr.divider:after {
   font: normal 14px/14px 'Mona Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.scrollable-area {
-  max-height: calc(100vh - 370px); /* Adjust based on your needs */
-}
-
+.google-button,
 .authButton-hover {
-  background-color: #4185ef;
+  background-color: var(--btn-bg-color);
   color: white;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 16px;
   transition: background-color 0.3s ease;
 }
 
+.google-button:hover,
 .authButton-hover:hover {
-  background-color: #2e67d2;
+  background-color: var(--btn-bg-color-hover);
 }
 
 .signup-form .requiredLabel,
@@ -112,4 +119,129 @@ hr.divider:after {
   font: bold 20px 'Mona Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   margin-bottom: 40px;
   color: #1a3991;
+}
+
+/* ------ NEW CSS STYLES FOR AUTH PAGE -------- */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 100vh;
+  padding-bottom: 10px;
+  background: linear-gradient(145deg, #f0f4f8, #ffffff);
+}
+
+.logo-container-desktop,
+.logo-container-mobile {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.form-container {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Desktop styles NEW */
+@media (min-width: 768px) {
+  .auth-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: linear-gradient(145deg, #f0f4f8, #ffffff);
+  }
+
+  .logo-container-desktop {
+    width: 50%;
+    background: #5161ce;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #5161ce;
+    color: white;
+    border-radius: 10px 0 0 10px;
+    box-sizing: border-box;
+  }
+
+  .form-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 40px;
+    border-radius: 0 10px 10px 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+
+  .scrollable-area {
+    overflow-y: auto;
+  }
+
+  .logo-container-mobile {
+    display: none;
+  }
+
+  .logo-container-desktop img {
+    width: 120px;
+    margin-bottom: 20px;
+  }
+
+  .logo-container-desktop h1 {
+    font-size: 2em;
+    margin-bottom: 15px;
+  }
+
+  .logo-container-desktop p {
+    text-align: center;
+    font-size: 1em;
+  }
+}
+
+/* Mobile styles NEW */
+@media (max-width: 767px) {
+  .auth-container {
+    height: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 20px;
+  }
+
+  .form-container {
+    width: 100%;
+    padding: 20px;
+    justify-content: flex-start;
+    margin-top: 20px;
+    overflow-y: visible;
+  }
+
+  .logo-container-desktop {
+    display: none;
+  }
+
+  .logo-container-mobile {
+    display: flex;
+    padding: 20px;
+    background: #5161ce;
+    color: white;
+  }
+
+  .logo-container-mobile img {
+    width: 50px;
+  }
+
+  .logo-container-mobile p {
+    font-size: 1em;
+  }
 }

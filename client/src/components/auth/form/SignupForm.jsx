@@ -90,7 +90,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
     <Form form={form} onFinish={handleSubmit} initialValues={{ university: '' }} className='signup-form'>
       <div className='p-8 py-2 md:py-0 w-full mx-auto'>
         <div id='signup-form' className='scrollable-area'>
-          <h1 className='authform-title'>Sign up to CloudRounds</h1>
+          <h1 className='authform-title'>Sign up</h1>
           {fields.map((field, index) => (
             <div key={index}>
               <p className='requiredLabel'>{field.label}</p>

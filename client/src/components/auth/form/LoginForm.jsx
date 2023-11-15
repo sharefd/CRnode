@@ -85,20 +85,21 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
     <>
       {isForgotPassword ? (
         <Form layout='vertical' onFinish={handleForgotPassword}>
-          <div className='scrollable-area'>
+          <div className={isSendingEmail ? '' : `scrollable-area`}>
             <div className='px-8 w-full mx-auto'>
               <Form.Item>
                 <p className='requiredLabel'>Email</p>
                 <Input
                   prefix={<MailOutlined style={{ color: 'rgb(128,128,128)' }} />}
                   placeholder='Email'
+                  disabled={isSendingEmail}
                   value={emailResetField}
                   onChange={e => setEmailResetField(e.target.value)}
                 />
               </Form.Item>
               <div>
                 {isSendingEmail ? (
-                  <div className='text-center justify-center'>
+                  <div className='flex justify-center'>
                     <Spin />
                   </div>
                 ) : (
@@ -124,7 +125,6 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
           <div className='scrollable-area'>
             <div className='px-8 w-full mx-auto'>
               <div id='login-form' style={{ marginBottom: '30px' }}>
-                <h1 className='authform-title'>Login to CloudRounds</h1>
                 {fields.map((field, index) => (
                   <div key={index}>
                     {field.name === 'password' ? (

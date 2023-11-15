@@ -16,31 +16,21 @@ const AuthPage = () => {
     setIsSignUp(location.pathname === '/register');
   }, [location.pathname]);
 
-  const formContainerClass = isSignup
-    ? 'flex flex-col justify-start md:justify-center h-[85vh]'
-    : 'flex flex-col justify-center h-[85vh]';
-
   return (
-    <div className='flex justify-center items-center h-screen pb-10 auth'>
-      <div className='flex flex-col md:flex-row w-full max-w-screen-lg h-[85vh]'>
-        {/* Left Column */}
-        <LogoContainer />
+    <div className='auth-container'>
+      <LogoContainer />
 
-        {/* Right Column */}
-        <div
-          className={`w-full md:w-1/2 p-8 ${formContainerClass} bg-white relative overflow-y-auto md:rounded-r-2xl`}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {isSignup ? (
-            <SignupForm fields={signupFields} setIsSignUp={setIsSignUp} />
-          ) : (
-            <LoginForm
-              fields={loginFields}
-              appName={appName}
-              isForgotPassword={isForgotPassword}
-              setIsForgotPassword={setIsForgotPassword}
-            />
-          )}
-        </div>
+      <div className='form-container'>
+        {isSignup ? (
+          <SignupForm fields={signupFields} setIsSignUp={setIsSignUp} />
+        ) : (
+          <LoginForm
+            fields={loginFields}
+            isForgotPassword={isForgotPassword}
+            setIsForgotPassword={setIsForgotPassword}
+            appName={appName}
+          />
+        )}
       </div>
     </div>
   );
