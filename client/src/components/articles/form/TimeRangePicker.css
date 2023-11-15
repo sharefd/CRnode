@@ -16,3 +16,17 @@
 .ant-message {
   z-index: 2200 !important;
 }
+
+.time-btn {
+  cursor: pointer;
+  color: #5161ce;
+  background-color: #f0f0f080;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.time-btn:hover {
+  background-color: #f0f0f080;
+  background-color: #f0f0f0;
+}

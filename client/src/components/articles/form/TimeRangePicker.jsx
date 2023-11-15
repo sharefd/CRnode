@@ -74,11 +74,11 @@ const TimeRangePicker = ({ value, onChange }) => {
 
   return (
     <>
-      <Text onClick={() => showModal('start')} code>
+      <Text onClick={() => showModal('start')} className='time-btn'>
         {value[0] ? value[0].format('h:mm A') : 'Start Time'}
       </Text>
       <span> - </span>
-      <Text onClick={() => showModal('end')} code>
+      <Text onClick={() => showModal('end')} className='time-btn'>
         {value[1] ? value[1].format('h:mm A') : 'End Time'}
       </Text>
 

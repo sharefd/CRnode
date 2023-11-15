@@ -209,8 +209,6 @@ const ArticleList = observer(() => {
                           href={article.event_link}
                           target='_blank'
                           rel='noopener noreferrer'
-                          Join
-                          Meeting
                           className='basic-btn purple-full-link'>
                           Join Meeting
                         </a>
