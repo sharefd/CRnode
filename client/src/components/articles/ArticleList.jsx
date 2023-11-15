@@ -148,10 +148,11 @@ const ArticleList = observer(() => {
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
                       <button
                         type='primary'
-                        href={article.event_link}
+                        href={article.meetingType !== 'In-Person' ? article.event_link : undefined}
                         target='_blank'
+                        disabled={article.meetingType === 'In-Person'}
                         className='basic-btn purple-light-full'>
-                        Join Meeting
+                        {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
                       </button>
                       <button className='basic-btn gray-outline' onClick={() => toggleDetails(article._id)}>
                         More Details
