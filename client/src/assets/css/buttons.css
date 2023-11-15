@@ -211,12 +211,12 @@
   display: flex;
   align-items: center;
   border-radius: 6px;
-  background-color: #f1f8ff;
+  background-color: #edeffa;
   padding: 8px;
   padding-inline: 10px;
   border: none;
-  border-color: #4285f4;
-  color: #4285f4;
+  border-color: #4655b3;
+  color: #5161ce;
   font-size: 0.7rem;
   margin-left: auto;
 }
@@ -229,8 +229,8 @@
   padding: 8px;
   padding-inline: 10px;
   border: none;
-  border-color: #4285f4;
-  color: #4285f4;
+  border-color: #4655b3;
+  color: #5161ce;
   font-size: 0.7rem;
 }
 

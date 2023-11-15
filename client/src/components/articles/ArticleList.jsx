@@ -144,12 +144,18 @@ const ArticleList = observer(() => {
                     <p style={{ fontSize: 'x-small', color: '#8c8c8c' }}>{article.duration}</p>
                   </Col>
                   <Col span={18}>
-                    <div className='bg-blue-100 text-black px-2 py-1 rounded mb-3'>{article.title}</div>
+                    <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
-                      <Button type='primary' href={article.event_link} target='_blank' style={{ marginRight: '8px' }}>
+                      <button
+                        type='primary'
+                        href={article.event_link}
+                        target='_blank'
+                        className='basic-btn purple-light-full'>
                         Join Meeting
-                      </Button>
-                      <Button onClick={() => toggleDetails(article._id)}>More Details</Button>
+                      </button>
+                      <button className='basic-btn gray-outline' onClick={() => toggleDetails(article._id)}>
+                        More Details
+                      </button>
                     </div>
                     {showDetails[article._id] && (
                       <>
@@ -186,7 +192,7 @@ const ArticleList = observer(() => {
                       )}
                     </Button>
                     <div className='purpose-badge'>
-                      {purposeIcons[article.purpose.name] || purposeIcons.DEFAULT}
+                      {purposeIcons.DEFAULT}
                       <span style={{ fontSize: '13px' }}>{article.purpose.name}</span>
                     </div>
                   </div>

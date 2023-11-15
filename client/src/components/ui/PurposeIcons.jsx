@@ -2,7 +2,7 @@ import { PeopleAlt, RocketLaunch, Engineering } from '@mui/icons-material';
 import MACIMAHD1Icon from '@/assets/images/mcm.png';
 import MACIMAHD2Icon from '@/assets/images/mcm2.png';
 import MACIMAHD3Icon from '@/assets/images/mcm3.png';
-import OM1Icon from '@/assets/images/om1.png';
+import OM1Icon from '@/assets/images/om1-purple.png';
 
 export const purposeIcons = {
   OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
@@ -10,8 +10,7 @@ export const purposeIcons = {
   MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
   MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
   MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  DEFAULT: <PeopleAlt sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
-  "OM AHD": <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  "UofT Occ Med Rounds": <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+  DEFAULT: <PeopleAlt sx={{ width: '18px', marginRight: '6px', height: '18px', color: '#5161ce' }} />,
+  'OM AHD': <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  'UofT Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />
 };
-    

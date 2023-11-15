@@ -113,9 +113,11 @@ const OlderArticles = observer(() => {
         </Button>
       </div>
     ) : (
-      <Button onClick={() => handleOpen(article, '')}>
+      <button
+        onClick={() => handleOpen(article, '')}
+        className='flex items-center w-[42px] justify-center basic-btn gray-outline hover:bg-[#5161ce] hover:text-white'>
         <AddCircle />
-      </Button>
+      </button>
     );
   };
 
