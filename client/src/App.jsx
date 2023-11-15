@@ -22,6 +22,8 @@ const Admin = lazy(() => import('./components/admin/Admin'));
 
 const App = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
+  const token = localStorage.getItem('CloudRoundsToken');
+
   const parsedUser = JSON.parse(localUser);
 
   const [user, setUser] = useState(parsedUser);
@@ -31,7 +33,7 @@ const App = observer(() => {
     isLoading,
     isError
   } = useQuery('userData', fetchCurrentUser, {
-    enabled: !!user
+    enabled: !!user && !token
   });
 
   useEffect(() => {

@@ -46,7 +46,7 @@ export const fetchUserFeedbacks = async userId => {
     const response = await axios.get(`${baseUrl}/api/feedbacks/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    console.error('Error fetching user feedbacks:', error);
   }
 };
 
@@ -57,6 +57,6 @@ export const fetchFeedbacks = async () => {
     userStore.setFeedbacks(feedbacks);
     return feedbacks;
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    console.error('Error fetching all feedbacks:', error);
   }
 };

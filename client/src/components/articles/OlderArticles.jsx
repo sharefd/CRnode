@@ -1,6 +1,5 @@
 import { createFeedback, fetchUserFeedbacks } from '@/services/feedbacks';
 import { toggleAttending } from '@/services/users';
-import userStore from '@/stores/userStore';
 import { formatDate } from '@/utils/dates';
 import { AddCircle, Edit } from '@mui/icons-material';
 import { Layout, Card, Table, Checkbox, Pagination, Modal, Input, Button, Spin, Typography } from 'antd';
@@ -9,26 +8,27 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { sortArticlesDescending } from '@/services/articles';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
-import { fetchCurrentUser } from '@/services/users';
 
 const { TextArea } = Input;
 
 const OlderArticles = observer(() => {
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const user = JSON.parse(localUser);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState('');
   const [currentArticle, setCurrentArticle] = useState(null);
-  const [user, setUser] = useState(null);
-
-  const { data: fetchedUser, isLoading: isUserLoading, refetch: refetchUser } = useQuery('userData', fetchCurrentUser);
+  const [userFeedbacks, setUserFeedbacks] = useState([]);
+  const [attended, setAttended] = useState([]);
 
   const {
     data: feedbacks,
     isLoading: isFeedbacksQueryLoading,
     refetch: refetchFeedbacks
-  } = useQuery(['feedbacks', fetchedUser._id], () => fetchUserFeedbacks(fetchedUser._id), {
-    enabled: !user
+  } = useQuery(['feedbacks', user?._id], () => fetchUserFeedbacks(user?._id), {
+    enabled: !!user
   });
 
   const { allowedArticles, isLoading } = useArticlePermissions();
@@ -39,15 +39,9 @@ const OlderArticles = observer(() => {
   const filteredArticles = sortedArticles.filter(article => new Date(article.date) <= currentDate);
 
   useEffect(() => {
-    if (!isUserLoading || isFeedbacksQueryLoading) return;
-    userStore.setFeedbacks(feedbacks);
-  }, [isUserLoading, feedbacks]);
-
-  useEffect(() => {
-    if (!isUserLoading) {
-      setUser(fetchedUser);
-    }
-  }, [isUserLoading]);
+    if (isFeedbacksQueryLoading) return;
+    setUserFeedbacks(feedbacks);
+  }, [isFeedbacksQueryLoading]);
 
   const handleFeedbackSubmit = async currentArticle => {
     try {
@@ -66,7 +60,7 @@ const OlderArticles = observer(() => {
   });
 
   const getFeedback = articleId => {
-    const feedbackObj = userStore.feedbacks.find(f => f.articleId && f.articleId._id === articleId);
+    const feedbackObj = userFeedbacks.find(f => f.articleId && f.articleId._id === articleId);
     return feedbackObj ? feedbackObj.feedback : '';
   };
 
@@ -74,8 +68,7 @@ const OlderArticles = observer(() => {
     try {
       const response = await toggleAttending(user._id, articleId, isAttending);
       const attendedArticles = allowedArticles.filter(a => response.attended.includes(a._id));
-      setUser({ ...user, attended: attendedArticles });
-      await refetchUser();
+      setAttended(attendedArticles);
     } catch (error) {
       console.error('There was an error updating attendance:', error);
     }
@@ -101,7 +94,7 @@ const OlderArticles = observer(() => {
     setOpen(false);
   };
 
-  if (isLoading || isUserLoading) return <Spin />;
+  if (isLoading || isFeedbacksQueryLoading) return <Spin />;
 
   const renderFeedback = article => {
     const feedback = getFeedback(article._id);
@@ -160,7 +153,7 @@ const OlderArticles = observer(() => {
             dataIndex='attended'
             render={(text, article) => (
               <Checkbox
-                checked={user.attended.map(a => a._id).includes(article._id)}
+                checked={attended.map(a => a._id).includes(article._id)}
                 onChange={e => handleToggleAttending(article._id, e.target.checked)}
               />
             )}
