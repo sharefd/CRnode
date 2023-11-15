@@ -247,36 +247,34 @@ const RequestsList = observer(() => {
 
   return (
     <Layout className='w-full mx-auto h-screen'>
-        <div className='w-full bg-white p-6 min-h-[280px] text-center full-width-mobile'>
-          <Button onClick={toggleView} className='mb-5'>
-            {!showUserRequests ? 'View Invitations' : 'View Access Requests'}
-          </Button>
-          <hr className='my-5' />
-          <Typography.Title level={2} className='mb-5'>
-            {!showUserRequests ? 'Access Requests' : 'Invitations'}
-          </Typography.Title>
-          <Table
-            dataSource={
-              rowsPerPage > 0
-                ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                : displayedRequests
-            }
-            pagination={false}
-            rowKey={record => record._id}
-            columns={columns}
-            scroll={{ x: 'max-content' }}
-            className='w-full overflow-x-auto'
-          />
-          <Pagination
-            total={localRequests.length}
-            pageSize={rowsPerPage}
-            current={page}
-            onChange={handleChangePage}
-            showSizeChanger
-            pageSizeOptions={['25', '50', '100']}
-            className='mt-5'
-          />
-        </div>
+      <div className='w-full bg-white p-6 min-h-[280px] text-center full-width-mobile'>
+        <Button onClick={toggleView} className='mb-5'>
+          {!showUserRequests ? 'View Invitations' : 'View Access Requests'}
+        </Button>
+        <hr className='my-5' />
+        <Typography.Title level={2} className='mb-5'>
+          {!showUserRequests ? 'Access Requests' : 'Invitations'}
+        </Typography.Title>
+        <Table
+          dataSource={
+            rowsPerPage > 0 ? displayedRequests.slice((page - 1) * rowsPerPage, page * rowsPerPage) : displayedRequests
+          }
+          pagination={false}
+          rowKey={record => record._id}
+          columns={columns}
+          scroll={{ x: 'max-content' }}
+          className='w-full overflow-x-auto'
+        />
+        <Pagination
+          total={localRequests.length}
+          pageSize={rowsPerPage}
+          current={page}
+          onChange={handleChangePage}
+          showSizeChanger
+          pageSizeOptions={['25', '50', '100']}
+          className='mt-5'
+        />
+      </div>
     </Layout>
   );
 });

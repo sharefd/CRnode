@@ -1,0 +1,128 @@
+.navbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  vertical-align: middle;
+  background-color: #0066b2;
+  padding-right: 12px;
+  padding-left: 20px;
+}
+
+.navbar-desktop {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 340px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #0066b2;
+}
+
+.navbar-mobile {
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navbar.css */
+@media screen and (max-width: 950px) {
+  .navbar-desktop {
+    display: none;
+  }
+  .navbar-mobile {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (min-width: 951px) {
+  .navbar-desktop {
+    display: flex;
+  }
+  .navbar-mobile {
+    display: none;
+  }
+}
+
+.navbar-desktop ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  color: #fff;
+  cursor: pointer;
+  height: 100%;
+}
+
+.navbar-desktop ul > li {
+  color: #fff;
+  cursor: pointer;
+  height: 64px;
+  position: relative;
+}
+
+.navbar-desktop ul > li > svg:hover,
+.navbar-desktop ul > li:hover,
+.navbar-desktop ul > li:hover > svg {
+  color: #b8b8b8 !important; /* Overrides other styles with !important */
+}
+
+.navbar-desktop ul > li > svg {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  align-self: center;
+  vertical-align: middle;
+  font-size: 24px !important;
+  position: relative !important;
+}
+
+.navbar-desktop ul > li::after {
+  position: absolute !important;
+  left: 43% !important;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 46px;
+  border-bottom-color: #fff !important;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.navbar-desktop ul > li:active::after {
+  border-bottom-color: #fff !important;
+  opacity: 1 !important;
+}
+
+.navbar-desktop ul > li:hover::after,
+.navbar-desktop ul > li.ant-menu-item-active {
+  opacity: 1 !important;
+}
+
+.navbar-desktop ul > li.navlinkAvatar {
+  border-bottom-color: transparent !important;
+  border-bottom: none !important;
+}
+
+.navbar-desktop ul li[data-menu-id='rc-menu-uuid-46059-1-userDropdown'] {
+  color: #808080; /* Your desired hover color */
+  border-bottom-color: transparent !important;
+  border-bottom: none !important;
+}
+
+li[data-menu-id='rc-menu-uuid-46059-1-userDropdown']:hover {
+  color: #808080; /* Your desired hover color */
+  border-bottom-color: transparent !important;
+  border-bottom: none !important;
+}

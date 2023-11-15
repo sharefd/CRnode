@@ -9,6 +9,11 @@
 @tailwind utilities;
 @tailwind variants;
 
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
 * {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }
@@ -171,48 +176,48 @@ select::placeholder {
 }
 
 .custom-hover-button {
-  background-color: #1890ff;
+  background-color: #5161ce;
   color: white;
-  border-color: #1890ff;
+  border-color: #5161ce;
 }
 
 .custom-hover-button:hover {
-  background-color: #1890ff;
+  background-color: #5161ce;
   color: #fff;
-  border-color: #1890ff;
+  border-color: #5161ce;
 }
 
 .new-calendar-button:hover {
-  background-color: #1890ff !important;
+  background-color: #5161ce !important;
   color: #fff !important;
-  border-color: #1890ff !important;
+  border-color: #5161ce !important;
 }
 
 .new-calendar-button {
   background-color: #fff !important;
-  color: #1890ff !important;
-  border-color: #1890ff !important;
+  color: #5161ce !important;
+  border-color: #5161ce !important;
   margin-bottom: 20px;
 }
 
 .submit-blue-button {
-  background-color: #1890ff !important;
+  background-color: #5161ce !important;
   color: #fff !important;
-  border-color: #1890ff !important;
+  border-color: #5161ce !important;
   transition: all 0.3s ease-in-out;
 }
 
 .submit-blue-button:hover {
-  background-color: #59a5ec !important;
+  background-color: #5161ce !important;
   color: #fff !important;
-  border-color: #59a5ec !important;
+  border-color: #8190f2 !important;
 }
 
 .ant-transfer-operation button,
 .ant-modal-footer button:nth-child(2) {
-  background-color: #1890ff !important;
+  background-color: #5161ce !important;
   color: #fff !important;
-  border-color: #1890ff !important;
+  border-color: #5161ce !important;
   transition: all 0.3s ease-in-out;
 }
 
@@ -321,7 +326,3 @@ select::placeholder {
   display: flex;
   align-items: center;
 }
-
-
-
-

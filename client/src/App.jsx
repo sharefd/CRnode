@@ -11,6 +11,7 @@ import Home from './components/home/Home';
 import Navbar from './components/home/Navbar';
 import 'react-toastify/dist/ReactToastify.css';
 import ResetPassword from './components/auth/form/ResetPassword';
+import Newbar from './components/home/Newbar';
 
 const PurposesList = lazy(() => import('./components/purposes/PurposesList'));
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
@@ -60,7 +61,7 @@ const App = observer(() => {
   return (
     <>
       <Router>
-        <Navbar user={user} />
+        <Newbar />
         <Suspense fallback={<Spin />}>
           <Routes>
             <Route path='/' element={<Home />} />

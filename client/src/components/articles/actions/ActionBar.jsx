@@ -140,12 +140,12 @@ const ActionBar = ({
       {/* Display most recent upcoming event details */}
 
       <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100'>
-        <Button type='primary' className='flex items-center custom-hover-button' onClick={toggleNewArticleModal}>
+        <button className='flex items-center basic-btn purple-light-full' onClick={toggleNewArticleModal}>
           <span style={{ marginRight: '8px' }}>
             <FcCalendar />
           </span>
-          <span style={{    fontWeight: 'bold' }}>Create Event</span>{' '}
-        </Button>
+          <span style={{ fontWeight: 'bold' }}>Create Event</span>{' '}
+        </button>
         <p className='text-gray-600 text-sm'>{currentTime}</p>
       </Space>
     </div>

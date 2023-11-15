@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { Avatar, List, Card, Button, Input, Typography, Spin } from 'antd';
+import { Avatar, List, Card, Button, Input, Typography, Spin, Layout } from 'antd';
 import { Modal, Space, Divider, Select } from 'antd';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -108,7 +108,7 @@ const UserSettings = observer(() => {
   };
 
   const renderField = (label, field, choices) => (
-    <div style={{ width: editingField === field ? '70%' : '95%', marginBottom: '1rem' }}>
+    <div style={{ width: editingField === field ? '70%' : '100%', marginBottom: '1rem' }}>
       <Typography.Text>{label}</Typography.Text>
       <div style={{ backgroundColor: '#F9FAFC', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
         {editingField === field ? (
@@ -166,87 +166,110 @@ const UserSettings = observer(() => {
   const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
 
   return (
-    <Card style={{ maxWidth: '600px', margin: '0 auto', marginTop: '1rem', marginBottom: '2rem' }}>
-      <div className='flex justify-between items-center bg-bluebrand text-white' style={{ padding: '0.8rem 1rem' }}>
-        <Typography.Title level={4} style={{ margin: 0, color: '#fff', fontWeight: 300 }}>
-          Account Settings
-        </Typography.Title>
-        <Avatar className='bg-white text-bluebrand align-middle' size={42} gap={8}>
-          {initials}
-        </Avatar>
-      </div>
-      <Space direction='vertical' style={{ width: '100%' }}>
-        <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-          <Divider>LOGIN INFORMATION</Divider>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            {/* {renderField('Username', 'username')} */}
-            {renderField('Password', 'password')}
-          </Space>
-
-          <Divider>PROFILE DETAILS</Divider>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            {renderField('First Name', 'firstName')}
-            {renderField('Last Name', 'lastName')}
-            {renderField('Email', 'email')}
-            {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
-          </Space>
-
-          <Divider>ATTENDED EVENTS</Divider>
-          <List>
-            {user.attended.length > 0 ? (
-              <>
-                <Typography.Text>
-                  You have attended {user.attended.length} events.
-                  <Button type='link' onClick={() => setIsAttendedModalOpen(true)}>
-                    View Details
-                  </Button>
-                </Typography.Text>
-                <AttendedArticles isOpen={isAttendedModalOpen} onClose={() => setIsAttendedModalOpen(false)} />
-              </>
-            ) : (
-              <List.Item>No articles attended.</List.Item>
-            )}
-          </List>
-
-          <Divider>PERMISSIONS</Divider>
-          {user && (
-            <List>
-              <List.Item>
-                Subscribed to:
-                <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
-                  {canReadPurposes && canReadPurposes.map(p => p.name).join(', ')}
-                </span>
-              </List.Item>
-              <List.Item>
-                Your Calendars:
-                <span style={{ marginLeft: '6px', color: 'gray', fontSize: '0.85rem' }}>
-                  {canWritePurposes && canWritePurposes.map(p => p.name).join(', ')}
-                </span>
-              </List.Item>
-            </List>
-          )}
-
-          <Divider>DANGER ZONE</Divider>
-          <Button type='link' onClick={handleClickOpen}>
-            Delete Account
-          </Button>
-          <Modal
-            title='Confirm Deletion'
-            open={open}
-            onCancel={handleClose}
-            footer={[
-              <Button key='back' onClick={handleClose}>
-                Cancel
-              </Button>,
-              <Button key='submit' ghost className='submit-blue-button' type='primary' onClick={handleDeleteAccount}>
-                Confirm
-              </Button>
-            ]}>
-            Are you sure you want to delete your account? This action cannot be undone.
-          </Modal>
+    <Layout className='w-[600px] h-screen mx-auto bg-white'>
+      <div className='w-[600px] mx-auto pt-8'>
+        <div
+          className='flex items-center justify-center'
+          style={{ paddingInline: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+          <Typography.Title level={2} className='mt-3'>
+            Account Settings
+          </Typography.Title>
         </div>
-      </Space>
-    </Card>
+        <div>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            <div className='mx-auto max-w-[600px] p-6'>
+              <Divider className='text-lg font-semibold'>LOGIN INFORMATION</Divider>
+              <div className='mt-4'>
+                <div className='mb-3'>
+                  <Typography.Text>Username</Typography.Text>
+                  <Input disabled value={tempValues['username']} style={{ cursor: 'default' }} />
+                </div>
+                {renderField('Password', 'password')}
+              </div>
+
+              <Divider className='text-lg font-semibold'>PROFILE DETAILS</Divider>
+              <div className='mt-4'>
+                {renderField('First Name', 'firstName')}
+                {renderField('Last Name', 'lastName')}
+                {renderField('Email', 'email')}
+                {renderField('University', 'university', UNIVERSITY_CHOICES.slice(1))}
+              </div>
+
+              <Divider>ATTENDED EVENTS</Divider>
+              <List>
+                {user.attended.length > 0 ? (
+                  <div className='p-4 bg-gray-100 rounded-lg text-left mb-4'>
+                    <div className='flex items-center space-x-2'>
+                      <p className='text-md font-semibold flex-grow'>
+                        You have attended {user.attended.length} events.
+                      </p>
+                      <button
+                        className='text-blue-500 hover:text-blue-600 hover:underline font-medium'
+                        onClick={() => setIsAttendedModalOpen(true)}>
+                        View Details
+                      </button>
+                    </div>
+                    <AttendedArticles isOpen={isAttendedModalOpen} onClose={() => setIsAttendedModalOpen(false)} />
+                  </div>
+                ) : (
+                  <List.Item>No articles attended.</List.Item>
+                )}
+              </List>
+
+              <Divider />
+              <div className='p-4 bg-gray-100 rounded-lg text-left mb-4'>
+                <p className='text-lg font-semibold'>PERMISSIONS</p>
+                {user && (
+                  <div className='mt-2'>
+                    <div className='flex items-center'>
+                      <p className='font-medium mr-2'>Calendars:</p>
+                      <span className='text-gray-600 text-sm'>
+                        {canWritePurposes && canWritePurposes.map(p => p.name).join(', ')}
+                      </span>
+                    </div>
+                    <div className='flex items-center mb-2'>
+                      <p className='font-medium mr-2'>Subscribed:</p>
+                      <span className='text-gray-600 text-sm'>
+                        {canReadPurposes && canReadPurposes.map(p => p.name).join(', ')}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Divider className='text-lg font-semibold text-red-600'>DANGER ZONE</Divider>
+              <div className='p-4 bg-red-100 rounded-lg text-left mb-4'>
+                <button
+                  className='text-red-600 hover:text-red-700 hover:underline font-medium'
+                  onClick={handleClickOpen}>
+                  Delete Account
+                </button>
+              </div>
+
+              <Modal
+                title='Confirm Deletion'
+                open={open}
+                onCancel={handleClose}
+                footer={[
+                  <Button key='back' onClick={handleClose}>
+                    Cancel
+                  </Button>,
+                  <Button
+                    key='submit'
+                    ghost
+                    className='submit-blue-button'
+                    type='primary'
+                    onClick={handleDeleteAccount}>
+                    Confirm
+                  </Button>
+                ]}>
+                Are you sure you want to delete your account? This action cannot be undone.
+              </Modal>
+            </div>
+          </Space>
+        </div>
+      </div>
+    </Layout>
   );
 });
 

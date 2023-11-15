@@ -144,28 +144,19 @@ const ArticleList = observer(() => {
                     <p style={{ fontSize: 'x-small', color: '#8c8c8c' }}>{article.duration}</p>
                   </Col>
                   <Col span={18}>
-                    <div className='bg-blue-100 text-black px-2 py-1 rounded mb-3'>{article.title}</div>
+                    <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
-    <Button
-  type='primary'
-  href={article.meetingType !== 'In-Person' ? article.event_link : undefined}
-  target='_blank'
-  style={{
-    marginRight: '8px',
-    backgroundColor: article.meetingType === 'In-Person' ? '#1677FF' : undefined,
-    borderColor: article.meetingType === 'In-Person' ? '#1677FF' : undefined,
-    color: article.meetingType === 'In-Person' ? '#fff' : undefined,
-  }}
-  disabled={article.meetingType === 'In-Person'}
->
-  {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
-</Button>
-
-
-
-
-
-                      <Button onClick={() => toggleDetails(article._id)}>More Details</Button>
+                      <button
+                        type='primary'
+                        href={article.meetingType !== 'In-Person' ? article.event_link : undefined}
+                        target='_blank'
+                        disabled={article.meetingType === 'In-Person'}
+                        className='basic-btn purple-light-full'>
+                        {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
+                      </button>
+                      <button className='basic-btn gray-outline' onClick={() => toggleDetails(article._id)}>
+                        More Details
+                      </button>
                     </div>
                     {showDetails[article._id] && (
                       <>
@@ -202,7 +193,7 @@ const ArticleList = observer(() => {
                       )}
                     </Button>
                     <div className='purpose-badge'>
-                      {purposeIcons[article.purpose.name] || purposeIcons.DEFAULT}
+                      {purposeIcons.DEFAULT}
                       <span style={{ fontSize: '13px' }}>{article.purpose.name}</span>
                     </div>
                   </div>

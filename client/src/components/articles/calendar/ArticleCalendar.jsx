@@ -81,7 +81,7 @@ const ArticleCalendar = ({ articles }) => {
 
   return (
     <div id='calendar-container' className='flex flex-col'>
-      <div id='calendar-head' className='flex items-center justify-between bg-bluebrand text-white rounded-t-xl'>
+      <div id='calendar-head' className='flex items-center justify-between bg-[#5161ce] text-white rounded-t-xl'>
         <Button
           id='prev-month'
           ghost
@@ -95,7 +95,7 @@ const ArticleCalendar = ({ articles }) => {
           style={{
             borderColor: 'white',
             backgroundColor: 'white',
-            color: '#1976d2'
+            color: '#5161ce'
           }}
           className='today-button'>
           <CalendarOutlined className='today-icon' />
