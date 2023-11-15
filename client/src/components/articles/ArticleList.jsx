@@ -24,8 +24,9 @@ const ArticleList = observer(() => {
 
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
 
-  const { allowedArticles, canReadPurposes, canWritePurposes, isLoading, refetchArticles } = useArticlePermissions();
+  const { allowedArticles, canReadPurposes, isLoading, refetchArticles } = useArticlePermissions();
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
 
@@ -97,7 +98,27 @@ const ArticleList = observer(() => {
     return articleDate >= eightHoursAgo;
   };
 
-  if (isLoading) {
+  const handleArticleUpdate = async updatedArticle => {
+    setIsUpdateLoading(true);
+    const updatedArticles = localArticles.map(article =>
+      article._id === updatedArticle._id ? updatedArticle : article
+    );
+    setLocalArticles(updatedArticles);
+    await refetchArticles();
+    setIsUpdateLoading(false);
+  };
+
+  const handleCreateArticle = async newArticle => {
+    setIsUpdateLoading(true);
+
+    const allArticles = [...localArticles, newArticle];
+
+    setLocalArticles(sortArticles(allArticles));
+    await refetchArticles();
+    setIsUpdateLoading(false);
+  };
+
+  if (isLoading || isUpdateLoading) {
     return <LoadingSpinner />;
   }
 
@@ -224,11 +245,11 @@ const ArticleList = observer(() => {
         open={openNewArticleModal || !!selectedArticle}
         onClose={toggleNewArticleModal}
         localArticles={localArticles}
-        setLocalArticles={setLocalArticles}
-        refetchArticles={refetchArticles}
         selectedArticle={selectedArticle}
         setSelectedArticle={setSelectedArticle}
         onDelete={handleDelete}
+        onCreateArticle={handleCreateArticle}
+        onArticleUpdate={handleArticleUpdate}
       />
     </div>
   );
