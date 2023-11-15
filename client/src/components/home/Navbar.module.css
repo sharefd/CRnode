@@ -33,10 +33,10 @@
 /* Navbar.css */
 @media screen and (max-width: 950px) {
   .navbar-desktop {
-    display: none;
+    display: none !important;
   }
   .navbar-mobile {
-    display: flex;
+    display: flex !important;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
@@ -49,10 +49,10 @@
 
 @media screen and (min-width: 951px) {
   .navbar-desktop {
-    display: flex;
+    display: flex !important;
   }
   .navbar-mobile {
-    display: none;
+    display: none !important;
   }
 }
 

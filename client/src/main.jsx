@@ -5,7 +5,6 @@ import { Provider } from 'mobx-react';
 import userStore from './stores/userStore.js';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import './main.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const queryClient = new QueryClient();
 

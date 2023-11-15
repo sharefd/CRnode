@@ -1,3 +1,32 @@
+#navbar-mobile {
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 767px) {
+  #navbar-animmenu * {
+    display: none;
+  }
+  #navbar-mobile {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #navbar-animmenu {
+    display: flex;
+  }
+  #navbar-mobile {
+    display: none;
+  }
+}
+
 /*----------bootstrap-navbar-css------------*/
 .navbar-logo {
   padding: 15px;

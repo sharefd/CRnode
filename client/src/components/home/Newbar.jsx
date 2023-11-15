@@ -6,7 +6,7 @@ import { LogoutOutlined, MenuOutlined, SettingOutlined, HomeOutlined, UserOutlin
 import CloudLogo from '@/assets/images/logo.png';
 import { navlinks as links, sideMenuLinks } from '@/utils/constants';
 import './Newbar.css';
-import { Avatar, Dropdown } from 'antd';
+import { Avatar, Dropdown, Drawer, List } from 'antd';
 
 const Newbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -16,6 +16,7 @@ const Newbar = observer(() => {
   const navbarRef = useRef(null);
   const horiSelectorRef = useRef(null);
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +41,9 @@ const Newbar = observer(() => {
     return () => window.removeEventListener('resize', updateActiveIndicator);
   }, [activeIndex]);
 
-  const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+  const handleNavCollapse = () => {
+    setDrawerVisible(!drawerVisible);
+  };
 
   const handleLogout = () => {
     userStore.setUser(null);
@@ -149,9 +152,26 @@ const Newbar = observer(() => {
           <span className='text-white text-lg ml-2'>CloudRounds</span>
         </Link>
       </div>
-      <button className='p-3 text-white md:hidden' onClick={handleNavCollapse}>
-        <MenuOutlined />
-      </button>
+
+      <Drawer
+        title={
+          <div className='flex items-center text-gray-700 justify-start'>
+            <Avatar>{getInitials(user)}</Avatar>
+            <span className='ml-2'>{user.username}</span>
+          </div>
+        }
+        placement='right'
+        closable={false}
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={250}
+        style={{ border: 'none' }}>
+        <List
+          itemLayout='horizontal'
+          dataSource={drawerItems}
+          renderItem={item => <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>}
+        />
+      </Drawer>
       <div id='navbar-animmenu'>
         <ul className='show-dropdown main-navbar'>
           <div
@@ -181,6 +201,11 @@ const Newbar = observer(() => {
             </li>
           ))}
         </ul>
+      </div>
+      <div id='navbar-mobile'>
+        <button className='p-3 text-white md:hidden' onClick={handleNavCollapse}>
+          <MenuOutlined />
+        </button>
       </div>
     </nav>
   );
