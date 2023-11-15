@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import userStore from '@/stores/userStore';
-import { LogoutOutlined, MenuOutlined, SettingOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import CloudLogo from '@/assets/images/logo.png';
+import userStore from '@/stores/userStore';
 import { navlinks as links, sideMenuLinks } from '@/utils/constants';
+import { LogoutOutlined, MenuOutlined, SettingOutlined } from '@ant-design/icons';
+import { Avatar, Drawer, Dropdown, List, Typography } from 'antd';
+import { observer } from 'mobx-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Newbar.css';
-import { Avatar, Dropdown, Drawer, List, Typography } from 'antd';
-const { Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 const Newbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -24,7 +24,13 @@ const Newbar = observer(() => {
 
   const [activeIndicatorStyle, setActiveIndicatorStyle] = useState({ width: 0, left: 0 });
 
+  const findActiveIndex = () => {
+    return links.findIndex(link => location.pathname === link.endpoint);
+  };
+
   useEffect(() => {
+    setActiveIndex(findActiveIndex());
+
     const updateActiveIndicator = () => {
       const navbar = navbarRef.current;
       if (navbar) {

@@ -11,7 +11,12 @@ import { useMutation } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import NewArticleForm from './form/NewArticleForm';
-import { getPurposesWithoutArticles } from '@/utils/articleHelpers';
+import {
+  getPurposesAfterUpdate,
+  getPurposesAfterCreate,
+  getEmptyPurposes,
+  getPurposesAfterDelete
+} from '@/utils/articleHelpers';
 
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -56,6 +61,10 @@ const ArticleList = observer(() => {
     onSuccess: (data, variables) => {
       const updatedArticles = localArticles.filter(article => article._id !== variables);
       setLocalArticles(updatedArticles);
+
+      const newSelectedPurposes = getPurposesAfterDelete(updatedArticles, selectedArticle, selectedPurposes);
+      setSelectedPurposes(newSelectedPurposes);
+      setSelectedArticle(null);
     }
   });
 
@@ -68,7 +77,6 @@ const ArticleList = observer(() => {
       cancelText: 'No',
       onOk() {
         deleteMutation.mutate(articleId);
-        setSelectedArticle(null);
       },
       onCancel() {
         return;
@@ -108,24 +116,15 @@ const ArticleList = observer(() => {
     );
     setLocalArticles(sortArticles(updatedArticles));
 
-    const oldPurposeName = localArticles.find(a => a._id === updatedArticle._id).purpose.name;
-    const newPurposeName = userPurposes.find(p => updatedArticle.purpose._id === p._id).name;
-
-    const oldPurposeStillInUse = updatedArticles.some(article => article.purpose.name === oldPurposeName);
-
-    let newSelectedPurposes = selectedPurposes.slice();
-
-    // if no articles remain for that purpose, remove it from selected purposes
-    if (!oldPurposeStillInUse && newSelectedPurposes.includes(oldPurposeName)) {
-      newSelectedPurposes = newSelectedPurposes.filter(purpose => purpose !== oldPurposeName);
-    }
-
-    if (!newSelectedPurposes.includes(newPurposeName)) {
-      newSelectedPurposes.push(newPurposeName);
-    }
+    const newSelectedPurposes = getPurposesAfterUpdate(
+      localArticles,
+      userPurposes,
+      updatedArticle,
+      updatedArticles,
+      selectedPurposes
+    );
 
     setSelectedPurposes(newSelectedPurposes);
-
     setIsUpdateLoading(false);
   };
 
@@ -133,8 +132,11 @@ const ArticleList = observer(() => {
     setIsUpdateLoading(true);
 
     const allArticles = [...localArticles, newArticle];
-
     setLocalArticles(sortArticles(allArticles));
+
+    const newSelectedPurposes = getPurposesAfterCreate(userPurposes, newArticle, selectedPurposes);
+
+    setSelectedPurposes(newSelectedPurposes);
     setIsUpdateLoading(false);
   };
 
@@ -155,7 +157,7 @@ const ArticleList = observer(() => {
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
-  const purposesWithoutArticles = getPurposesWithoutArticles(localArticles, userPurposes);
+  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);
 
   const isMeetingJoinable = article => {
     if (article.meetingType === 'Hybrid' || article.meetingType === 'Virtual') {
