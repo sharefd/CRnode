@@ -152,6 +152,7 @@ const ArticleList = observer(() => {
                   </Col>
                   <Col span={18}>
                     <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
+
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
                       {isMeetingJoinable(article) ? (
                         <a
@@ -169,6 +170,7 @@ const ArticleList = observer(() => {
                         More Details
                       </button>
                     </div>
+
                     {showDetails[article._id] && (
                       <>
                         {article.meetingType !== 'In-Person' ? (
