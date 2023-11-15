@@ -27,7 +27,6 @@
   }
 }
 
-/*----------bootstrap-navbar-css------------*/
 .navbar-logo {
   padding: 15px;
   color: #fff;
@@ -42,7 +41,7 @@
 }
 
 #navbar-animmenu {
-  display: flex; /* Set to flex to enable flexbox properties */
+  display: flex;
   justify-content: flex-end;
   background: #5161ce;
   overflow: hidden;
@@ -62,6 +61,10 @@
   list-style-type: none;
 }
 
+#navbar-animmenu li a:hover {
+  color: #fff;
+}
+
 #navbar-animmenu ul li a svg {
   font-size: 26px;
 }
@@ -76,60 +79,13 @@
 }
 
 #navbar-animmenu > ul > li.active > a {
-  color: #5161ce;
+  color: #fff;
   background-color: transparent;
   transition: all 0.2s;
 }
 
 #navbar-animmenu .active > a:not(:only-child):after {
   transform: rotate(90deg);
-}
-.hori-selector {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  height: 100%; /* Example: reduce height to 80% of its parent li */
-  max-width: 50px;
-  top: 15px;
-  left: 6px;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  background-color: #fff;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
-
-.hori-selector .right,
-.hori-selector .left {
-  position: absolute;
-  width: 26px;
-  height: 25px;
-  background-color: inherit;
-  bottom: 10px;
-}
-.hori-selector .right {
-  right: -25px;
-}
-.hori-selector .left {
-  left: -25px;
-}
-.hori-selector .right:before,
-.hori-selector .left:before {
-  content: '';
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border-radius: 40%;
-  background-color: #5161ce;
-}
-.hori-selector .right:before {
-  bottom: 0;
-  right: -25px;
-}
-.hori-selector .left:before {
-  bottom: 0;
-  left: -25px;
 }
 
 .drawer-item {

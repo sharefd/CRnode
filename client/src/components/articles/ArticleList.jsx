@@ -200,16 +200,24 @@ const ArticleList = observer(() => {
                     <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
 
                     <div style={{ marginTop: '8px', marginBottom: showDetails[article._id] ? '16px' : '40px' }}>
-                      {isMeetingJoinable(article) ? (
+                      {article.meetingType === 'In-Person' ? (
+                        <button disabled className='basic-btn purple-light-full disabled'>
+                          In-Person
+                        </button>
+                      ) : isMeetingJoinable(article) ? (
                         <a
                           href={article.event_link}
                           target='_blank'
                           rel='noopener noreferrer'
-                          className='basic-btn join-meeting-btn'>
-                          {article.meetingType === 'In-Person' ? 'In-Person' : 'Join Meeting'}
+                          Join
+                          Meeting
+                          className='basic-btn purple-full-link'>
+                          Join Meeting
                         </a>
                       ) : (
-                        <button className='basic-btn bg-[#5161ce]'>Virtual</button>
+                        <button disabled className='basic-btn gray-disabled'>
+                          Join Meeting
+                        </button>
                       )}
 
                       <button className='basic-btn gray-outline' onClick={() => toggleDetails(article._id)}>

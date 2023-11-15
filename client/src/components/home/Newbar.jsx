@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Newbar.css';
+
 const { Text } = Typography;
 
 const Newbar = observer(() => {
@@ -16,7 +17,6 @@ const Newbar = observer(() => {
   const [activeIndex, setActiveIndex] = useState(0);
   const navbarRef = useRef(null);
   const horiSelectorRef = useRef(null);
-  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -28,39 +28,10 @@ const Newbar = observer(() => {
     return links.findIndex(link => location.pathname === link.endpoint);
   };
 
-  const isScrollbarVisible = () => {
-    return document.body.scrollHeight > window.innerHeight;
-  };
-
-  const getScrollbarWidth = () => {
-    return window.innerWidth - document.documentElement.clientWidth;
-  };
-
   useEffect(() => {
-    setActiveIndex(findActiveIndex());
-
-    const updateActiveIndicator = () => {
-      const navbar = navbarRef.current;
-      if (navbar) {
-        const activeLink = navbarRef.current.querySelector('li.active');
-        if (activeLink) {
-          const { offsetWidth: width, offsetLeft: left } = activeLink;
-          let adjustedLeft = left;
-          if (isScrollbarVisible()) {
-            const scrollbarWidth = getScrollbarWidth();
-            adjustedLeft += scrollbarWidth / 10;
-          }
-
-          setActiveIndicatorStyle({ width, left: adjustedLeft });
-        }
-      }
-    };
-
-    updateActiveIndicator();
-    window.addEventListener('resize', updateActiveIndicator);
-
-    return () => window.removeEventListener('resize', updateActiveIndicator);
-  }, [activeIndex]);
+    const currentActiveIndex = findActiveIndex();
+    setActiveIndex(currentActiveIndex);
+  }, [location]);
 
   const handleNavCollapse = () => {
     setDrawerVisible(!drawerVisible);
@@ -171,7 +142,7 @@ const Newbar = observer(() => {
 
   return (
     <nav ref={navbarRef} className='navbar-mainbg p-0 flex justify-between items-center h-16'>
-      <div className='navbar-logo'>
+      <div className={`navbar-logo`}>
         <Link to='/' className='flex items-center space-x-2 text-white text-lg p-3'>
           <img src={CloudLogo} width='40' alt='CloudRounds Logo' />
           <span className='text-white text-lg ml-2'>CloudRounds</span>
@@ -199,22 +170,10 @@ const Newbar = observer(() => {
       </Drawer>
       <div id='navbar-animmenu'>
         <ul className='show-dropdown main-navbar'>
-          <div
-            ref={horiSelectorRef}
-            className='hori-selector'
-            style={{
-              backgroundColor: activeIndex === 1 ? '#f3f4f6' : '#fff',
-              width: `${activeIndicatorStyle.width}px`,
-              transform: `translateX(${activeIndicatorStyle.left}px)`
-            }}>
-            <div className={`left`}></div>
-            <div className={`right`}></div>
-          </div>
-          {/* Map your nav items here */}
           {navbarDesktopItems.map((item, index) => (
             <li
               key={item.key}
-              className={`${index === activeIndex ? 'active' : ''} p-2 pb-[0px] rounded-full `}
+              className={`relative p-2 pb-[0px] rounded-full ${index === activeIndex ? 'active' : ''}`}
               onClick={item.onClick}>
               {item.label ? (
                 item.label
@@ -223,6 +182,19 @@ const Newbar = observer(() => {
                   <item.icon />
                 </Link>
               )}
+              <div
+                className={`${index === activeIndex ? '' : 'hidden'}`}
+                style={{
+                  position: 'absolute',
+                  bottom: '-10px',
+                  left: '6px',
+                  width: '52px',
+                  height: '3px',
+                  backgroundColor: '#fff',
+                  borderTopLeftRadius: '20px',
+                  borderTopRightRadius: '20px'
+                }}
+              />
             </li>
           ))}
         </ul>

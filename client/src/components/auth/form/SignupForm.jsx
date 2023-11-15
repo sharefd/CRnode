@@ -89,7 +89,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
   return (
     <Form form={form} onFinish={handleSubmit} initialValues={{ university: '' }} className='signup-form'>
       <div className='p-8 py-2 md:py-0 w-full mx-auto'>
-        <div id='signup-form' className='scrollable-area'>
+        <div id='signup-form' className={isLoading ? '' : `scrollable-area`}>
           <h1 className='authform-title'>Sign up</h1>
           {fields.map((field, index) => (
             <div key={index}>

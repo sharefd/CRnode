@@ -107,11 +107,37 @@
   border-color: #6c7ce7;
 }
 
+.gray-disabled {
+  padding: 3.5px 10px;
+  cursor: not-allowed;
+  color: darkgray;
+  background-color: #808080;
+}
+
 .purple-full {
   background-color: #5161ce;
 }
 
+.purple-full-link {
+  padding: 6px 12px;
+  background-color: #5161ce;
+}
+
+.purple-full-link:hover {
+  color: #fff;
+  background-color: #6576e8;
+}
+
+.purple-full:hover {
+  color: #fff;
+  background-color: #6576e8;
+}
+
 .purple-light-full {
+  background-color: #6576e8;
+}
+
+.purple-light-full.disabled:hover {
   background-color: #6576e8;
 }
 

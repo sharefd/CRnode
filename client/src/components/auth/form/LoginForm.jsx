@@ -85,7 +85,7 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
     <>
       {isForgotPassword ? (
         <Form layout='vertical' onFinish={handleForgotPassword}>
-          <div className={isSendingEmail ? '' : `scrollable-area`}>
+          <div className={isSendingEmail || isLoading ? '' : `scrollable-area`}>
             <div className='px-8 w-full mx-auto'>
               <Form.Item>
                 <p className='requiredLabel'>Email</p>
