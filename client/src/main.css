@@ -9,11 +9,6 @@
 @tailwind utilities;
 @tailwind variants;
 
-html {
-  scrollbar-gutter: stable;
-  overflow-y: scroll;
-}
-
 * {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }

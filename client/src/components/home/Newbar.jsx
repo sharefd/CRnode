@@ -28,6 +28,14 @@ const Newbar = observer(() => {
     return links.findIndex(link => location.pathname === link.endpoint);
   };
 
+  const isScrollbarVisible = () => {
+    return document.body.scrollHeight > window.innerHeight;
+  };
+
+  const getScrollbarWidth = () => {
+    return window.innerWidth - document.documentElement.clientWidth;
+  };
+
   useEffect(() => {
     setActiveIndex(findActiveIndex());
 
@@ -37,7 +45,13 @@ const Newbar = observer(() => {
         const activeLink = navbarRef.current.querySelector('li.active');
         if (activeLink) {
           const { offsetWidth: width, offsetLeft: left } = activeLink;
-          setActiveIndicatorStyle({ width, left });
+          let adjustedLeft = left;
+          if (isScrollbarVisible()) {
+            const scrollbarWidth = getScrollbarWidth();
+            adjustedLeft += scrollbarWidth / 10;
+          }
+
+          setActiveIndicatorStyle({ width, left: adjustedLeft });
         }
       }
     };
