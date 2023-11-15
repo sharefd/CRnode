@@ -122,7 +122,7 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
         </Form>
       ) : (
         <Form onFinish={handleSubmit}>
-          <div className='scrollable-area'>
+          <div className={isSendingEmail || isLoading ? 'overflow-hidden' : `scrollable-area`}>
             <div className='px-8 w-full mx-auto'>
               <div id='login-form' style={{ marginBottom: '30px' }}>
                 {fields.map((field, index) => (
@@ -143,6 +143,7 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
                           labelCol={{ span: 24 }}
                           wrapperCol={{ span: 24 }}>
                           <Input
+                            disabled={isLoading}
                             type={field.type}
                             value={credentials[field.name]}
                             onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
@@ -158,6 +159,7 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
                           labelCol={{ span: 24 }}
                           wrapperCol={{ span: 24 }}>
                           <Input
+                            disabled={isLoading}
                             type={field.type}
                             value={credentials[field.name]}
                             onChange={e => setCredentials({ ...credentials, [field.name]: e.target.value })}
