@@ -46,7 +46,7 @@ export const domainSuggestions = [
     'usask.ca',
     'saskhealthauthority.ca',
     'umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca',
-    'nosm.ca',
+    'nosm.ca', 'umontreal.ca',
 ];
 
 export const universityDomainMap = {
@@ -64,6 +64,7 @@ export const universityDomainMap = {
   'University of Saskatchewan': ['usask.ca', 'saskhealthauthority.ca'],  
   'University of Manitoba': ['umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca'],  
     'Northern Ontario School of Medicine University': ['nosm.ca'],
+'Université de Montréal': ['umontreal.ca'],
 
   Other: []
 };
