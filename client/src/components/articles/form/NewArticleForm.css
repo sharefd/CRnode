@@ -1,3 +1,7 @@
+.compact-form {
+  margin-top: 10px;
+}
+
 .compact-form .ant-form-item {
   margin-bottom: 16px;
 }
@@ -6,45 +10,35 @@
   display: block;
 }
 
+.newArticleForm > div > div > label {
+  font-family: 'Inter', Lato, Roboto;
+  color: #333333d1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.compact-form .ant-select-selector span.disabled-option {
+  color: gray !important;
+}
+
 .compact-form .ant-form-item-label {
-  margin-bottom: -6px;
+  padding-bottom: 0; /* Adjust this value as needed */
+  margin-bottom: -10px;
+}
+
+.compact-form .ant-form-item-control {
+  margin-bottom: 0px;
+}
+
+.compact-form .ant-form-item-control {
+  line-height: 32px; /* Adjust this value as needed */
 }
 
 .compact-form .ant-input,
 .compact-form .ant-select-selector {
-  border: none;
-  border-bottom: 1px solid #d9d9d9;
-  border-radius: 0;
-}
-
-.compact-form .ant-input:focus,
-.compact-form .ant-select-focused .ant-select-selector {
-  border-color: blue;
-  box-shadow: none;
-}
-
-.compact-form .ant-form-item-label > label {
-  color: #333;
-}
-
-.compact-form .ant-input:focus + .ant-form-item-label > label,
-.compact-form .ant-select-focused + .ant-form-item-label > label {
-  color: blue;
-}
-
-.compact-form textarea.ant-input {
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-}
-
-.compact-form textarea.ant-input:focus {
-  border-color: blue;
-  box-shadow: none;
-}
-
-.compact-form .ant-select-selector {
-  border: none;
-  border-radius: 4px;
+  /* border: none; */
+  /* border-bottom: 1px solid #d9d9d9; */
+  border-radius: 6px;
 }
 
 li.ant-picker-ok button {

@@ -11,6 +11,7 @@ import { useQuery } from 'react-query';
 import NewPurposeDialog from '../actions/NewPurposeDialog';
 import './NewArticleForm.css';
 import TimeRangePicker from './TimeRangePicker';
+const { Option } = Select;
 
 const NewArticleForm = ({
   open,
@@ -173,7 +174,7 @@ const NewArticleForm = ({
   return (
     <Modal open={open} onCancel={onModalClose} footer={null} className='new-article-form'>
       <Form onFinish={selectedArticle ? handleSave : handleSubmit} className='compact-form'>
-        <Form.Item label='Title' labelCol={{ span: 24 }} colon={false}>
+        <Form.Item label='Title' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
           <Input
             placeholder='Title'
             value={article.title}
@@ -183,23 +184,23 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false}>
+            <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <Select
                 value={(articlePurpose && articlePurpose._id) || ''}
                 onChange={value => setArticlePurpose({ ...articlePurpose, _id: value })}>
-                <Select.Option value='' disabled>
-                  Select Purpose
-                </Select.Option>
+                <Option value='' disabled>
+                  <span className='disabled-option'>Select Purpose</span>
+                </Option>
                 {allowedPurposes.map(purpose => (
-                  <Select.Option key={purpose._id} value={purpose._id}>
+                  <Option key={purpose._id} value={purpose._id}>
                     {purpose.name}
-                  </Select.Option>
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label='Speaker' labelCol={{ span: 24 }} colon={false}>
+            <Form.Item label='Speaker' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <Input
                 placeholder='Speaker'
                 value={article.speaker}
@@ -209,41 +210,37 @@ const NewArticleForm = ({
           </Col>
         </Row>
 
-        <Col span={24}>
-          <Form.Item label='Date and Time' labelCol={{ span: 24 }} colon={false}>
-            <Row gutter={16}>
-              <Col span={12}>
-                <DatePicker
-                  value={dayjs(article.date)}
-                  onChange={dateValue => {
-                    if (!dateValue) {
-                      setDate(dayjs(article.date));
-                      return;
-                    }
-                    setDate(dateValue);
-                    setArticle({ ...article, date: dayjs(dateValue) });
-                  }}
-                />
-              </Col>
-              {/* <Col span={12}>
-                <TimePicker.RangePicker
-                  value={timeRange}
-                  onChange={setTimeRange}
-                  format='hh:mm A'
-                  minuteStep={5}
-                  use12Hours
-                />
-              </Col> */}
-              <Col span={12}>
-                <TimeRangePicker value={timeRange} onChange={newRange => setTimeRange(newRange)} />
-              </Col>
-            </Row>
-          </Form.Item>
-        </Col>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label='Date' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+              <DatePicker
+                className='w-full'
+                value={dayjs(article.date)}
+                onChange={dateValue => {
+                  if (!dateValue) {
+                    setDate(dayjs(article.date));
+                    return;
+                  }
+                  setDate(dateValue);
+                  setArticle({ ...article, date: dayjs(dateValue) });
+                }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label='Time' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+              <TimeRangePicker
+                value={timeRange}
+                onChange={newRange => setTimeRange(newRange)}
+                isNewArticleModalOpen={open}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Meeting Type' labelCol={{ span: 24 }} colon={false}>
+            <Form.Item label='Meeting Type' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <Select value={article.meetingType} onChange={value => setArticle({ ...article, meetingType: value })}>
                 <Select.Option value='Virtual'>Virtual</Select.Option>
                 <Select.Option value='In-Person'>In-Person</Select.Option>
@@ -254,7 +251,7 @@ const NewArticleForm = ({
 
           {article.meetingType !== 'In-Person' && (
             <Col span={12}>
-              <Form.Item label='Meeting Details' labelCol={{ span: 24 }} colon={false}>
+              <Form.Item label='Meeting Details' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
                 <Row gutter={16}>
                   <Col span={9}>
                     <Input
@@ -279,6 +276,7 @@ const NewArticleForm = ({
         {/* EVENT LINK */}
         <Form.Item
           label={article.meetingType === 'In-Person' ? 'Location' : 'Event Link'}
+          className='newArticleForm'
           labelCol={{ span: 24 }}
           colon={false}>
           <Input
@@ -295,7 +293,7 @@ const NewArticleForm = ({
           />
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item label='Notes' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
           <Input.TextArea
             placeholder='Additional Details (e.g. required readings, preparation material)'
             value={article.additional_details}
