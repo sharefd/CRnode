@@ -4,7 +4,7 @@ import MACIMAHD2Icon from '@/assets/images/mcm2.png';
 import MACIMAHD3Icon from '@/assets/images/mcm3.png';
 import OM1Icon from '@/assets/images/om1-purple.png';
 
-export const purposeIcons = {
+const purposeIcons = {
   OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
   UOFTAMR: <RocketLaunch sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
   MACIMAHD1: <img src={MACIMAHD1Icon} style={{ width: '18px', marginRight: '6px' }} />,
@@ -14,3 +14,5 @@ export const purposeIcons = {
   'OM AHD': <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
   'UofT Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />
 };
+
+export default purposeIcons;

@@ -204,6 +204,34 @@ router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
   }
 });
 
+router.put('/toggle-favorite', jwtMiddleware, async (req, res) => {
+  const { userId, articleId, isFavorite } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    if (isFavorite) {
+      if (!user.favorites.includes(articleId)) {
+        user.favorites.push(articleId);
+      }
+    } else {
+      const index = user.favorites.indexOf(articleId);
+      if (index > -1) {
+        user.favorites.splice(index, 1);
+      }
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully updated favorites', favorites: user.favorites });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 // Update user details (from user settings)
 router.put('/:id', jwtMiddleware, async (req, res) => {
   const { id } = req.params;

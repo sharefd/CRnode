@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema({
   purposes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purpose' }],
   attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   resetToken: { type: String },
-  resetTokenExpiry: { type: Number }
+  resetTokenExpiry: { type: Number },
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }]
 });
 
 module.exports = mongoose.model('User', UserSchema);
