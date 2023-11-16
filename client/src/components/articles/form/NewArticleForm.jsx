@@ -277,7 +277,10 @@ const NewArticleForm = ({
         </Row>
 
         {/* EVENT LINK */}
-        <Form.Item label='Location' labelCol={{ span: 24 }} colon={false}>
+        <Form.Item
+          label={article.meetingType === 'In-Person' ? 'Location' : 'Event Link'}
+          labelCol={{ span: 24 }}
+          colon={false}>
           <Input
             placeholder={
               article.meetingType !== 'In-Person' ? 'Event Link (Virtual Meeting)' : 'Location (In-Person Meeting)'

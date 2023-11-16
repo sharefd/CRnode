@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { formatDate } from '@/utils/dates';
 
-import { purposeIcons } from '@/components/ui/PurposeIcons';
+import purposeIcons from '@/components/ui/PurposeIcons';
 import { EnvironmentOutlined } from '@ant-design/icons';
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {

@@ -45,3 +45,28 @@ export const getPurposesAfterDelete = (articles, deletedArticle, selectedPurpose
 
   return selectedPurposes;
 };
+
+export const isArticleAfterCurrentDate = article => {
+  const currentDate = new Date();
+  const eightHoursAgo = new Date(currentDate);
+  eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
+  const articleDate = new Date(article ? article.date : '');
+  return articleDate >= eightHoursAgo;
+};
+
+export const filterArticlesForList = (localArticles, organizerFilter, selectedPurposes) => {
+  return localArticles
+    .filter(article => {
+      return organizerFilter.length === 0 || organizerFilter.includes(article.organizer.username);
+    })
+    .filter(article => {
+      return selectedPurposes.includes('Show All') || selectedPurposes.includes(article.purpose.name);
+    })
+    .filter(isArticleAfterCurrentDate);
+};
+
+export const getArticlesForPage = (currentPage, articlesPerPage, filteredArticles) => {
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  return filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+};

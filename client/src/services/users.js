@@ -72,7 +72,7 @@ export const fetchUsers = async () => {
     const response = await axios.get(`${baseUrl}/api/users`);
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error fetching users:', error);
   }
 };
 
@@ -85,6 +85,19 @@ export const toggleAttending = async (userId, articleId, isAttending) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating attending for user:', error);
+  }
+};
+
+export const toggleFavorite = async (userId, articleId, isFavorite) => {
+  try {
+    const response = await axios.put(`${baseUrl}/api/users/toggle-favorite`, {
+      userId,
+      articleId,
+      isFavorite
+    });
+    return response.data.favorites;
+  } catch (error) {
+    console.error('Error updating favorite for user:', error);
   }
 };
