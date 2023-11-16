@@ -49,7 +49,8 @@ router.get('/me', jwtMiddleware, async (req, res) => {
       email: user.email,
       isAdmin: user.isAdmin,
       purposes: user.purposes,
-      attended: user.attended
+      attended: user.attended,
+      favorites: user.favorites
     };
 
     res.status(200).json(userResponse);
@@ -90,6 +91,7 @@ router.post('/login', async (req, res) => {
 
     const { password: _, ...userResponse } = user.toObject();
     userResponse.attended = user.attended;
+    userResponse.favorites = user.favorites;
 
     res.status(200).json({ message: 'Successfully logged in', token: token, user: userResponse });
   } catch (err) {
@@ -199,6 +201,22 @@ router.put('/toggle-attend', jwtMiddleware, async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: 'Successfully updated attendance', attended: user.attended });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get('/favorites/:userId', jwtMiddleware, async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const favorites = user.favorites;
+
+    res.status(200).json(favorites);
   } catch (err) {
     res.status(500).send(err);
   }
