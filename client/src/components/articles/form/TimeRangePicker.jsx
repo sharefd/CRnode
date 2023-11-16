@@ -110,7 +110,7 @@ const TimeRangePicker = ({ value, onChange, isNewArticleModalOpen }) => {
 
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 0; hour < 24; hour++) {
+    for (let hour = 6; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
         slots.push(dayjs().hour(hour).minute(minute).second(0));
       }
