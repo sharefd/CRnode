@@ -22,9 +22,7 @@ const Admin = lazy(() => import('./components/admin/Admin'));
 const App = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const token = localStorage.getItem('CloudRoundsToken');
-
   const parsedUser = JSON.parse(localUser);
-
   const [user, setUser] = useState(parsedUser);
 
   const {
@@ -32,7 +30,7 @@ const App = observer(() => {
     isLoading,
     isError
   } = useQuery('userData', fetchCurrentUser, {
-    enabled: !!user && !token
+    enabled: !!user || !token
   });
 
   useEffect(() => {
@@ -45,6 +43,14 @@ const App = observer(() => {
       setUser(fetchedUser);
     }
   }, [isLoading, fetchedUser]);
+
+  if (!token || !localUser) {
+    localStorage.removeItem('CloudRoundsUser');
+    localStorage.removeItem('CloudRoundsToken');
+    if (window.location.pathname !== '/login') {
+      window.location.href = '/login';
+    }
+  }
 
   axios.interceptors.request.use(
     config => {
