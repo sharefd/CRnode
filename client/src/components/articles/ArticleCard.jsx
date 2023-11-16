@@ -24,6 +24,17 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     }
     return false;
   };
+    
+    
+  const today = new Date();
+  const isToday = formattedDate === formatDate(today); // Check if the date is today
+    
+ const cardContainerStyle = {
+    border: isToday ? '2px solid #1e3a8a' : '', // Use different colors for today and other days
+     borderRadius: '10px', 
+  };   
+
+    
 
   const isMeetingJoinable = isMeetingInfoPresent();
 
@@ -181,7 +192,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     }
   ];
   return (
-    <div className='article-card-container mb-4 rounded-md bg-[#f5f3ff]'>
+    <div className='article-card-container mb-4 rounded-md bg-[#f5f3ff]' style={cardContainerStyle}>
       <Collapse bordered={true} accordion={true} items={panels} defaultActiveKey={['0']} />
     </div>
   );
