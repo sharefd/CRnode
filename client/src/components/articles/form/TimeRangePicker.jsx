@@ -42,7 +42,7 @@ const TimeRangePicker = ({ value, onChange }) => {
   const generateTimeSlots = () => {
     const slots = [];
     for (let hour = 0; hour < 24; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
+      for (let minute = 0; minute < 60; minute += 15) {
         slots.push(dayjs().hour(hour).minute(minute).second(0));
       }
     }
