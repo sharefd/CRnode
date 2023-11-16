@@ -43,11 +43,12 @@
 #navbar-animmenu {
   display: flex;
   justify-content: flex-end;
-  background: #5161ce;
+  background: transparent;
   overflow: hidden;
   position: relative;
   padding: 10px 0px;
   width: 100%;
+  height: 64px;
 }
 
 #navbar-animmenu ul {
@@ -55,10 +56,18 @@
   align-items: center;
   justify-content: center;
   margin: 0px;
+  height: 100%;
 }
 
 #navbar-animmenu li {
   list-style-type: none;
+  height: 100%;
+}
+
+#navbar-animmenu li .avatarDropdown {
+  padding: 6px;
+  width: 26px;
+  margin-right: 20px;
 }
 
 #navbar-animmenu li a:hover {
@@ -69,13 +78,14 @@
   font-size: 26px;
 }
 
-#navbar-animmenu ul li a {
+#navbar-animmenu li a {
   color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   padding: 0px 10px;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   position: relative;
+  height: 100%;
 }
 
 #navbar-animmenu > ul > li.active > a {
