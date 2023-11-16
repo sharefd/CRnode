@@ -2,7 +2,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { createArticle, updateArticle } from '@/services/articles';
 import { createPurpose, fetchPurposes } from '@/services/purposes';
 import { initialArticleData } from '@/utils/constants';
-import { extractTimesFromDuration } from '@/utils/dates';
+import { extractTimesFromDuration, formatDate } from '@/utils/dates';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd';
 import dayjs from 'dayjs';
@@ -92,6 +92,8 @@ const NewArticleForm = ({
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
 
+    console.log(formatDate(date));
+
     const payload = {
       ...article,
       date: date,
@@ -167,6 +169,7 @@ const NewArticleForm = ({
     setSelectedArticle(null);
     setArticlePurpose(null);
     setTimeRange(['', '']);
+    setDate(dayjs());
     setArticle(initialArticleData);
     onClose();
   };
