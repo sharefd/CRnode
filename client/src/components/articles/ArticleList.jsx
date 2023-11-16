@@ -193,8 +193,8 @@ const ArticleList = observer(() => {
               <Card key={index} style={{ marginBottom: '16px' }}>
                 <Row gutter={8}>
                   <Col span={6}>
-                    <p style={{ fontSize: 'small', color: '#8c8c8c' }}>{formatDate(article.date)}</p>
-                    <p style={{ fontSize: 'x-small', color: '#8c8c8c' }}>{article.duration}</p>
+                    <p style={{ fontSize: 'large', color: '#8c8c8c' }}>{formatDate(article.date)}</p>
+                    <p style={{ fontSize: 'small', color: '#8c8c8c' }}>{article.duration}</p>
                   </Col>
                   <Col span={18}>
                     <div className='bg-[#d6daf9] text-black px-2 py-1 rounded mb-3'>{article.title}</div>
