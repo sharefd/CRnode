@@ -1,44 +1,28 @@
-import { Spin, Typography, Card, Row, Col } from 'antd';
-import userStore from '@/stores/userStore';
+import { Typography, Card, Row, Col } from 'antd';
 import { homeLinks } from '@/utils/constants';
 import { observer } from 'mobx-react';
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
-import { fetchCurrentUser } from '@/services/users';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 const Home = observer(() => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(userStore.user);
+  const localUser = localStorage.getItem('CloudRoundsUser');
+  const token = localStorage.getItem('CloudRoundsToken');
 
-  const {
-    data: fetchedUser,
-    isLoading,
-    isError
-  } = useQuery('userData', fetchCurrentUser, {
-    enabled: !user
-  });
+  const user = JSON.parse(localUser);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (isLoading) {
-      return;
+    if (!localUser || !token) {
+      localStorage.removeItem('CloudRoundsToken');
+      localStorage.removeItem('CloudRoundsUser');
+      if (location.pathname !== '/login') navigate('/login');
     }
-
-    if (fetchedUser) {
-      localStorage.setItem('CloudRoundsUser', JSON.stringify(fetchedUser));
-      setUser(fetchedUser);
-    } else if (!user) {
-      navigate('/login');
-    }
-  }, [isLoading, fetchedUser]);
-
-  if (isLoading) {
-    return <Spin />;
-  }
+  }, []);
 
   return (
     <div className='mt-8'>
-      {user ? (
+      {user && (
         <>
           <Typography.Title level={4} className='text-center'>
             Welcome, {user ? user.firstName : 'None'}.
@@ -77,10 +61,6 @@ const Home = observer(() => {
             ))}
           </Row>
         </>
-      ) : (
-        <Typography.Title level={4} style={{ color: 'gray' }} className='text-center'>
-          You are not logged in.
-        </Typography.Title>
       )}
     </div>
   );

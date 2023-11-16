@@ -16,13 +16,16 @@ const AuthPage = () => {
     setIsSignUp(location.pathname === '/register');
   }, [location.pathname]);
 
-  useEffect(() => {
-    const localUser = localStorage.getItem('CloudRoundsUser');
-    if (localUser) {
-      navigate('/');
-    }
-  }, []);
-
+  // useEffect(() => {
+  //   const localUser = localStorage.getItem('CloudRoundsUser');
+  //   const token = localStorage.getItem
+  //   if (localUser) {
+  //     const parsedUser = JSON.parse(localUser);
+  //     if (!parsedUser) {
+  //       navigate('/');
+  //     }
+  //   }
+  // }, []);
   return (
     <div className='auth-container'>
       <LogoContainer />
