@@ -142,7 +142,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   Join Meeting
                 </a>
               ) : (
-                <p className='italic'>Meeting information will be disclosed in the near future.</p>
+                <p className='italic'>Meeting information not yet available.</p>
               )}
             </Col>
           )}
@@ -160,12 +160,12 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                       Join Meeting
                     </a>
                   ) : (
-                    <p className='italic'>Meeting information will be disclosed in the near future.</p>
+                    <p className='italic'>Meeting information not yet available.</p>
                   )}
                 </div>
               )}
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-                Location: <span>{article.location || 'Not disclosed yet.'}</span>
+                Location: <span>{article.location || 'Not yet available.'}</span>
               </p>
             </Col>
           )}
