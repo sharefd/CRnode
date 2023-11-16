@@ -1,7 +1,7 @@
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import useArticlePermissions from '@/hooks/useArticlePermissions';
 import { deleteArticle, sortArticles } from '@/services/articles';
-import { toggleFavorite } from '@/services/users';
+import { toggleFavorite, getFavorites } from '@/services/users';
 import {
   getEmptyPurposes,
   getPurposesAfterCreate,
@@ -13,7 +13,7 @@ import {
 import { Col, Modal, Pagination, Row } from 'antd';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import ActionBar from './actions/ActionBar';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import NewArticleForm from './form/NewArticleForm';
@@ -31,12 +31,15 @@ const ArticleList = observer(() => {
   const [openNewArticleModal, setOpenNewArticleModal] = useState(false);
   const [localArticles, setLocalArticles] = useState([]);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
-  const [favorites, setFavorites] = useState(user.favorites || []);
+  const [favorites, setFavorites] = useState(null);
 
-  const { userPurposes, allowedArticles, canReadPurposes, isLoading, refetchArticles, refetchPurposes } =
-    useArticlePermissions();
+  const { userPurposes, allowedArticles, canReadPurposes, isLoading } = useArticlePermissions();
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
+
+  const { data: favoritesData, isLoading: isFavoritesLoading } = useQuery(['favorites', user._id], () =>
+    getFavorites(user._id)
+  );
 
   const handlePageChange = page => {
     setCurrentPage(page);
@@ -57,6 +60,11 @@ const ArticleList = observer(() => {
       setSelectedPurposes(canReadPurposes.map(p => p.name));
     }
   }, [canReadPurposes]);
+
+  useEffect(() => {
+    if (isFavoritesLoading) return;
+    setFavorites(favoritesData);
+  }, [isFavoritesLoading]);
 
   const deleteMutation = useMutation(deleteArticle, {
     onSuccess: (data, variables) => {
@@ -125,16 +133,6 @@ const ArticleList = observer(() => {
     setIsUpdateLoading(false);
   };
 
-  if (isLoading || isUpdateLoading) {
-    return <LoadingSpinner />;
-  }
-
-  const filteredArticles = filterArticlesForList(localArticles, organizerFilter, selectedPurposes);
-
-  const currentArticles = getArticlesForPage(currentPage, articlesPerPage, filteredArticles);
-
-  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);
-
   const handleEdit = articleId => {
     setSelectedArticle(localArticles.find(article => article._id === articleId));
   };
@@ -151,6 +149,18 @@ const ArticleList = observer(() => {
       console.error('There was an error updating favorite:', error);
     }
   };
+
+  if (isLoading || isUpdateLoading || isFavoritesLoading) {
+    return (
+      <div className='text-center justify-center'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  const filteredArticles = filterArticlesForList(localArticles, organizerFilter, selectedPurposes);
+  const currentArticles = getArticlesForPage(currentPage, articlesPerPage, filteredArticles);
+  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);
 
   return (
     <div>
@@ -182,7 +192,7 @@ const ArticleList = observer(() => {
                 isOrganizer={article.organizer.username === user.username}
                 onFavorite={() => handleFavorite(article._id)}
                 onEdit={() => handleEdit(article._id)}
-                isFavorite={favorites.includes(article._id)}
+                isFavorite={favorites && favorites.includes(article._id)}
               />
 
             ))}
