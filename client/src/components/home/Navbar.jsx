@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import userStore from '@/stores/userStore';
-import { Layout, Menu, Avatar, Dropdown, Button, Drawer, List, Space } from 'antd';
-import { LogoutOutlined, MenuOutlined, SettingOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import CloudLogo from '@/assets/images/logo.png';
+import userStore from '@/stores/userStore';
 import { navlinks as links, sideMenuLinks } from '@/utils/constants';
-import { useMediaQuery } from '@mui/material';
-import styles from './Navbar.module.css';
+import { LogoutOutlined, MenuOutlined, SettingOutlined } from '@ant-design/icons';
+import { Avatar, Drawer, Dropdown, List, Typography } from 'antd';
+import { observer } from 'mobx-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import './Navbar.css';
 
-const { Header } = Layout;
+const { Text } = Typography;
 
 const Navbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
 
+  const [activeIndex, setActiveIndex] = useState(0);
+  const navbarRef = useRef(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const isSmallScreen = useMediaQuery('(max-width:950px)');
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const findActiveIndex = () => {
+    return links.findIndex(link => location.pathname === link.endpoint);
+  };
+
+  useEffect(() => {
+    const currentActiveIndex = findActiveIndex();
+    setActiveIndex(currentActiveIndex);
+  }, [location]);
+
+  const handleNavCollapse = () => {
+    setDrawerVisible(!drawerVisible);
+  };
 
   const handleLogout = () => {
     userStore.setUser(null);
@@ -33,10 +46,6 @@ const Navbar = observer(() => {
     localStorage.removeItem('CloudRoundsUser');
 
     navigate('/login');
-  };
-
-  const toggleDrawer = () => {
-    setDrawerVisible(!drawerVisible);
   };
 
   const handleSettingsClick = () => {
@@ -54,28 +63,31 @@ const Navbar = observer(() => {
     return '';
   };
 
+  const isActive = path => location.pathname === path;
+
   const drawerItems = [
     ...sideMenuLinks.map(link => ({
       key: link.endpoint,
       content: (
-        <Button
-          type='text'
-          icon={link.Icon ? <link.Icon /> : null}
+        <button
+          type='button'
+          className={`drawer-item ${isActive(link.endpoint) ? 'active' : ''}`}
           onClick={() => {
             navigate(link.endpoint);
             setDrawerVisible(false);
-          }}
-          block>
-          {link.label}
-        </Button>
+          }}>
+          <link.Icon className='text-lg' />
+          <span className='mt-1'>{link.label}</span>
+        </button>
       )
     })),
     {
       key: 'logout',
       content: (
-        <Button type='text' icon={<LogoutOutlined />} onClick={handleLogout} block>
-          Log Out
-        </Button>
+        <button type='button' className={`drawer-item`} onClick={handleLogout}>
+          <LogoutOutlined className='text-lg' />
+          <span className='mt-1'>Log Out</span>
+        </button>
       )
     }
   ];
@@ -103,70 +115,93 @@ const Navbar = observer(() => {
     }
   ];
 
-  const navlinkItems = links.map(link => ({
+  const navlinkItems = links.map((link, index) => ({
     key: link.endpoint,
-    icon: link.Icon ? <link.Icon className={styles.navlinkIcon} /> : null,
-    onClick: () => navigate(link.endpoint)
+    icon: link.Icon || null,
+    onClick: () => {
+      setActiveIndex(index);
+      navigate(link.endpoint);
+    }
   }));
 
   const avatarMenuItem = {
     key: 'userDropdown',
     label: (
-      <Dropdown menu={{ items }} trigger={['click']} overlayStyle={{ top: '54px' }} className={styles.navlinkAvatar}>
-        <Avatar className='cursor-pointer mr-3'>{getInitials(user)}</Avatar>
-      </Dropdown>
+      <div className='flex items-center w-[64px] justify-center'>
+        <Dropdown menu={{ items }} overlayStyle={{ top: '52px' }}>
+          <Avatar className='cursor-pointer'>{getInitials(user)}</Avatar>
+        </Dropdown>
+      </div>
     )
   };
 
   const navbarDesktopItems = [...navlinkItems, avatarMenuItem];
 
   return (
-    <Header className={styles['navbar-header']}>
-      <Link to='/' className='flex items-center flex-row'>
-        <img src={CloudLogo} width='40' alt='CloudRounds Logo' />
-        <span className='text-white text-lg ml-2'>CloudRounds</span>
-      </Link>
+    <nav ref={navbarRef} className='navbar-mainbg p-0 flex justify-between items-center h-16'>
+      <div className={`navbar-logo min-w-[200px]`}>
+        <Link to='/' className='flex items-center space-x-2 text-white text-lg p-3'>
+          <img src={CloudLogo} width='40' alt='CloudRounds Logo' />
+          <span className='text-white text-lg ml-2'>CloudRounds</span>
+        </Link>
+      </div>
 
-      {user && (
-        <>
-          <div style={{ display: isSmallScreen ? 'none' : 'flex' }} className={styles['navbar-desktop']}>
-            <Menu
-              mode='horizontal'
-              selectedKeys={[location.pathname]}
-              items={navbarDesktopItems}
-              className={styles['navbar-desktop']}
-            />
+      <Drawer
+        title={
+          <div className='flex items-center text-gray-700 justify-center'>
+            <Text code className='text-lg'>
+              Menu
+            </Text>
           </div>
-
-          <Drawer
-            title={
-              <div className='flex items-center text-gray-700 justify-start'>
-                <Avatar>{getInitials(user)}</Avatar>
-                <span className='ml-2'>{user.username}</span>
-              </div>
-            }
-            placement='right'
-            closable={false}
-            onClose={() => setDrawerVisible(false)}
-            open={drawerVisible}
-            width={250}
-            style={{ border: 'none' }}>
-            <List
-              itemLayout='horizontal'
-              dataSource={drawerItems}
-              renderItem={item => (
-                <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>
+        }
+        placement='right'
+        closable={false}
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={150}>
+        <List
+          itemLayout='horizontal'
+          dataSource={drawerItems}
+          renderItem={item => <List.Item style={{ padding: '12px 0', ...drawerItemStyle }}>{item.content}</List.Item>}
+        />
+      </Drawer>
+      <div id='navbar-animmenu'>
+        <ul className='show-dropdown main-navbar'>
+          {navbarDesktopItems.map((item, index) => (
+            <li
+              key={item.key}
+              className={`relative p-2 pb-[0px] rounded-full ${index === activeIndex ? 'active' : ''}`}
+              onClick={item.onClick}>
+              {item.label ? (
+                item.label
+              ) : (
+                <Link className='flex items-center justify-center' style={{ height: '36px' }}>
+                  <item.icon />
+                </Link>
               )}
-            />
-          </Drawer>
-          <div className={styles['navbar-mobile']}>
-            <button className='p-3 text-white md:hidden' onClick={toggleDrawer}>
-              <MenuOutlined />
-            </button>
-          </div>
-        </>
-      )}
-    </Header>
+              <div
+                className={`${index === activeIndex ? '' : 'hidden'}`}
+                style={{
+                  position: 'absolute',
+                  bottom: '-10px',
+                  left: '6px',
+                  width: '52px',
+                  height: '3px',
+                  backgroundColor: '#fff',
+                  borderTopLeftRadius: '20px',
+                  borderTopRightRadius: '20px'
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div id='navbar-mobile'>
+        <button className='p-3 text-white' onClick={handleNavCollapse}>
+          <MenuOutlined />
+        </button>
+      </div>
+    </nav>
   );
 });
 

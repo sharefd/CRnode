@@ -2,19 +2,26 @@ import { useEffect, useState } from 'react';
 import LoginForm from './form/LoginForm';
 import SignupForm from './form/SignupForm';
 import { loginFields, signupFields } from './fields/authFields';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LogoContainer from './LogoContainer';
 
 const AuthPage = () => {
   const location = useLocation();
   const [isSignup, setIsSignUp] = useState(location.pathname === '/register');
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-
+  const navigate = useNavigate();
   const appName = 'CloudRounds';
 
   useEffect(() => {
     setIsSignUp(location.pathname === '/register');
   }, [location.pathname]);
+
+  useEffect(() => {
+    const localUser = localStorage.getItem('CloudRoundsUser');
+    if (localUser) {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <div className='auth-container'>
