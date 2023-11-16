@@ -18,6 +18,8 @@ import ActionBar from './actions/ActionBar';
 import ArticleCalendar from './calendar/ArticleCalendar';
 import NewArticleForm from './form/NewArticleForm';
 import ArticleCard from './ArticleCard';
+import { Badge } from 'antd';
+
 
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
@@ -160,7 +162,7 @@ const ArticleList = observer(() => {
 
   const filteredArticles = filterArticlesForList(localArticles, organizerFilter, selectedPurposes);
   const currentArticles = getArticlesForPage(currentPage, articlesPerPage, filteredArticles);
-  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);
+  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);    
 
   return (
     <div>
@@ -177,14 +179,32 @@ const ArticleList = observer(() => {
         emptyPurposes={purposesWithoutArticles}
       />
       <div style={{ padding: '0 16px' }}>
+          
         <Row gutter={16} className='custom-flex'>
           <Col xs={24} lg={12} className='calendar-col'>
             <div className='max-w-full overflow-x-auto'>
               <ArticleCalendar articles={currentArticles} />
+                
             </div>
+              
           </Col>
+                   
 
           <Col xs={24} lg={12} className='article-list-col order-list mt-5'>
+<Badge
+              status="processing"
+              text="Upcoming Events"
+              style={{
+                marginBottom: '10px',
+                border: '0px solid #1e3a8a',
+                borderRadius: '10px',
+                padding: '8px',
+                background: '#e0e7ff',
+                     fontWeight: '900em',
+
+              }}
+            />
+              
             {currentArticles.map((article, index) => (
               <ArticleCard
                 key={index}
