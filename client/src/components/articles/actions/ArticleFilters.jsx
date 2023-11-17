@@ -26,7 +26,7 @@ export const ArticleFilters = ({ canReadPurposes, selectedPurposes, setSelectedP
   };
 
   return (
-    <div className='flex'>
+    <div className='flex' 
       {open && (
         <div className='w-64 h-screen bg-gray-200 fixed top-0 right-0 overflow-y-auto'>
           <div className='p-4'>

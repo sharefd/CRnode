@@ -165,7 +165,7 @@ const ArticleList = observer(() => {
   const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);    
 
   return (
-    <div>
+    <div style={{ background: '#e0e7ff', borderRadius: '10px'}}>
       <ActionBar
         user={user}
         mostRecentArticle={currentArticles[0]}
@@ -190,16 +190,19 @@ const ArticleList = observer(() => {
           </Col>
                    
 
-          <Col xs={24} lg={12} className='article-list-col order-list mt-5'>
+          <Col xs={24} lg={12} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
+              
+              
+              
 <Badge
               status="processing"
               text="Upcoming Events"
               style={{
                 marginBottom: '10px',
-                border: '0px solid #1e3a8a',
+                border: '1px solid #0a0a0a',
                 borderRadius: '10px',
                 padding: '8px',
-                background: '#e0e7ff',
+                background: '#bfdbfe',
                      fontWeight: '900em',
 
               }}
@@ -223,6 +226,11 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
+            
+            
+            
+        
+            
         </Row>
       </div>
       <NewArticleForm
