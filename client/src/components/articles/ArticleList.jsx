@@ -165,7 +165,7 @@ const ArticleList = observer(() => {
   const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);    
 
   return (
-    <div style={{ background: '#e0e7ff', borderRadius: '10px'}}>
+    <div style={{ background: '#e0e7ff'}}>
       <ActionBar
         user={user}
         mostRecentArticle={currentArticles[0]}
