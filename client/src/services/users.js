@@ -101,3 +101,12 @@ export const toggleFavorite = async (userId, articleId, isFavorite) => {
     console.error('Error updating favorite for user:', error);
   }
 };
+
+export const getFavorites = async userId => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/users/favorites/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting favorites for user:', error);
+  }
+};

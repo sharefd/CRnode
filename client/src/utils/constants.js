@@ -8,6 +8,8 @@ export const UNIVERSITY_CHOICES = [
   { value: 'University of Toronto', label: 'University of Toronto' },
   { value: 'University of Western Ontario', label: 'University of Western Ontario' },
   { value: 'University of Ottawa', label: 'University of Ottawa' },
+      { value: 'Queens University', label: "Queen's University" },
+
     { value: 'Dalhousie University', label: 'Dalhousie University' },
       { value: 'McGill University', label: 'McGill University' },
 
@@ -19,7 +21,7 @@ export const UNIVERSITY_CHOICES = [
     { value: 'University of British Columbia', label: 'University of British Columbia' },
     
     { value: 'Université de Montréal', label: 'Université de Montréal' },
-        { value: ' Northern Ontario School of Medicine University', label: 'Northern Ontario School of Medicine University' },
+        { value: 'Northern Ontario School of Medicine University', label: 'Northern Ontario School of Medicine University' },
 
     
     
@@ -29,15 +31,22 @@ export const UNIVERSITY_CHOICES = [
 export const domainSuggestions = [
   'mail.utoronto.ca',
   'utoronto.ca',
-  'medportal.ca',
+  'medportal.ca', 'mcmaster.ca',
   'mcgill.ca',
-  'usask.ca',
   'ualberta.ca',
-  'uwo.ca',
+  'uwo.ca', 'meds.uwo.ca',
   'queensu.ca',
   'uba.ca',
   'uottawa.ca',
-  'dal.ca'
+  'dal.ca',
+  'queensu.ca',
+    'mail.ubc.ca',
+  'ahs.ca', 
+    'albertahealthservices.ca',
+    'usask.ca',
+    'saskhealthauthority.ca',
+    'umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca',
+    'nosm.ca', 'umontreal.ca',
 ];
 
 export const universityDomainMap = {
@@ -48,7 +57,15 @@ export const universityDomainMap = {
   'University of Toronto': ['mail.utoronto.ca', 'utoronto.ca'],
   'University of Western Ontario': ['uwo.ca', 'meds.uwo.ca'],
   'University of Manitoba': ['umanitoba.ca'],
-  'University of British Columbia': ['ubc.ca'],
+  'University of British Columbia': ['ubc.ca', 'mail.ubc.ca'],
+  'Queens University': ['queensu.ca'],
+  'University of Calgary': ['ahs.ca', 'albertahealthservices.ca'],
+  'University of Alberta': ['ualberta.ca'],
+  'University of Saskatchewan': ['usask.ca', 'saskhealthauthority.ca'],  
+  'University of Manitoba': ['umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca'],  
+    'Northern Ontario School of Medicine University': ['nosm.ca'],
+'Université de Montréal': ['umontreal.ca'],
+
   Other: []
 };
 

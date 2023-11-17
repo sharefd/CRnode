@@ -24,6 +24,17 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     }
     return false;
   };
+    
+    
+  const today = new Date();
+  const isToday = formattedDate === formatDate(today); // Check if the date is today
+    
+ const cardContainerStyle = {
+    border: isToday ? '2px solid #1e3a8a' : '', // Use different colors for today and other days
+     borderRadius: '10px', 
+  };   
+
+    
 
   const isMeetingJoinable = isMeetingInfoPresent();
 
@@ -142,7 +153,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   Join Meeting
                 </a>
               ) : (
-                <p className='italic'>Meeting information will be disclosed in the near future.</p>
+                <p className='italic'>Meeting information not yet available.</p>
               )}
             </Col>
           )}
@@ -160,12 +171,12 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                       Join Meeting
                     </a>
                   ) : (
-                    <p className='italic'>Meeting information will be disclosed in the near future.</p>
+                    <p className='italic'>Meeting information not yet available.</p>
                   )}
                 </div>
               )}
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-                Location: <span>{article.location || 'Not disclosed yet.'}</span>
+                Location: <span>{article.location || 'Not yet available.'}</span>
               </p>
             </Col>
           )}
@@ -181,7 +192,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     }
   ];
   return (
-    <div className='article-card-container mb-4 rounded-md bg-[#f0f0f0]'>
+    <div className='article-card-container mb-4 rounded-md bg-[#f5f3ff]' style={cardContainerStyle}>
       <Collapse bordered={true} accordion={true} items={panels} defaultActiveKey={['0']} />
     </div>
   );

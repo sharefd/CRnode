@@ -127,7 +127,7 @@ const Navbar = observer(() => {
   const avatarMenuItem = {
     key: 'userDropdown',
     label: (
-      <div className='flex items-center w-[64px] justify-center'>
+      <div className='avatarDropdown'>
         <Dropdown menu={{ items }} overlayStyle={{ top: '52px' }}>
           <Avatar className='cursor-pointer'>{getInitials(user)}</Avatar>
         </Dropdown>
@@ -138,10 +138,10 @@ const Navbar = observer(() => {
   const navbarDesktopItems = [...navlinkItems, avatarMenuItem];
 
   return (
-    <nav ref={navbarRef} className='navbar-mainbg p-0 flex justify-between items-center h-16'>
+    <nav ref={navbarRef} className='navbar-mainbg flex justify-between items-center h-[64px]'>
       <div className={`navbar-logo min-w-[200px]`}>
-        <Link to='/' className='flex items-center space-x-2 text-white text-lg p-3'>
-          <img src={CloudLogo} width='40' alt='CloudRounds Logo' />
+        <Link to='/' className='flex items-center space-x-2 text-white text-lg pl-2'>
+          <img src={CloudLogo} width='40px' alt='CloudRounds Logo' />
           <span className='text-white text-lg ml-2'>CloudRounds</span>
         </Link>
       </div>
@@ -170,12 +170,12 @@ const Navbar = observer(() => {
           {navbarDesktopItems.map((item, index) => (
             <li
               key={item.key}
-              className={`relative p-2 pb-[0px] rounded-full ${index === activeIndex ? 'active' : ''}`}
+              className={`relative px-2 pb-[0px] rounded-full ${index === activeIndex ? 'active' : ''}`}
               onClick={item.onClick}>
               {item.label ? (
                 item.label
               ) : (
-                <Link className='flex items-center justify-center' style={{ height: '36px' }}>
+                <Link className='flex items-center justify-center'>
                   <item.icon />
                 </Link>
               )}
@@ -184,7 +184,7 @@ const Navbar = observer(() => {
                 style={{
                   position: 'absolute',
                   bottom: '-10px',
-                  left: '6px',
+                  left: '5px',
                   width: '52px',
                   height: '3px',
                   backgroundColor: '#fff',
