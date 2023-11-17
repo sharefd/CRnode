@@ -141,7 +141,7 @@ const PurposesList = observer(() => {
       <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
         + New Calendar
       </Button>
-      <Table
+      <Table 
         dataSource={createdPurposes}
         columns={columns}
         rowKey='_id'

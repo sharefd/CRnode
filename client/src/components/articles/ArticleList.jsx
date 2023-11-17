@@ -165,7 +165,7 @@ const ArticleList = observer(() => {
   const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);    
 
   return (
-    <div style={{ background: '#e0e7ff', borderRadius: '10px'}}>
+    <div style={{ background: '#e0e7ff'}}>
       <ActionBar
         user={user}
         mostRecentArticle={currentArticles[0]}
@@ -190,7 +190,7 @@ const ArticleList = observer(() => {
           </Col>
                    
 
-          <Col xs={24} lg={12} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
+          <Col xs={24} lg={6} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
               
               
               
@@ -226,6 +226,47 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
+            
+             <Col xs={24} lg={6} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
+              
+              
+              
+<Badge
+              status="error"
+              text="Space we can fill"
+              style={{
+                marginBottom: '10px',
+                border: '1px solid #0a0a0a',
+                borderRadius: '10px',
+                padding: '8px',
+                background: '#fee2e2',
+                     fontWeight: '900em',
+
+              }}
+            />
+                 
+              <h2> test </h2>
+                               <h2> test </h2>
+
+                               <h2> test </h2>
+             <h2> move article management here? </h2>
+                 
+                <h2> move home links here? </h2>
+                            <h2> paid advertisements? :) </h2>
+     
+                 
+                 
+
+     
+
+
+           
+           
+          </Col>
+            
+            
+            
+            
             
             
             
