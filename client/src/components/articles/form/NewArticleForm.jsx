@@ -74,10 +74,12 @@ const NewArticleForm = ({
       setArticlePurpose(selectedArticle.purpose);
       const [startTime, endTime] = extractTimesFromDuration(selectedArticle.duration);
       setTimeRange([startTime, endTime]);
+      setDate(dayjs(selectedArticle.date)); // Set to the article's date
     } else {
       setArticlePurpose(null);
       setArticle(initialArticleData);
       setTimeRange(['', '']);
+      setDate(dayjs());
     }
   }, [selectedArticle]);
 
