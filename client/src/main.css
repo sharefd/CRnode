@@ -321,3 +321,13 @@ select::placeholder {
   display: flex;
   align-items: center;
 }
+
+@keyframes flashBorder {
+  0% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: #581c87;
+  }
+}
+
