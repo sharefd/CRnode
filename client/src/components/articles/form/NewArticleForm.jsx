@@ -92,8 +92,6 @@ const NewArticleForm = ({
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
 
-    console.log(formatDate(date));
-
     const payload = {
       ...article,
       date: date,

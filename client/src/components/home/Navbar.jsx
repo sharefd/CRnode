@@ -100,6 +100,15 @@ const Navbar = observer(() => {
     width: '100%'
   };
 
+  const navlinkItems = links.map((link, index) => ({
+    key: link.endpoint,
+    icon: link.Icon || null,
+    onClick: () => {
+      setActiveIndex(index);
+      navigate(link.endpoint);
+    }
+  }));
+
   const items = [
     {
       key: '0',
@@ -114,15 +123,6 @@ const Navbar = observer(() => {
       onClick: () => handleLogout()
     }
   ];
-
-  const navlinkItems = links.map((link, index) => ({
-    key: link.endpoint,
-    icon: link.Icon || null,
-    onClick: () => {
-      setActiveIndex(index);
-      navigate(link.endpoint);
-    }
-  }));
 
   const avatarMenuItem = {
     key: 'userDropdown',

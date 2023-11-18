@@ -13,6 +13,10 @@
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }
 
+body {
+  background-color: #e1e7f7;
+}
+
 p.MuiTypography-root {
   font-family: 'Inter', 'Lato', 'Roboto', sans-serif;
 }

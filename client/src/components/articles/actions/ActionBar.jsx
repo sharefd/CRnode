@@ -1,6 +1,6 @@
+import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Divider, Drawer, Dropdown, Input, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
-import { Button, Input, Checkbox, Drawer, Space, Divider } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { FcCalendar } from 'react-icons/fc';
 
 const ActionBar = ({
@@ -27,6 +27,20 @@ const ActionBar = ({
   const allowedPurposes = userPurposes.map(purpose => purpose.name);
 
   const filteredPurposes = allowedPurposes.filter(p => p && p.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      });
+      setCurrentTime(formattedTime);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePurposeToggle = purpose => {
     let newPurposes = [...selectedPurposes];
@@ -64,19 +78,23 @@ const ActionBar = ({
     setOrganizerFilter([]);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const formattedTime = now.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-      });
-      setCurrentTime(formattedTime);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const dropdownItems = [
+    {
+      key: '1',
+      label: 'All',
+      onClick: () => selectAllPurposes()
+    },
+    {
+      key: '2',
+      label: 'None',
+      onClick: () => deselectAllPurposes()
+    },
+    ...userPurposes.map((purpose, index) => ({
+      key: index + 3,
+      label: purpose.name,
+      onClick: () => setSelectedPurposes(purpose.name)
+    }))
+  ];
 
   return (
     <div className='relative flex w-full' >
@@ -87,6 +105,7 @@ const ActionBar = ({
       />
       {/* LEFT SIDEBAR: Article Filters */}
       <Drawer
+        style={{ backgroundColor: '#c8d3fb' }}
         title='Filters'
         placement='left'
         closable={true}
@@ -98,12 +117,19 @@ const ActionBar = ({
 
         <Divider>Calendars</Divider>
         <div className='flex justify-between'>
-          <Button size='small' onClick={selectAllPurposes}>
-            Select All
-          </Button>
-          <Button size='small' onClick={deselectAllPurposes}>
-            Deselect All
-          </Button>
+          <Dropdown
+            menu={{
+              items: dropdownItems,
+              triggerSubMenuAction: 'click'
+            }}
+            trigger={['click']}>
+            <Typography.Link>
+              <Space>
+                Options
+                <DownOutlined />
+              </Space>
+            </Typography.Link>
+          </Dropdown>
         </div>
         <Space direction='vertical' className='w-full mt-4'>
           {filteredPurposes.map(purpose => (
@@ -141,7 +167,11 @@ const ActionBar = ({
       {/* Horizontal Bar below Navbar */}
       {/* Display most recent upcoming event details */}
 
+<<<<<<< Updated upstream
       <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100' style={{ background: '#c7d2fe'}}>
+=======
+      <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-[#c8d3fb]'>
+>>>>>>> Stashed changes
         <button className='flex items-center basic-btn purple-light-full' onClick={toggleNewArticleModal}>
           <span style={{ marginRight: '8px' }}>
             <FcCalendar />
