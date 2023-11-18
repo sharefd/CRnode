@@ -2,6 +2,12 @@ body {
   background-color: #c8d3fb;
 }
 
+.content-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .card-margin {
   margin-bottom: 20px;
 }

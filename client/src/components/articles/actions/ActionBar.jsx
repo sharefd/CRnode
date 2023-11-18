@@ -97,7 +97,7 @@ const ActionBar = ({
   ];
 
   return (
-    <div className='relative flex w-full' >
+    <div className='relative flex w-full'>
       <Button
         onClick={() => setShowSidebar(!showSidebar)}
         icon={showSidebar ? <LeftOutlined /> : <RightOutlined />}
@@ -167,11 +167,9 @@ const ActionBar = ({
       {/* Horizontal Bar below Navbar */}
       {/* Display most recent upcoming event details */}
 
-<<<<<<< Updated upstream
-      <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100' style={{ background: '#c7d2fe'}}>
-=======
-      <Space className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-[#c8d3fb]'>
->>>>>>> Stashed changes
+      <Space
+        className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100'
+        style={{ background: '#c7d2fe' }}>
         <button className='flex items-center basic-btn purple-light-full' onClick={toggleNewArticleModal}>
           <span style={{ marginRight: '8px' }}>
             <FcCalendar />

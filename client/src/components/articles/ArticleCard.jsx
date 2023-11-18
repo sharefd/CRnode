@@ -9,58 +9,47 @@ const { Panel } = Collapse;
 const { Text, Title } = Typography;
 
 const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const formattedDate = formatDate(article.date);
   const formattedTime = article.duration;
   const isVirtual = article.meetingType === 'Virtual';
   const isHybrid = article.meetingType === 'Hybrid';
-  const [initials, setInitials] = useState(
-    article.organizer.firstName[0].toUpperCase() + article.organizer.lastName[0].toUpperCase()
-  );
 
   const isMeetingInfoPresent = () => {
     if (article.meetingType === 'Hybrid' || article.meetingType === 'Virtual') {
-      return article.event_link || (article.meeting_id && article.passcode);
+      return article.event_link || article.meeting_id;
     }
     return false;
   };
 
- const isWithin15MinutesOfEvent = () => {
-  const [startTime, endTime] = article.duration.split(' - ');
+  const isWithin15MinutesOfEvent = () => {
+    const [startTime, endTime] = article.duration.split(' - ');
 
-  const eventStartDate = new Date(`${formattedDate} ${startTime}`);
-  const eventEndDate = new Date(`${formattedDate} ${endTime}`);
-  const currentTime = new Date();
+    const eventStartDate = new Date(`${formattedDate} ${startTime}`);
+    const eventEndDate = new Date(`${formattedDate} ${endTime}`);
+    const currentTime = new Date();
 
-  // Adjust start time to be 15 minutes earlier
-  const startTimeMinus15Minutes = new Date(eventStartDate - 15 * 60 * 1000);
+    // Adjust start time to be 15 minutes earlier
+    const startTimeMinus15Minutes = new Date(eventStartDate - 15 * 60 * 1000);
 
-  // Adjust end time to be exactly at the end of the event
-  const endTimeExact = new Date(eventEndDate);
+    // Adjust end time to be exactly at the end of the event
+    const endTimeExact = new Date(eventEndDate);
 
-  // Check if the current time is within the adjusted time range
-  return currentTime >= startTimeMinus15Minutes && currentTime <= endTimeExact;
-};
+    // Check if the current time is within the adjusted time range
+    return currentTime >= startTimeMinus15Minutes && currentTime <= endTimeExact;
+  };
 
-const today = new Date();
-const isToday = formattedDate === formatDate(today); // Check if the date is today
+  const today = new Date();
+  const isToday = formattedDate === formatDate(today); // Check if the date is today
 
-const isEventLive = isToday && isWithin15MinutesOfEvent(); // Check if the event is live within 15 minutes
+  const isEventLive = isToday && isWithin15MinutesOfEvent(); // Check if the event is live within 15 minutes
 
-const cardContainerStyle = {
-  border: isEventLive ? '2px solid #f87171' : '0px solid #1e3a8a', // Use different colors for today and other days
-  borderRadius: '10px',
-  animation: isEventLive ? 'flashBorder 0.8s infinite alternate' : 'none',
-};
-
-
-
-    
+  const cardContainerStyle = {
+    border: isEventLive ? '2px solid #f87171' : '0px solid #1e3a8a', // Use different colors for today and other days
+    borderRadius: '10px',
+    animation: isEventLive ? 'flashBorder 0.8s infinite alternate' : 'none'
+  };
 
   const isMeetingJoinable = isMeetingInfoPresent();
-    
-   
-  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const header = (
     <div className='relative rounded-md'>
@@ -166,7 +155,7 @@ const cardContainerStyle = {
         <Row gutter={[16, 16]}>
           {isVirtual && (
             <Col span={24}>
-              {article.meeting_id && article.passcode ? (
+              {isMeetingJoinable ? (
                 <a
                   href={article.event_link}
                   target='_blank'

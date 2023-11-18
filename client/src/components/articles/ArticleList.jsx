@@ -20,7 +20,6 @@ import NewArticleForm from './form/NewArticleForm';
 import ArticleCard from './ArticleCard';
 import { Badge } from 'antd';
 
-
 const ArticleList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
@@ -162,10 +161,10 @@ const ArticleList = observer(() => {
 
   const filteredArticles = filterArticlesForList(localArticles, organizerFilter, selectedPurposes);
   const currentArticles = getArticlesForPage(currentPage, articlesPerPage, filteredArticles);
-  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);    
+  const purposesWithoutArticles = getEmptyPurposes(localArticles, userPurposes);
 
   return (
-    <div style={{ background: '#e0e7ff'}}>
+    <div style={{ background: '#e0e7ff' }}>
       <ActionBar
         user={user}
         mostRecentArticle={currentArticles[0]}
@@ -178,39 +177,35 @@ const ArticleList = observer(() => {
         userPurposes={userPurposes}
         emptyPurposes={purposesWithoutArticles}
       />
-      <div style={{ padding: '0 16px' }}>
-          
+      <div style={{ padding: '0 16px' }} className='content-container'>
         <Row gutter={16} className='custom-flex'>
           <Col xs={24} lg={12} className='calendar-col'>
             <div className='max-w-full overflow-x-auto'>
               <ArticleCalendar articles={currentArticles} />
-                
             </div>
-              
           </Col>
-                   
 
-          <Col xs={24} lg={6} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
-              
-              
-              
-<Badge
-              status="warning"
-              text="Upcoming Events"
+          <Col
+            xs={24}
+            lg={12}
+            className='article-list-col order-list mt-5'
+            style={{ background: '#e0e7ff', borderRadius: '10px' }}>
+            <Badge
+              status='warning'
+              text='Upcoming Events'
               style={{
                 marginBottom: '10px',
                 border: '0px solid #0a0a0a',
                 borderRadius: '10px',
                 padding: '10px',
-                    color: 'white',
+                color: 'white',
                 background: '#5161CE',
-                     fontWeight: '900em',
-                          width: '100%', // Set the width to 100% to make it span the entire column
-      display: 'block', // Ensure it behaves as a block element
-
+                fontWeight: '900em',
+                width: '100%', // Set the width to 100% to make it span the entire column
+                display: 'block' // Ensure it behaves as a block element
               }}
             />
-              
+
             {currentArticles.map((article, index) => (
               <ArticleCard
                 key={index}
@@ -220,7 +215,6 @@ const ArticleList = observer(() => {
                 onEdit={() => handleEdit(article._id)}
                 isFavorite={favorites && favorites.includes(article._id)}
               />
-
             ))}
             <Pagination
               current={currentPage}
@@ -229,69 +223,6 @@ const ArticleList = observer(() => {
               onChange={handlePageChange}
             />
           </Col>
-            
-             <Col xs={24} lg={6} className='article-list-col order-list mt-5'style={{ background: '#e0e7ff', borderRadius: '10px'}}>
-                  
-<Badge
-              status="warning"
-              text="Space to fill"
-              style={{
-                marginBottom: '10px',
-                border: '0px solid #0a0a0a',
-                borderRadius: '10px',
-                padding: '10px',
-                    color: 'white',
-                background: '#5161CE',
-                     fontWeight: '900em',
-                          width: '100%', // Set the width to 100% to make it span the entire column
-      display: 'block', // Ensure it behaves as a block element
-
-              }}
-            />
-                 
-              <h2> test </h2>
-                               <h2> test </h2>
-
-                               <h2> test </h2>
-             <h2> move article management here? </h2>
-                 
-                <h2> move home links here? </h2>
-                            <h2> paid advertisements? :) </h2>
-                 
-                 <Badge
-              status="error"
-              text="Space we can fill pace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fillpace we can fill"
-              style={{
-                marginBottom: '10px',
-                border: '1px solid #0a0a0a',
-                borderRadius: '10px',
-                padding: '8px',
-                background: '#fee2e2',
-                     fontWeight: '900em',
-
-              }}
-            />
-                 
-                 
-     
-                 
-                 
-
-     
-
-
-           
-           
-          </Col>
-            
-            
-            
-            
-            
-            
-            
-        
-            
         </Row>
       </div>
       <NewArticleForm
