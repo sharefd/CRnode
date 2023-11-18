@@ -82,12 +82,6 @@ const NewArticleForm = ({
   }, [selectedArticle]);
 
   const handleSave = async e => {
-    console.log('Saving Edited article');
-    let eventLink = article.event_link;
-    if (!eventLink.startsWith('https://')) {
-      eventLink = `https://${eventLink}`;
-    }
-
     const [start, end] = timeRange;
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
@@ -98,7 +92,7 @@ const NewArticleForm = ({
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
       purpose: articlePurpose._id,
-      event_link: eventLink
+      event_link: article.event_link
     };
 
     try {
@@ -112,12 +106,6 @@ const NewArticleForm = ({
   };
 
   const handleSubmit = async e => {
-    console.log('Submitting new article');
-    let eventLink = article.event_link;
-    if (!eventLink.startsWith('https://')) {
-      eventLink = `https://${eventLink}`;
-    }
-
     const [start, end] = timeRange;
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
@@ -128,7 +116,7 @@ const NewArticleForm = ({
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
       purpose: articlePurpose._id,
-      event_link: eventLink // Update the event_link with the corrected URL
+      event_link: article.event_link
     };
 
     if (!payload.title) {

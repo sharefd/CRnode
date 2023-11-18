@@ -202,6 +202,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       showArrow: false
     }
   ];
+
   return (
     <div className='article-card-container mb-4 rounded-md bg-[#f5f3ff]' style={cardContainerStyle}>
       <Collapse bordered={true} accordion={true} items={panels} defaultActiveKey={['0']} />
