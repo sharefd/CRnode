@@ -49,7 +49,7 @@ export const getPurposesAfterDelete = (articles, deletedArticle, selectedPurpose
 export const isArticleAfterCurrentDate = article => {
   const currentDate = new Date();
   const eightHoursAgo = new Date(currentDate);
-  eightHoursAgo.setHours(eightHoursAgo.getHours() - 28);
+  eightHoursAgo.setHours(eightHoursAgo.getHours() - 1);
   const articleDate = new Date(article ? article.date : '');
   return articleDate >= eightHoursAgo;
 };
