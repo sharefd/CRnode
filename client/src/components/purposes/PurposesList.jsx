@@ -135,6 +135,8 @@ const PurposesList = observer(() => {
   const memberColumns = getMemberColums(handleLeave);
   const columns = getColumns(handleOpen, handleOpenMemberList, handleDelete);
 
+
+
   return (
     <div className='px-2 md:px-10'>
       <h1 className='my-4 text-xl'>Your Calendars</h1>
@@ -145,7 +147,7 @@ const PurposesList = observer(() => {
         dataSource={createdPurposes}
         columns={columns}
         rowKey='_id'
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: true }}
         className='full-width-mobile overflow-x-auto'
       />
 

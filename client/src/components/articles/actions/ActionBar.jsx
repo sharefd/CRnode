@@ -102,10 +102,13 @@ const ActionBar = ({
         onClick={() => setShowSidebar(!showSidebar)}
         icon={showSidebar ? <LeftOutlined /> : <RightOutlined />}
         className='absolute top-3'
+          
       />
+          
+          
       {/* LEFT SIDEBAR: Article Filters */}
       <Drawer
-        style={{ backgroundColor: '#c8d3fb' }}
+        style={{ backgroundColor: '#faf5ff' }}
         title='Filters'
         placement='left'
         closable={true}
