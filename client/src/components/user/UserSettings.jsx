@@ -166,8 +166,8 @@ const UserSettings = observer(() => {
   const initials = user ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : '';
 
   return (
-    <Layout className='w-[600px] h-screen mx-auto bg-white'>
-      <div className='w-[600px] mx-auto pt-8'>
+        <Layout className='p-4 bg-indigo-100	 rounded-lg text-left mb-4'>
+                  <div className='p-4 bg-gray-100 rounded-lg text-left mb-4'>
         <div
           className='flex items-center justify-center'
           style={{ paddingInline: '2rem', maxWidth: '600px', margin: '0 auto' }}>
