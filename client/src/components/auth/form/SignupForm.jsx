@@ -34,7 +34,7 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
 
     setIsLoading(false);
     if (response && response.user) {
-      toast.success('Successfully signed up', { autoClose: 1500, pauseOnFocusLoss: false });
+      toast.success('Successfully signed up', { autoClose: 2500, pauseOnFocusLoss: false });
       setIsSignUp(false);
       form.resetFields();
     } else if (response && response.response && response.response.data) {

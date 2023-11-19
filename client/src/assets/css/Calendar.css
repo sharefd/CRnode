@@ -1,3 +1,4 @@
+/* ------ NEW STYLES --------- */
 :root {
   --white-color: #fff;
   --calendar-chevron-hover-color: #b6cfe7;
@@ -13,20 +14,29 @@
 .calendar-chevron {
   color: var(--white-color);
   transition: color 0.3s;
+  font-size: 20px;
+  background-color: #6072e5 !important;
 }
 
 .calendar-chevron:hover {
-  color: var(--calendar-chevron-hover-color);
+  color: #fff !important;
+  background-color: #6072e570 !important;
 }
 
-.calendar-chevron:active,
-.calendar-chevron:focus,
-.calendar-chevron .ant-btn-clicked:after {
-  transform: none;
-  outline: none;
-  box-shadow: none;
-  animation: none;
-  background: transparent;
+#calendar-container {
+  margin-top: 20px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  background-color: var(--calendar-header-footer-color);
+  border-radius: 10px 10px 0 0;
+  padding: 10px;
+}
+
+.calendar-head > * {
+  margin: 0 10px;
 }
 
 #calendar-container {
@@ -45,9 +55,10 @@
 }
 
 #current-month-year {
-  font-size: 18px;
+  flex-grow: 1;
+  text-align: center;
   font-weight: bold;
-  margin: 10px 0;
+  font-size: 18px;
 }
 
 #calendar-body th,
@@ -148,17 +159,26 @@ div#calendar-cell {
 }
 
 .today-button {
-  display: flex;
-  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  display: inline-flex;
   align-items: center;
-  padding: 5px 30px;
-  margin-left: 10px;
 }
 
 .today-button .today-text {
+  font-family: Fira Code;
   visibility: visible;
   position: absolute;
   left: 0;
+  background-color: #fff;
+  padding: 2.5px 5px;
+  border-radius: 6px;
+  color: #5161ce;
+}
+
+.today-button .today-text:hover {
+  background-color: rgb(230, 230, 230);
 }
 
 .today-button .today-icon {
@@ -299,6 +319,17 @@ div#calendar-cell {
 
   .mb-5 {
     margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .today-button {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .calendar-head {
+    padding: 5px;
   }
 }
 

@@ -1,11 +1,16 @@
 import dayjs from 'dayjs';
 
-export const compareDates = (a, b) => {
-  const dateA = new Date(a.date);
-  const dateB = new Date(b.date);
+export const convertDurationToDateTime = (date, duration) => {
+  const startTime = duration.split(' - ')[0].trim();
+  return dayjs(`${date} ${startTime}`, 'YYYY-MM-DD h:mm A');
+};
 
-  if (dateA < dateB) return -1;
-  if (dateA > dateB) return 1;
+export const compareDates = (a, b) => {
+  const dateA = dayjs(a.date);
+  const dateB = dayjs(b.date);
+
+  if (dateA.isBefore(dateB, 'day')) return -1;
+  if (dateA.isAfter(dateB, 'day')) return 1;
 
   const timeToMinutes = timeString => {
     const [hoursStr, minutesStr] = timeString.split(':');
@@ -22,8 +27,10 @@ export const compareDates = (a, b) => {
     return hours * 60 + parseInt(minutes, 10);
   };
 
-  const minutesA = a.time ? timeToMinutes(a.time) : 0;
-  const minutesB = b.time ? timeToMinutes(b.time) : 0;
+  const startTimeA = a.duration.split(' - ')[0];
+  const startTimeB = b.duration.split(' - ')[0];
+  const minutesA = timeToMinutes(startTimeA);
+  const minutesB = timeToMinutes(startTimeB);
 
   return minutesA - minutesB;
 };

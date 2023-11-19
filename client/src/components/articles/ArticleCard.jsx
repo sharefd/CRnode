@@ -51,66 +51,17 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
 
   const isMeetingJoinable = isMeetingInfoPresent();
 
-  const header = (
-    <div className='relative rounded-md'>
-      <div className='flex items-center rounded-md'>
-        <Avatar style={{ backgroundColor: hashStringToColor(article.purpose.description) }}>
-          {createAcronym(article.purpose.description)}
-        </Avatar>
-        <div style={{ flex: 1, marginLeft: '10px' }}>
-          <Title level={5} style={{ margin: 0, padding: 0 }}>
-            {article.title}
-          </Title>
-          <Text type='secondary'>
-            {formattedDate} | {formattedTime}
-          </Text>
-        </div>
-      </div>
-
-      <div className='absolute top-[-2px] right-[5px]'>
-        {isFavorite ? (
-          <StarFilled
-            className={`text-yellow-600 cursor-pointer text-sm p-1`}
-            onClick={event => {
-              event.stopPropagation();
-              onFavorite(article._id);
-            }}
-          />
-        ) : (
-          <StarOutlined
-            className={`hover:text-yellow-600 cursor-pointer text-sm p-1`}
-            onClick={event => {
-              event.stopPropagation();
-              onFavorite(article._id);
-            }}
-          />
-        )}
-      </div>
-      <div className='absolute bottom-[-2px] right-[5px]'>
-        {isOrganizer && (
-          <FaRegEdit
-            className='cursor-pointer text-xl hover:text-blue-600 p-1'
-            onClick={event => {
-              event.stopPropagation();
-              onEdit(article._id);
-            }}
-          />
-        )}
-      </div>
-    </div>
-  );
-
   const panels = [
     {
       key: '1',
       label: (
-        <div className='relative rounded-md'>
+        <div className='relative rounded-md '>
           <div className='flex items-center rounded-md'>
             <Avatar style={{ backgroundColor: hashStringToColor(article.purpose.description) }}>
               {createAcronym(article.purpose.description)}
             </Avatar>
             <div style={{ flex: 1, marginLeft: '10px' }}>
-              <Title level={5} style={{ margin: 0, padding: 0 }}>
+              <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
                 {article.title}
               </Title>
               <Text type='secondary'>
@@ -157,7 +108,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
             <Col span={24}>
               {isMeetingJoinable ? (
                 <a
-                  href={article.event_link}
+                  href={/^https?:\/\//i.test(article.event_link) ? article.event_link : `http://${article.event_link}`}
                   target='_blank'
                   rel='noopener noreferrer'
                   className='basic-btn purple-full-link'>
@@ -192,9 +143,25 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
             </Col>
           )}
 
+          <Col span={24}>
+            <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+              Speaker: <span>{article.speaker || 'Not yet disclosed.'}</span>
+            </p>
+          </Col>
+
+          {article.additional_details && (
+            <Col span={24}>
+              <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+                Notes: <span>{article.additional_details || 'None.'}</span>
+              </p>
+            </Col>
+          )}
+
           {!isOrganizer && (
             <Col>
-              <p>Organized by: {`${article.organizer.firstName} ${article.organizer.lastName}`}</p>
+              <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+                Organized by: <span>{`${article.organizer.firstName} ${article.organizer.lastName}`}</span>
+              </p>
             </Col>
           )}
         </Row>

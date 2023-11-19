@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Button, Table } from 'antd';
 import CalendarCell from './CalendarCell';
 import { monthNames } from '@/utils/constants';
-import { LeftOutlined, RightOutlined, CalendarOutlined } from '@ant-design/icons';
+import { CalendarOutlined, RightCircleOutlined, LeftCircleOutlined } from '@ant-design/icons';
+import { MdToday } from 'react-icons/md';
 
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
@@ -81,44 +82,28 @@ const ArticleCalendar = ({ articles }) => {
 
   return (
     <div id='calendar-container' className='flex flex-col'>
-      <div id='calendar-head' className='flex items-center justify-between bg-[#5161ce] text-white rounded-t-xl'>
+      <div id='calendar-head' className='flex items-center justify-between bg-[#5161ce]  text-white rounded-t-xl p-2'>
         <Button
           id='prev-month'
           ghost
           className='calendar-chevron'
           onClick={() => changeMonth(-1)}
-          icon={<LeftOutlined />}
+          icon={<LeftCircleOutlined />}
         />
 
-        <Button
-          onClick={goToToday}
-          style={{
-            borderColor: 'white',
-            backgroundColor: 'white',
-            color: '#5161ce'
-          }}
-          className='today-button'>
+        <Button onClick={goToToday} className='today-button'>
           <CalendarOutlined className='today-icon' />
           <span className='today-text'>TODAY</span>
         </Button>
 
-        <span
-          id='current-month-year'
-          style={{
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            marginRight: '45px'
-          }}>
-          {`${monthNames[month]} ${year}`}
-        </span>
+        <span id='current-month-year'>{`${monthNames[month]} ${year}`}</span>
 
         <Button
           id='next-month'
           ghost
           className='calendar-chevron'
           onClick={() => changeMonth(1)}
-          icon={<RightOutlined />}
+          icon={<RightCircleOutlined />}
         />
       </div>
       <Table id='calendar-body' dataSource={calendarData} pagination={false}>

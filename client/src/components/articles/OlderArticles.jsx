@@ -21,7 +21,7 @@ const OlderArticles = observer(() => {
   const [currentFeedback, setCurrentFeedback] = useState('');
   const [currentArticle, setCurrentArticle] = useState(null);
   const [userFeedbacks, setUserFeedbacks] = useState([]);
-  const [attended, setAttended] = useState([]);
+  const [attended, setAttended] = useState(user.attended);
 
   const {
     data: feedbacks,
@@ -68,6 +68,7 @@ const OlderArticles = observer(() => {
     try {
       const response = await toggleAttending(user._id, articleId, isAttending);
       const attendedArticles = allowedArticles.filter(a => response.attended.includes(a._id));
+      console.log(attendedArticles);
       setAttended(attendedArticles);
     } catch (error) {
       console.error('There was an error updating attendance:', error);

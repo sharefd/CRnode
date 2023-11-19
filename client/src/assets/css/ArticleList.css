@@ -166,3 +166,32 @@ body {
 .purple-full-dark:hover {
   background-color: #080942;
 }
+
+.article-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.article-card-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.article-card-title {
+  margin-left: 10px;
+  flex-grow: 1; /* Allow title to take available space */
+  overflow: hidden; /* Prevent overflow */
+}
+
+.article-card-title-text {
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ellipsis for overflow */
+  max-width: 90%; /* Limit width to prevent overlap */
+}
+
+.article-card-actions {
+  display: flex;
+  align-items: center;
+}

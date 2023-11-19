@@ -1,6 +1,6 @@
-import axios from 'axios';
 import userStore from '@/stores/userStore';
 import { compareDates } from '@/utils/dates';
+import axios from 'axios';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
@@ -35,9 +35,7 @@ export const deleteArticle = async articleId => {
 };
 
 export const sortArticles = articles => {
-  return articles.sort((a, b) => {
-    return compareDates(a, b);
-  });
+  return articles.sort(compareDates);
 };
 
 export const sortArticlesDescending = articles => {

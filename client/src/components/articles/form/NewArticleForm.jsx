@@ -90,7 +90,7 @@ const NewArticleForm = ({
 
     const payload = {
       ...article,
-      date: date,
+      date: date ? date : article.date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
       purpose: articlePurpose._id,
@@ -114,7 +114,7 @@ const NewArticleForm = ({
 
     const payload = {
       ...article,
-      date: date,
+      date: date ? date : article.date,
       duration: `${startTimeFormatted} - ${endTimeFormatted}`,
       organizer: user._id,
       purpose: articlePurpose._id,
@@ -206,13 +206,10 @@ const NewArticleForm = ({
             <Form.Item label='Date' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <DatePicker
                 className='w-full'
-                value={dayjs(article.date)}
+                value={date ? dayjs(date) : null}
                 onChange={dateValue => {
-                  if (!dateValue) {
-                    setDate(dayjs(article.date));
-                    return;
-                  }
-                  setDate(dateValue);
+                  setDate(dateValue ? dayjs(dateValue) : null);
+
                   setArticle({ ...article, date: dayjs(dateValue) });
                 }}
               />
