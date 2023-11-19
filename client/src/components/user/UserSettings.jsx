@@ -216,9 +216,10 @@ const UserSettings = observer(() => {
                 )}
               </List>
 
-              <Divider />
               <div className='p-4 bg-gray-100 rounded-lg text-left mb-4'>
-                <p className='text-lg font-semibold'>PERMISSIONS</p>
+                  
+                                <Divider>PERMISSIONS </Divider>
+
                 {user && (
                   <div className='mt-2'>
                     <div className='flex items-center'>
