@@ -138,7 +138,7 @@ const PurposesList = observer(() => {
 
 
   return (
-    <div className='px-2 md:px-10'>
+    <div className='px-0 md:px-10'>
       <h1 className='my-4 text-xl'>Your Calendars</h1>
       <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
         + New Calendar
