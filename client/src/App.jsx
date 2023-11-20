@@ -50,13 +50,15 @@ const App = observer(() => {
     }
   }, [isLoading, fetchedUser]);
 
-  if (!token || !localUser) {
-    localStorage.removeItem('CloudRoundsUser');
-    localStorage.removeItem('CloudRoundsToken');
-    if (!isNonAuthPath()) {
-      window.location.href = '/login';
+  useEffect(() => {
+    if (!token || !localUser) {
+      localStorage.removeItem('CloudRoundsUser');
+      localStorage.removeItem('CloudRoundsToken');
+      if (!isNonAuthPath()) {
+        window.location.href = '/login';
+      }
     }
-  }
+  }, [localUser, token]);
 
   axios.interceptors.request.use(
     config => {
