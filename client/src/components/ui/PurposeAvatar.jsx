@@ -1,7 +1,7 @@
 import { hashStringToColor, createAcronym } from '@/utils/cardHelpers';
 import { Avatar } from 'antd';
 
-const PurposeAvatar = (purpose = 'N/A') => {
+const PurposeAvatar = ({ purpose = 'N/A' }) => {
   const bgColor = hashStringToColor(purpose);
   const acronym = createAcronym(purpose);
 
