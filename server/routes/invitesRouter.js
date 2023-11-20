@@ -67,7 +67,8 @@ router.post('/register-with-token', async (req, res) => {
     password: hashedPassword,
     university,
     firstName,
-    lastName
+    lastName,
+    emailValidated: true
   });
 
   try {
