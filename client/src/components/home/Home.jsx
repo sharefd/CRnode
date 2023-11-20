@@ -1,24 +1,10 @@
 import { Typography, Card, Row, Col } from 'antd';
 import { homeLinks } from '@/utils/constants';
 import { observer } from 'mobx-react';
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 const Home = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
-  const token = localStorage.getItem('CloudRoundsToken');
-
   const user = JSON.parse(localUser);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!localUser || !token) {
-      localStorage.removeItem('CloudRoundsToken');
-      localStorage.removeItem('CloudRoundsUser');
-      if (location.pathname !== '/login') navigate('/login');
-    }
-  }, []);
 
   return (
     <div className='mt-8'>

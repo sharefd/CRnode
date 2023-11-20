@@ -25,6 +25,12 @@ const App = observer(() => {
   const parsedUser = JSON.parse(localUser);
   const [user, setUser] = useState(parsedUser);
 
+  const isNonAuthPath = () => {
+    const nonAuthPatterns = [/^\/login$/, /^\/register$/, /^\/forgot-password$/, /^\/reset-password\/.+$/];
+
+    return nonAuthPatterns.some(pattern => pattern.test(window.location.pathname));
+  };
+
   const {
     data: fetchedUser,
     isLoading,
@@ -44,13 +50,15 @@ const App = observer(() => {
     }
   }, [isLoading, fetchedUser]);
 
-  if (!token || !localUser) {
-    localStorage.removeItem('CloudRoundsUser');
-    localStorage.removeItem('CloudRoundsToken');
-    if (window.location.pathname !== '/login') {
-      window.location.href = '/login';
+  useEffect(() => {
+    if (!token || !localUser) {
+      localStorage.removeItem('CloudRoundsUser');
+      localStorage.removeItem('CloudRoundsToken');
+      if (!isNonAuthPath()) {
+        window.location.href = '/login';
+      }
     }
-  }
+  }, [localUser, token]);
 
   axios.interceptors.request.use(
     config => {

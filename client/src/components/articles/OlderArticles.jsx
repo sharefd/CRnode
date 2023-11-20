@@ -8,6 +8,7 @@ import { Button, Card, Checkbox, Input, Layout, Modal, Pagination, Spin, Table, 
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import PurposeAvatar from '../ui/PurposeAvatar';
 
 const { TextArea } = Input;
 
@@ -160,7 +161,7 @@ const OlderArticles = observer(() => {
             title='Purpose'
             dataIndex='purpose'
             key='purpose'
-            render={purpose => (purpose ? purpose.name : '')}
+            render={purpose => <PurposeAvatar purpose={purpose && purpose.name} />}
           />
           <Table.Column
             title='Article Title'
