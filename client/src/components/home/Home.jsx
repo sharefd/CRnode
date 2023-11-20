@@ -7,16 +7,22 @@ import { useLocation, useNavigate } from 'react-router';
 const Home = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const token = localStorage.getItem('CloudRoundsToken');
-
   const user = JSON.parse(localUser);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const isNonAuthPath = () => {
+    const nonAuthPatterns = [/^\/login$/, /^\/register$/, /^\/forgot-password$/, /^\/reset-password\/.+$/];
+
+    return nonAuthPatterns.some(pattern => pattern.test(location.pathname));
+  };
   useEffect(() => {
     if (!localUser || !token) {
       localStorage.removeItem('CloudRoundsToken');
       localStorage.removeItem('CloudRoundsUser');
-      if (location.pathname !== '/login') navigate('/login');
+      if (!isNonAuthPath()) {
+        navigate('/login');
+      }
     }
   }, []);
 

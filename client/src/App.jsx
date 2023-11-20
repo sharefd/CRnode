@@ -25,6 +25,12 @@ const App = observer(() => {
   const parsedUser = JSON.parse(localUser);
   const [user, setUser] = useState(parsedUser);
 
+  const isNonAuthPath = () => {
+    const nonAuthPatterns = [/^\/login$/, /^\/register$/, /^\/forgot-password$/, /^\/reset-password\/.+$/];
+
+    return nonAuthPatterns.some(pattern => pattern.test(window.location.pathname));
+  };
+
   const {
     data: fetchedUser,
     isLoading,
@@ -47,7 +53,7 @@ const App = observer(() => {
   if (!token || !localUser) {
     localStorage.removeItem('CloudRoundsUser');
     localStorage.removeItem('CloudRoundsToken');
-    if (window.location.pathname !== '/login') {
+    if (!isNonAuthPath()) {
       window.location.href = '/login';
     }
   }

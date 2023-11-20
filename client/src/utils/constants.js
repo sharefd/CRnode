@@ -3,50 +3,52 @@ import { SettingOutlined } from '@ant-design/icons';
 
 export const UNIVERSITY_CHOICES = [
   { value: '', label: 'Select University' },
- 
+
   { value: 'McMaster University', label: 'McMaster University' },
   { value: 'University of Toronto', label: 'University of Toronto' },
   { value: 'University of Western Ontario', label: 'University of Western Ontario' },
   { value: 'University of Ottawa', label: 'University of Ottawa' },
-      { value: 'Queens University', label: "Queen's University" },
+  { value: 'Queens University', label: "Queen's University" },
 
-    { value: 'Dalhousie University', label: 'Dalhousie University' },
-      { value: 'McGill University', label: 'McGill University' },
-
+  { value: 'Dalhousie University', label: 'Dalhousie University' },
+  { value: 'McGill University', label: 'McGill University' },
 
   { value: 'University of Manitoba', label: 'University of Manitoba' },
   { value: 'University of Saskatchewan', label: 'University of Saskatchewan' },
-  { value: 'University of Calgary', label: 'University of Calgary' }, 
-  { value: 'University of Alberta', label: 'University of Alberta' },    
-    { value: 'University of British Columbia', label: 'University of British Columbia' },
-    
-    { value: 'Université de Montréal', label: 'Université de Montréal' },
-        { value: 'Northern Ontario School of Medicine University', label: 'Northern Ontario School of Medicine University' },
+  { value: 'University of Calgary', label: 'University of Calgary' },
+  { value: 'University of Alberta', label: 'University of Alberta' },
+  { value: 'University of British Columbia', label: 'University of British Columbia' },
 
-    
-    
+  { value: 'Université de Montréal', label: 'Université de Montréal' },
+  { value: 'Northern Ontario School of Medicine University', label: 'Northern Ontario School of Medicine University' },
+
   { value: 'Other', label: 'Other' }
 ];
 
 export const domainSuggestions = [
   'mail.utoronto.ca',
   'utoronto.ca',
-  'medportal.ca', 'mcmaster.ca',
+  'medportal.ca',
+  'mcmaster.ca',
   'mcgill.ca',
   'ualberta.ca',
-  'uwo.ca', 'meds.uwo.ca',
+  'uwo.ca',
+  'meds.uwo.ca',
   'queensu.ca',
   'uba.ca',
   'uottawa.ca',
   'dal.ca',
   'queensu.ca',
-    'mail.ubc.ca',
-  'ahs.ca', 
-    'albertahealthservices.ca',
-    'usask.ca',
-    'saskhealthauthority.ca',
-    'umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca',
-    'nosm.ca', 'umontreal.ca',
+  'mail.ubc.ca',
+  'ahs.ca',
+  'albertahealthservices.ca',
+  'usask.ca',
+  'saskhealthauthority.ca',
+  'umanitoba.ca',
+  'hsc.mb.ca',
+  'exchange.hsc.mb.ca',
+  'nosm.ca',
+  'umontreal.ca'
 ];
 
 export const universityDomainMap = {
@@ -61,10 +63,10 @@ export const universityDomainMap = {
   'Queens University': ['queensu.ca'],
   'University of Calgary': ['ahs.ca', 'albertahealthservices.ca'],
   'University of Alberta': ['ualberta.ca'],
-  'University of Saskatchewan': ['usask.ca', 'saskhealthauthority.ca'],  
-  'University of Manitoba': ['umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca'],  
-    'Northern Ontario School of Medicine University': ['nosm.ca'],
-'Université de Montréal': ['umontreal.ca'],
+  'University of Saskatchewan': ['usask.ca', 'saskhealthauthority.ca'],
+  'University of Manitoba': ['umanitoba.ca', 'hsc.mb.ca', 'exchange.hsc.mb.ca'],
+  'Northern Ontario School of Medicine University': ['nosm.ca'],
+  'Université de Montréal': ['umontreal.ca'],
 
   Other: []
 };
