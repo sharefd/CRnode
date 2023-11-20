@@ -185,6 +185,12 @@ div#calendar-cell {
   position: absolute;
   visibility: hidden;
   display: none;
+  left: 5px;
+  color: #000;
+}
+
+.today-button .today-icon:hover {
+  background-color: rgb(230, 230, 230);
 }
 
 /* Media Queries */
@@ -328,14 +334,23 @@ div#calendar-cell {
     font-size: 14px;
   }
 
+  .today-button .today-text {
+    visibility: hidden;
+    display: none;
+  }
+
+  .today-button .today-icon {
+    visibility: visible;
+    display: block;
+  }
+
   .calendar-head {
     padding: 5px;
   }
 }
 
 @media (max-width: 400px) {
-  .today-button .today-text,
-  .today-button .today-icon {
+  .today-button .today-text {
     visibility: hidden;
     display: none;
   }

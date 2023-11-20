@@ -92,7 +92,7 @@ const ArticleCalendar = ({ articles }) => {
         />
 
         <Button onClick={goToToday} className='today-button'>
-          <CalendarOutlined className='today-icon' />
+          <CalendarOutlined className='absolute hidden bg-white p-[6px] rounded-md today-icon' />
           <span className='today-text'>TODAY</span>
         </Button>
 
