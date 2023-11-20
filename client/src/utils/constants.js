@@ -148,20 +148,20 @@ export const homeLinks = [
     label: 'Step 1: Manage',
     Icon: PeopleAlt,
     endpoint: '/manage',
-    description: 'Create a calendar. Select or invite users to view your calendar.'
+    description: "Create a calendar in the Manage tab. Select or invite users to view your calendar."
   },
   {
     label: 'Step 2: Calendar',
     Icon: EventAvailable,
     endpoint: '/calendar',
-    description: 'View and create events. See your calendar in action.'
+    description: 'Create events in the Calendar tab. See your calendar in action.'
   },
-  {
-    label: 'Step 3: Requests',
-    Icon: Key,
-    endpoint: '/requests',
-    description: 'View and manage incoming calendar requests.'
-  }
+//  {
+//    label: 'Step 3: Requests',
+//    Icon: Key,
+//    endpoint: '/requests',
+//    description: 'View and manage incoming calendar requests.'
+//  }
   //     {
   //     label: 'Past Events',
   //     Icon: History,

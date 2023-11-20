@@ -28,7 +28,7 @@ const Home = observer(() => {
             Welcome, {user ? user.firstName : 'None'}.
           </Typography.Title>
           <Typography variant='body' className='text-center'>
-            Get started in 3 simple steps:
+            Get started in 2 simple steps:
           </Typography>
 
           <Row
