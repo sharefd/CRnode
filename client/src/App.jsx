@@ -11,6 +11,7 @@ import Home from './components/home/Home';
 import Navbar from './components/home/Navbar';
 import 'react-toastify/dist/ReactToastify.css';
 import ResetPassword from './components/auth/form/ResetPassword';
+import EmailVerification from './components/auth/form/EmailVerification';
 
 const PurposesList = lazy(() => import('./components/purposes/PurposesList'));
 const RequestsList = lazy(() => import('./components/requests/RequestsList'));
@@ -26,7 +27,14 @@ const App = observer(() => {
   const [user, setUser] = useState(parsedUser);
 
   const isNonAuthPath = () => {
-    const nonAuthPatterns = [/^\/login$/, /^\/register$/, /^\/forgot-password$/, /^\/reset-password\/.+$/];
+    const nonAuthPatterns = [
+      /^\/login$/,
+      /^\/login\/.+$/,
+      /^\/register$/,
+      /^\/forgot-password$/,
+      /^\/reset-password\/.+$/,
+      /^\/verify-email\/.+$/
+    ];
     return nonAuthPatterns.some(pattern => pattern.test(window.location.pathname));
   };
 
@@ -85,6 +93,7 @@ const App = observer(() => {
             <Route path='/past-events' element={<OlderArticles />} />
             <Route path='/requests' element={<RequestsList />} />
             <Route path='/login' element={<AuthPage />} />
+            <Route path='/verify-email/:token' element={<EmailVerification />} />
             <Route path='/register' element={<AuthPage />} />
             <Route path='/forgot-password' element={<AuthPage />} />
             <Route path='/reset-password/:resetToken' element={<ResetPassword />} />

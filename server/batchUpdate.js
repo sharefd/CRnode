@@ -1,30 +1,16 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Purpose = require('./models/Purpose');
-const Article = require('./models/Article');
-const Request = require('./models/Request'); // Importing the Request model
+const User = require('./models/User');
 
-async function updatePurposesUniqueMembers() {
+async function validateAllExistingEmails() {
   try {
-    const purposes = await Purpose.find();
-
-    for (const purpose of purposes) {
-      const uniqueCanReadMembers = [...new Set(purpose.canReadMembers.map(member => member.toString()))];
-      const uniqueCanWriteMembers = [...new Set(purpose.canWriteMembers.map(member => member.toString()))];
-
-      if (
-        uniqueCanReadMembers.length !== purpose.canReadMembers.length ||
-        uniqueCanWriteMembers.length !== purpose.canWriteMembers.length
-      ) {
-        purpose.canReadMembers = uniqueCanReadMembers;
-        purpose.canWriteMembers = uniqueCanWriteMembers;
-        await purpose.save();
-      }
-    }
-
-    console.log('All purposes have been updated with unique members.');
-  } catch (error) {
-    console.error('Failed to update purposes:', error);
+    const result = await User.updateMany(
+      {}, // This empty object means "match all documents"
+      { $set: { emailValidated: true } }
+    );
+    console.log('Email validation update result:', result);
+  } catch (err) {
+    console.error('Error updating users:', err);
   }
 }
 
@@ -36,7 +22,7 @@ mongoose
   .then(async () => {
     console.log('MongoDB connected');
 
-    await updatePurposesUniqueMembers();
+    await validateAllExistingEmails();
 
     mongoose.connection.close();
   })

@@ -25,29 +25,39 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
 
     setIsLoading(true);
 
-    let response;
-    if (token) {
-      response = await registerWithToken({ ...values, token });
-    } else {
-      response = await createUser(values);
-    }
+    try {
+      let response;
 
-    setIsLoading(false);
-    if (response && response.user) {
-      toast.success('Successfully signed up', { autoClose: 2500, pauseOnFocusLoss: false });
-      setIsSignUp(false);
-      form.resetFields();
-    } else if (response && response.response && response.response.data) {
-      const errorMessage = response.response.data;
-      toast.error(errorMessage, {
-        autoClose: 2500,
-        pauseOnFocusLoss: false
-      });
-    } else {
-      toast.error('An error occurred during signup', {
-        autoClose: 2500,
-        pauseOnFocusLoss: false
-      });
+      if (token) {
+        response = await registerWithToken({ ...values, token });
+      } else {
+        response = await createUser(values);
+      }
+
+      setIsLoading(false);
+      if (response && response.message) {
+        toast.success('Successfully signed up. Please check your email to validate your account.', {
+          autoClose: 5000,
+          pauseOnFocusLoss: false
+        });
+        setIsSignUp(false);
+        navigate('/login');
+        form.resetFields();
+      }
+    } catch (error) {
+      setIsLoading(false);
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data;
+        toast.error(errorMessage, {
+          autoClose: 2500,
+          pauseOnFocusLoss: false
+        });
+      } else {
+        toast.error('An error occurred during signup', {
+          autoClose: 2500,
+          pauseOnFocusLoss: false
+        });
+      }
     }
   };
 

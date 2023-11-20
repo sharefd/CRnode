@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Input, Button, Spin, Typography } from 'antd';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/userStore';
@@ -8,15 +8,29 @@ import { useNavigate } from 'react-router';
 import { loginUser } from '@/services/users';
 import { MailOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPassword }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = useState(false);
   const initialCredentials = fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
   const [credentials, setCredentials] = useState(initialCredentials);
   const [fieldErrors, setFieldErrors] = useState(initialCredentials);
   const [emailResetField, setEmailResetField] = useState('');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const emailValidated = query.get('emailValidated');
+    if (emailValidated === 'true') {
+      toast.success('Success, your email has been validated. Please login.', {
+        autoClose: 5000,
+        pauseOnFocusLoss: false
+      });
+    }
+  }, [location]);
 
   const handleSubmit = async () => {
     setIsLoading(true);

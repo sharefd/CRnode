@@ -10,9 +10,12 @@ const UserSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   purposes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purpose' }],
   attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   resetToken: { type: String },
   resetTokenExpiry: { type: Number },
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }]
+  registerToken: { type: String },
+  registerTokenExpiry: { type: Number },
+  emailValidated: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('User', UserSchema);

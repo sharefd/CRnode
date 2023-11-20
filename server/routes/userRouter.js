@@ -1,11 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/User');
 
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const { sendEmail } = require('../middleware/mailer');
 const { jwtMiddleware } = require('../middleware/permissions');
+
+const URL_HOST = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://cloudrounds.com';
 
 // fetch all users
 router.get('/', jwtMiddleware, async (req, res) => {
@@ -104,6 +109,10 @@ router.post('/login', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
+    if (!user.emailValidated) {
+      return res.status(403).send('Email not validated. Please check your email to validate your account.');
+    }
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).send('Invalid password');
@@ -133,6 +142,9 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   const { username, email, password, university, firstName, lastName } = req.body;
 
+  const registerToken = crypto.randomBytes(20).toString('hex');
+  const registerTokenExpiry = Date.now() + 3600000; // 1 hour
+
   if (!username || !email || !password || !university || !firstName || !lastName) {
     return res.status(400).send('All fields are required');
   }
@@ -157,29 +169,23 @@ router.post('/register', async (req, res) => {
     password: hashedPassword,
     university,
     firstName,
-    lastName
+    lastName,
+    emailValidated: false,
+    registerToken,
+    registerTokenExpiry
   });
 
   try {
-    const createdUser = await newUser.save();
+    await newUser.save();
 
-    const token = jwt.sign({ username: newUser.username, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET, {
-      expiresIn: '72h'
-    });
+    const subject = 'Validate Email';
+    const text = `You are receiving this email because you signed up to CloudRounds.\n\n
+        Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
+        ${URL_HOST}/verify-email/${registerToken}\n\n`;
 
-    res.cookie('CloudRoundsToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 72 * 3600000
-    });
-
-    const { password: _, ...userResponse } = createdUser.toObject();
-
-    res.status(200).json({
-      message: 'User successfully registered',
-      token: token,
-      user: userResponse
-    });
+    const to = newUser.email;
+    await sendEmail(subject, text, to);
+    res.status(200).json({ message: 'User registered. Please check your email to validate your account.' });
   } catch (err) {
     res.status(500).send(err.message);
   }
