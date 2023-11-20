@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -5,7 +6,22 @@ const bcrypt = require('bcrypt');
 const { sendEmail } = require('../middleware/mailer');
 const crypto = require('crypto');
 
-const URL_HOST = process.env.NODE_ENV === 'production' ? 'https://cloudrounds.com' : 'http://localhost:3000';
+const URL_HOST = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://cloudrounds.com';
+
+router.get('/session-check', (req, res) => {
+  const token = req.cookies['CloudRoundsToken'];
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json({ valid: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ valid: false, message: 'Token is not valid' });
+  }
+});
 
 router.post('/forgot-password', async (req, res) => {
   const email = req.body.email;

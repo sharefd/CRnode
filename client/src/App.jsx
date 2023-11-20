@@ -27,7 +27,6 @@ const App = observer(() => {
 
   const isNonAuthPath = () => {
     const nonAuthPatterns = [/^\/login$/, /^\/register$/, /^\/forgot-password$/, /^\/reset-password\/.+$/];
-
     return nonAuthPatterns.some(pattern => pattern.test(window.location.pathname));
   };
 

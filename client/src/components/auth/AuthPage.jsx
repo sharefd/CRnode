@@ -9,23 +9,12 @@ const AuthPage = () => {
   const location = useLocation();
   const [isSignup, setIsSignUp] = useState(location.pathname === '/register');
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const navigate = useNavigate();
   const appName = 'CloudRounds';
 
   useEffect(() => {
     setIsSignUp(location.pathname === '/register');
   }, [location.pathname]);
 
-  // useEffect(() => {
-  //   const localUser = localStorage.getItem('CloudRoundsUser');
-  //   const token = localStorage.getItem
-  //   if (localUser) {
-  //     const parsedUser = JSON.parse(localUser);
-  //     if (!parsedUser) {
-  //       navigate('/');
-  //     }
-  //   }
-  // }, []);
   return (
     <div className='auth-container'>
       <LogoContainer />

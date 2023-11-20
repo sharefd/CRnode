@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "MODE=development nodemon index.js",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
     "build:ui": "cd ../client && npm run build && cp -r dist ../server",
     "dev:all": "concurrently \"npm run dev\" \"cd ../client && npm run dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
