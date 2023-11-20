@@ -6,7 +6,7 @@ const baseUrl = isDevelopment ? 'http://localhost:3003' : '';
 
 export const updateFeedback = async editedfeedback => {
   try {
-    const response = await axios.put(`${baseUrl}/feedbacks/${editedfeedback._id}`, editedfeedback);
+    const response = await axios.put(`${baseUrl}/api/feedbacks/${editedfeedback._id}`, editedfeedback);
     const updatedfeedback = response.data;
     userStore.setFeedbacks(
       userStore.feedbacks.map(feedback => (feedback._id === updatedfeedback._id ? updatedfeedback : feedback))
@@ -18,14 +18,11 @@ export const updateFeedback = async editedfeedback => {
 
 export const createFeedback = async (userId, feedback, articleId) => {
   try {
-    const response = await axios.put(`${baseUrl}/feedbacks/updateOrCreate`, {
-      articleId,
+    const response = await axios.post(`${baseUrl}/api/feedbacks`, {
       userId,
-      feedback
+      feedback,
+      articleId
     });
-
-    const temp = userStore.feedbacks.filter(f => f._id !== response.data.feedback._id);
-    userStore.setFeedbacks([...temp, response.data.feedback]);
     return response.data.feedback;
   } catch (error) {
     console.error('There was an error creating the feedback:', error);
@@ -34,7 +31,7 @@ export const createFeedback = async (userId, feedback, articleId) => {
 
 export const deleteFeedback = async feedbackId => {
   try {
-    await axios.delete(`${baseUrl}/feedbacks/${feedbackId}`);
+    await axios.delete(`${baseUrl}/api/feedbacks/${feedbackId}`);
     userStore.setFeedbacks(userStore.feedbacks.filter(feedback => feedback._id !== feedbackId));
   } catch (error) {
     console.error('Error deleting feedback:', error);
