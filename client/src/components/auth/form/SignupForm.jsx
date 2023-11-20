@@ -30,20 +30,23 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
 
       if (token) {
         response = await registerWithToken({ ...values, token });
+        toast.success('Successfully signed up. Please login to start using the platform.', {
+          autoClose: 5000,
+          pauseOnFocusLoss: false
+        });
       } else {
         response = await createUser(values);
-      }
-
-      setIsLoading(false);
-      if (response && response.message) {
         toast.success('Successfully signed up. Please check your email to validate your account.', {
           autoClose: 5000,
           pauseOnFocusLoss: false
         });
-        setIsSignUp(false);
-        navigate('/login');
-        form.resetFields();
       }
+
+      setIsLoading(false);
+
+      setIsSignUp(false);
+      navigate('/login');
+      form.resetFields();
     } catch (error) {
       setIsLoading(false);
       if (error.response && error.response.data) {
