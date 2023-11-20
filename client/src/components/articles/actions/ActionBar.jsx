@@ -1,7 +1,11 @@
 import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Divider, Drawer, Dropdown, Input, Space, Typography } from 'antd';
+import { Button, Checkbox, Divider, Drawer, Dropdown, Input, Space, Typography, Popover } from 'antd';
 import { useEffect, useState } from 'react';
 import { FcCalendar } from 'react-icons/fc';
+import { FaCloud } from "react-icons/fa";
+import { EventAvailable, History, Key, ManageSearch, PeopleAlt, Settings, } from '@mui/icons-material';
+
+
 
 const ActionBar = ({
   selectedPurposes,
@@ -14,11 +18,71 @@ const ActionBar = ({
   emptyPurposes
 }) => {
   const now = new Date();
+    
+    
+    const App = () => {
+    const [open, setOpen] = useState(false);
+    const hide = () => {
+      setOpen(false);
+    };
+    const handleOpenChange = (newOpen) => {
+      setOpen(newOpen);
+    };
+
+    return (
+     <Popover
+  content={<a onClick={hide}>Close</a>}
+  title={
+  <>
+  <p>How to create events:</p>
+  <br />
+  <p>
+    Step 1: <PeopleAlt /> Head to the manage tab and create your calendar. Add/invite people to view your calendar. 
+  </p>
+                
+        <br />
+
+                
+  <p> Step 2: <EventAvailable /> Navigate back to this tab and create events.   </p>
+  <br />
+  <p><Key /> If a calendar is shared with you, the invitation can be accepted in the Requests tab. </p>
+  <br />
+  <p><History /> All historical events will appear in the Past Events tab. </p>
+   <br />            
+  <p> <ManageSearch /> In the future, you will be able to add your calendar to a public catalog, and request access to other publically available calendars/rounds. </p>                
+</>
+  }
+  trigger="click"
+  open={open}
+  onOpenChange={handleOpenChange}
+  overlayStyle={{ width: '350px' }} // Set the desired width
+>
+  <Button
+    type="primary"
+    className="custom-help-button"
+    style={{ backgroundColor: '#6576e8', border: 'none', display: 'flex', alignItems: 'center' }}
+  >
+    <FaCloud style={{ marginRight: '8px' }} /> Help
+  </Button>
+</Popover>
+
+
+
+
+
+
+    );
+  };
+    
+    
+    
   const formattedTime = now.toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
     timeZoneName: 'short'
   });
+    
+    
 
   const [currentTime, setCurrentTime] = useState(formattedTime);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -170,14 +234,15 @@ const ActionBar = ({
       {/* Horizontal Bar below Navbar */}
       {/* Display most recent upcoming event details */}
 
-      <Space
-        className='flex justify-end items-center w-full px-4 py-3.5 mb-5 bg-gray-100'
+     <Space
+        className='flex justify-end items-center w-full px-4 py-3.5 mb-5 purple-light-full'
         style={{ background: '#c7d2fe' }}>
+        <App />
         <button className='flex items-center basic-btn purple-light-full' onClick={toggleNewArticleModal}>
           <span style={{ marginRight: '8px' }}>
             <FcCalendar />
           </span>
-          <span style={{ fontWeight: 'bold' }}>Create Event</span>{' '}
+          <span style={{ fontWeight: 'bold' }}>New Event</span>{' '}
         </button>
         <p className='text-gray-600 text-sm'>{currentTime}</p>
       </Space>

@@ -335,3 +335,8 @@ select::placeholder {
   }
 }
 
+.custom-help-button:hover {
+  background-color: #5161ce !important; /* Use !important to override Ant Design styles */
+}
+
+
