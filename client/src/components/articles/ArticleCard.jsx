@@ -46,7 +46,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
   const cardContainerStyle = {
     border: isEventLive ? '2px solid #f87171' : '0px solid #1e3a8a', // Use different colors for today and other days
     borderRadius: '10px',
-    animation: isEventLive ? 'flashBorder 0.8s infinite alternate' : 'none'
+    animation: isEventLive ? 'flashBorder 1.5s infinite alternate' : 'none'
   };
 
   const isMeetingJoinable = isMeetingInfoPresent();
