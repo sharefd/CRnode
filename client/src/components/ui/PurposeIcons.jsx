@@ -11,8 +11,10 @@ const purposeIcons = {
   MACIMAHD2: <img src={MACIMAHD2Icon} style={{ width: '18px', marginRight: '6px' }} />,
   MACIMAHD3: <img src={MACIMAHD3Icon} style={{ width: '18px', marginRight: '6px' }} />,
   DEFAULT: <PeopleAlt sx={{ width: '18px', marginRight: '6px', height: '18px', color: '#5161ce' }} />,
-  'OM AHD': <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
-  'UofT Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />
+  'Occ Med AHD': <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
+  'SMH Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+  'UofT Aerospace': <RocketLaunch sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+
 };
 
 export default purposeIcons;
