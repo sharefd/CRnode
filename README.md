@@ -27,6 +27,6 @@ Allows users to view, create, and manage articles related to seminars, rounds, a
 Organizers can opt to have their calendar featured in a public catalog that users can request access to, potentially increasing their audience and reach. 
 
 ### Integrated feedback forms
-Provides speakers and event organizers with easy to use, customizable feedback forms built directly into the app that be shared with event attendees.
+Provides speakers and event organizers with easy to use, customizable feedback forms built directly into the app that can be shared with event attendees.
 
 
