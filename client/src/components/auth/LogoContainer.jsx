@@ -17,7 +17,14 @@ const LogoContainer = ({ isSignup }) => {
       {/* Mobile View */}
       <div className='logo-container-mobile'>
         <img src={CloudLogo} alt='App Logo' />
-        <p className='ml-4'>Welcome to CloudRounds.</p>
+          <p className='ml-4'>
+    Welcome to CloudRounds.
+    <br />
+    <span style={{ fontSize: '0.7em' }}>
+      Access and manage medical rounds, research meetings, and more.
+    </span>
+  </p>
+          
       </div>
     </>
   );

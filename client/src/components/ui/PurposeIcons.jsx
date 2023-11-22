@@ -1,8 +1,10 @@
-import { PeopleAlt, RocketLaunch, Engineering } from '@mui/icons-material';
+import { PeopleAlt, RocketLaunch, Engineering, Vaccines, } from '@mui/icons-material';
 import MACIMAHD1Icon from '@/assets/images/mcm.png';
 import MACIMAHD2Icon from '@/assets/images/mcm2.png';
 import MACIMAHD3Icon from '@/assets/images/mcm3.png';
 import OM1Icon from '@/assets/images/om1-purple.png';
+import { GiPoisonBottle } from "react-icons/gi";
+
 
 const purposeIcons = {
   OM1: <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
@@ -14,7 +16,11 @@ const purposeIcons = {
   'Occ Med AHD': <img src={OM1Icon} style={{ width: '18px', marginRight: '6px' }} />,
   'SMH Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
   'UofT Aerospace': <RocketLaunch sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+  'UofT Tox Rounds': <Vaccines sx={{ width: '18px', marginRight: '6px', height: '18px' }} />,
+    
 
 };
+
+
 
 export default purposeIcons;
