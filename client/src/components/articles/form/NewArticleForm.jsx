@@ -5,6 +5,7 @@ import { initialArticleData } from '@/utils/constants';
 import { extractTimesFromDuration, formatDate } from '@/utils/dates';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd';
+
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -203,17 +204,19 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Date' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
-              <DatePicker
-                className='w-full'
-                value={date ? dayjs(date) : null}
-                onChange={dateValue => {
-                  setDate(dateValue ? dayjs(dateValue) : null);
+<Form.Item label='Date' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+  <DatePicker
+    className='w-full'
+    value={date ? dayjs(date) : null}
+    onChange={dateValue => {
+      setDate(dateValue ? dayjs(dateValue) : null);
+      setArticle({ ...article, date: dayjs(dateValue) });
+    }}
+    disabledDate={current => current && current.isBefore(dayjs(), 'day')}
+  />
+</Form.Item>
 
-                  setArticle({ ...article, date: dayjs(dateValue) });
-                }}
-              />
-            </Form.Item>
+
           </Col>
           <Col span={12}>
             <Form.Item label='Time' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>

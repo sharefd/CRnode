@@ -3,7 +3,7 @@ import CloudLogo from '@/assets/images/logo.png';
 const LogoContainer = ({ isSignup }) => {
   const welcomeMessage = isSignup
     ? 'Join our community of learners and health professionals.'
-    : 'Access and manage medical rounds and research meetings.';
+    : 'Access and manage your   medical rounds and research meetings.';
 
   return (
     <>
@@ -21,7 +21,7 @@ const LogoContainer = ({ isSignup }) => {
     Welcome to CloudRounds.
     <br />
     <span style={{ fontSize: '0.7em' }}>
-      Access and manage medical rounds, research meetings, and more.
+      Access and manage your medical rounds and research meetings.
     </span>
   </p>
           
