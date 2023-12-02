@@ -43,7 +43,6 @@ const SignupForm = observer(({ fields, setIsSignUp }) => {
       }
 
       setIsLoading(false);
-
       setIsSignUp(false);
       navigate('/login');
       form.resetFields();

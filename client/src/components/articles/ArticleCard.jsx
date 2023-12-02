@@ -1,9 +1,9 @@
-import { CaretDownOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
+import { StarFilled, StarOutlined } from '@ant-design/icons';
 import { Col, Collapse, Row, Avatar, Typography } from 'antd';
-import { useState } from 'react';
 import { formatDate } from '@/utils/dates';
 import { hashStringToColor, createAcronym } from '@/utils/cardHelpers';
 import { FaRegEdit } from 'react-icons/fa';
+import ExportToIcalButton from './calendar/ExportToIcalButton';
 
 const { Panel } = Collapse;
 const { Text, Title } = Typography;
@@ -55,11 +55,12 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     {
       key: '1',
       label: (
-        <div className='relative rounded-md '>
+        <div className='relative rounded-md'>
           <div className='flex items-center rounded-md'>
             <Avatar style={{ backgroundColor: hashStringToColor(article.purpose.description) }}>
               {createAcronym(article.purpose.description)}
             </Avatar>
+
             <div style={{ flex: 1, marginLeft: '10px' }}>
               <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
                 {article.title}
@@ -103,7 +104,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
         </div>
       ),
       children: (
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} className='relative'>
           {isVirtual && (
             <Col span={24}>
               {isMeetingJoinable ? (
@@ -119,6 +120,9 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
               )}
             </Col>
           )}
+          <div className='absolute top-[-2px] right-0 mr-2'>
+            <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
+          </div>
 
           {!isVirtual && (
             <Col span={24}>
@@ -158,7 +162,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
           )}
 
           {!isOrganizer && (
-            <Col>
+            <Col span={24}>
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
                 Organized by: <span>{`${article.organizer.firstName} ${article.organizer.lastName}`}</span>
               </p>

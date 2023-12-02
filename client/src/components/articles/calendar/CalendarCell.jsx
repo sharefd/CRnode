@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { Badge, Typography, Modal, Button } from 'antd';
+import purposeIcons from '@/components/ui/PurposeIcons';
+import { formatDate } from '@/utils/dates';
 import {
-  LeftOutlined,
-  RightOutlined,
-  LinkOutlined,
   ClockCircleOutlined,
-  LockOutlined,
   CopyOutlined,
+  DownloadOutlined,
+  EnvironmentOutlined,
+  LeftOutlined,
+  LinkOutlined,
+  LockOutlined,
+  RightOutlined,
   UsergroupAddOutlined
 } from '@ant-design/icons';
-import { formatDate } from '@/utils/dates';
-
-import purposeIcons from '@/components/ui/PurposeIcons';
-import { EnvironmentOutlined } from '@ant-design/icons';
+import { Badge, Button, Modal, Typography } from 'antd';
+import React, { useState } from 'react';
+import ExportToIcalButton from './ExportToIcalButton';
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
@@ -99,9 +100,12 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
             </p>
           </div>
 
-          <div className='flex items-center mb-5'>
-            <ClockCircleOutlined className='mr-2' />
-            {formatDate(article.date)} @ {article.duration}
+          <div className='flex items-center mb-5 justify-between'>
+            <div className='flex items-center'>
+              <ClockCircleOutlined className='mr-2' />
+              {formatDate(article.date)} @ {article.duration}
+            </div>
+            <ExportToIcalButton article={article} />
           </div>
 
           <div className='flex items-center mb-5'>

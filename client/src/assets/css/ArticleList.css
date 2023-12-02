@@ -128,6 +128,20 @@ body {
   background-color: #5161ce;
 }
 
+.red-full {
+  border-color: #f47d7f;
+  color: #fff;
+}
+
+.red-full:hover {
+  background-color: #f47d7f;
+}
+
+.red-full:hover p,
+.red-full:hover svg {
+  color: #fff;
+}
+
 .purple-full-link {
   padding: 6px 12px;
   background-color: #5161ce;
@@ -194,4 +208,13 @@ body {
 .article-card-actions {
   display: flex;
   align-items: center;
+}
+
+.custom-checkbox .ant-checkbox-inner {
+  border-color: #808080 !important;
+  border-width: 1px !important;
+}
+
+.custom-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #808080 !important;
 }
