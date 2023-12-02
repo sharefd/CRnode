@@ -5,18 +5,48 @@ import dayjs from 'dayjs';
 
 const ExportToIcalButton = ({ article, text, fontSize }) => {
   const createIcsFile = event => {
-    const { title, date, duration, location } = event;
+    const {
+      title,
+      date,
+      duration,
+      location,
+      additional_details,
+      speaker,
+      organizer,
+      meeting_id,
+      passcode,
+      event_link
+    } = event;
     const [startTime, endTime] = extractTimesFromDuration(duration);
 
     const startDate = dayjs(date).hour(startTime.hour()).minute(startTime.minute());
     const endDate = dayjs(date).hour(endTime.hour()).minute(endTime.minute());
 
+    let description = '';
+    if (additional_details) {
+      description += `Details: ${additional_details}\n`;
+    }
+    if (speaker) {
+      description += `Speaker: ${speaker}\n`;
+    }
+    if (organizer) {
+      description += `Organized by: ${organizer.firstName} ${organizer.lastName}\n`;
+    }
+    if (meeting_id) {
+      description += `Meeting ID: ${meeting_id}\n`;
+    }
+    if (passcode) {
+      description += `Passcode: ${passcode}\n`;
+    }
+
     createEvent(
       {
         title: title,
+        description,
         start: [startDate.year(), startDate.month() + 1, startDate.date(), startDate.hour(), startDate.minute()],
         end: [endDate.year(), endDate.month() + 1, endDate.date(), endDate.hour(), endDate.minute()],
-        location: location
+        location,
+        url: event_link
       },
       (error, value) => {
         if (error) {
@@ -25,7 +55,7 @@ const ExportToIcalButton = ({ article, text, fontSize }) => {
           const blob = new Blob([value], { type: 'text/calendar;charset=utf-8;' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = `${title}.ics`;
+          link.download = `${title.replace(/[^a-zA-Z ]/g, '')}.ics`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
