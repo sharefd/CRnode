@@ -88,7 +88,7 @@ const handleMouseLeave = () => setIsHovered(false);
 
           
         className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
-          isToday ? 'border border-[#5161ce]' : ''
+          isToday ? 'border border-[#FAFAFA]' : ''
         }`}>
           
           
@@ -129,27 +129,25 @@ const handleMouseLeave = () => setIsHovered(false);
 </div>
 
   ) : (
-    <div className={`relative w-8 h-8 flex rounded-md items-center justify-center ${isToday ? 'border border-[#5161ce]' : ''}`}>
-      {events.length > 0 && (
-        <div
-          style={{ border: 'none', display: 'block' }}
-        >
-        </div>
-      )}
-      <Typography.Text
-        strong
-        style={{ color: isToday ? '#000' : 'inherit' }}
-      >
-        {day}
-      </Typography.Text>
-      {events.length > 0 && (
-        <Badge
-          count={events.length}
-          className='absolute calendar-badge'
-          style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12, display: isHovered ? 'none' : 'block' }}
-        />
-      )}
+<div className={`relative w-8 h-8 flex rounded-md items-center justify-center ${isToday && !isHovered ? 'border border-[#5161ce]' : ''}`}>
+  {events.length > 0 && (
+    <div style={{ border: 'none', display: 'block' }}>
     </div>
+  )}
+  <Typography.Text
+    strong
+    style={{ color: isToday ? '#000' : 'inherit' }}
+  >
+    {day}
+  </Typography.Text>
+  {events.length > 0 && (
+    <Badge
+      count={events.length}
+      className='absolute calendar-badge'
+      style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12, display: isHovered ? 'none' : 'block' }}
+    />
+  )}
+</div>
   )}
 </div>
 
