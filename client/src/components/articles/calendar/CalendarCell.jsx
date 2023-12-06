@@ -105,19 +105,25 @@ const handleMouseLeave = () => setIsHovered(false);
         <div
           key={index}
           style={{
-            border: '1px solid #5161CE',
+            border: '1px dotted #5161CE',
             borderRadius: '2px',
             color: '#5161CE',
             fontWeight: '900',
             fontSize: '9px', // Increase font size for better visibility
             marginBottom: '1px', // Adjust margin for better spacing
             display: 'inline-block',
-                            verticalAlign: 'top', // Align events to the top
+            verticalAlign: 'top', // Align events to the top
+            padding: '1px 0px 0px 2px', 
+            marginTop: '-8px', // Move the div higher
+            textAlign: 'left', // Align text to the left
+            background: '', // Light grey background
+    
+
 
 
           }}
         >
-        {event.title.length > 9 ? event.title.slice(0, 9) + '...' : event.title}
+        {event.title.length > 9 ? event.title.slice(0, 9) + '..' : event.title}
         </div>
     ))}
 </div>
