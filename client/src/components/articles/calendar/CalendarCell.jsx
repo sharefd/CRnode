@@ -17,6 +17,14 @@ import ExportToIcalButton from './ExportToIcalButton';
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
+    
+    
+    
+    const [isHovered, setIsHovered] = useState(false);
+
+    
+    
+    
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const today = new Date();
@@ -48,6 +56,11 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const handlePrevEvent = () => {
     setCurrentEventIndex(prevIndex => Math.max(prevIndex - 1, 0));
   };
+    
+    const handleMouseEnter = () => setIsHovered(true);
+    
+const handleMouseLeave = () => setIsHovered(false);
+
 
   const article = events[currentEventIndex] || {};
   const isInPersonMeeting = article.meetingType === 'In-Person';
@@ -68,25 +81,90 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
   return (
-    <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
+    <div key={`${day}-${month}-${year}`} 
+        onClick={handleCellClick} 
+        id='calendar-cell'>
       <div
+
+          
         className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
           isToday ? 'border border-[#5161ce]' : ''
         }`}>
+          
+          
+  <div
+  onMouseEnter={handleMouseEnter}
+  onMouseLeave={handleMouseLeave}
+  key={`${day}-${month}-${year}`}
+  onClick={handleCellClick}
+  id='calendar-cell'
+>
+  {isHovered && events.length > 0 ? (
+<div style={{ maxHeight: '20px', minHeight: '20px', maxWidth: '50px', minWidth: '50px'}}>
+    {events.slice(0, 2).map((event, index) => (
+        <div
+          key={index}
+          style={{
+            border: '1px solid #5161CE',
+            borderRadius: '2px',
+            color: '#5161CE',
+            fontWeight: '900',
+            fontSize: '9px', // Increase font size for better visibility
+            marginBottom: '1px', // Adjust margin for better spacing
+            display: 'inline-block',
+                            verticalAlign: 'top', // Align events to the top
+
+
+          }}
+        >
+        {event.title.length > 9 ? event.title.slice(0, 9) + '...' : event.title}
+        </div>
+    ))}
+</div>
+
+  ) : (
+    <div className={`relative w-8 h-8 flex rounded-md items-center justify-center ${isToday ? 'border border-[#5161ce]' : ''}`}>
+      {events.length > 0 && (
+        <div
+          style={{ border: 'none', display: 'block' }}
+        >
+        </div>
+      )}
+      <Typography.Text
+        strong
+        style={{ color: isToday ? '#000' : 'inherit' }}
+      >
+        {day}
+      </Typography.Text>
+      {events.length > 0 && (
         <Badge
           count={events.length}
           className='absolute calendar-badge'
-          style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12 }}
+          style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12, display: isHovered ? 'none' : 'block' }}
         />
-        <Typography.Text
-          strong
-          style={{
-            color: isToday ? '#000' : 'inherit'
-          }}>
-          {day}
-        </Typography.Text>
+      )}
+    </div>
+  )}
+</div>
+
+          
+          
+          
+          
+          
+          
+          
+
+
       </div>
 
+          
+          
+          
+          
+          
+          
+          
       <Modal open={open} onCancel={handleClose} footer={null} width={420}>
         <div onClick={stopPropagation}>
           <Typography.Title level={4} className='mb-5'>
