@@ -61,7 +61,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       label: (
         <div className='relative rounded-md'>
           <div className='flex items-center rounded-md'>
-<Avatar style={{ backgroundColor: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #5161ce' }}>
+<Avatar style={{ backgroundColor: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '0px solid #5161ce' }}>
   {purposeIcons[article.purpose.name]|| purposeIcons.DEFAULT}
 </Avatar>
 
