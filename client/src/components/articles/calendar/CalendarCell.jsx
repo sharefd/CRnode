@@ -74,6 +74,7 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
           isToday ? 'border border-[#5161ce]' : ''
         }`}>
         <Badge
+            
           count={events.length}
           className='absolute calendar-badge'
           style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12 }}
