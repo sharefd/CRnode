@@ -68,20 +68,27 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
   };
 
  return (
+     
     <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
-      <Popover
-        title={<strong>{`Events on ${formatDate(new Date(year, month, day))}`}</strong>}
-        content={
-          <div>
-            {events.map((event, index) => (
-              <div key={event.title} style={{ marginBottom: '8px' }}>
-                 <strong>{`${event.duration}: `}</strong>
-                {event.title}
-              </div>
-            ))}
+         
+         
+         
+  <Popover
+    title={<strong>{`Events on ${formatDate(new Date(year, month, day))}`}</strong>}
+    content={
+      <div>
+        {events.map((event, index) => (
+          <div className='flex justify-start items-center mb-5 purpose-badge ml-0 mr-auto' key={event.title} style={{ marginBottom: '8px' }}>
+            <strong>{`${event.duration}: `}</strong>&nbsp;{event.title}
+
           </div>
-        }
-        trigger="hover"
+        ))}
+        <p style={{ marginTop: '10px', textAlign: 'left', fontStyle: '' }}>
+          Click to expand.
+        </p>
+      </div>
+    }
+    trigger="hover"
       >
         <div
           className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
