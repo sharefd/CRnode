@@ -166,7 +166,7 @@ const NewArticleForm = ({
   return (
     <Modal open={open} onCancel={onModalClose} footer={null} className='new-article-form'>
       <Form onFinish={selectedArticle ? handleSave : handleSubmit} className='compact-form'>
-        <Form.Item label='Title' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+        <Form.Item label='Title*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
           <Input
             placeholder='Title'
             value={article.title}
@@ -176,7 +176,7 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Calendar' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+            <Form.Item label='Calendar*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <Select
                 value={(articlePurpose && articlePurpose._id) || ''}
                 onChange={value => setArticlePurpose({ ...articlePurpose, _id: value })}>
@@ -204,7 +204,7 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-<Form.Item label='Date' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+<Form.Item label='Date*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
   <DatePicker
     className='w-full'
     value={date ? dayjs(date) : null}
@@ -219,7 +219,7 @@ const NewArticleForm = ({
 
           </Col>
           <Col span={12}>
-            <Form.Item label='Time' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+            <Form.Item label='Time*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
               <TimeRangePicker
                 value={timeRange}
                 onChange={newRange => setTimeRange(newRange)}
