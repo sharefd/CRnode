@@ -69,7 +69,7 @@ const ActionBar = ({
           type='primary'
           className='custom-help-button'
           style={{ backgroundColor: '#6576e8', border: 'none', display: 'flex', alignItems: 'center' }}>
-          <FaCloud style={{ marginRight: '8px' }} /> Help
+          <FaCloud style={{ marginRight: '4px' }} />Help
         </Button>
       </Popover>
     );
@@ -163,12 +163,13 @@ const ActionBar = ({
       <Button
         onClick={() => setShowSidebar(!showSidebar)}
         icon={showSidebar ? <LeftOutlined /> : <RightOutlined />}
-        className='absolute top-3'
+        className='absolute top-3.5 left-1.5'
+        style={{ backgroundColor: '#ffffff'}}
+
       />
 
       {/* LEFT SIDEBAR: Article Filters */}
       <Drawer
-        style={{ backgroundColor: '#faf5ff' }}
         title='Filters'
         placement='left'
         closable={true}
