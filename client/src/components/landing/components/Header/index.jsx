@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Row, Col, Drawer } from 'antd';
-import { withTranslation } from 'react-i18next';
 import Container from '../../common/Container';
 import { SvgIcon } from '../../common/SvgIcon';
 import { Button } from '../../common/Button';
@@ -15,8 +14,11 @@ import {
   Outline,
   Span
 } from './styles';
+import { useNavigate } from 'react-router';
+import Logo from '../Logo';
 
-const Header = ({ t }) => {
+const Header = () => {
+  const navigate = useNavigate();
   const [visible, setVisibility] = useState(false);
 
   const toggleButton = () => {
@@ -34,17 +36,17 @@ const Header = ({ t }) => {
     return (
       <>
         <CustomNavLinkSmall onClick={() => scrollTo('about')}>
-          <Span>{t('About')}</Span>
+          <Span>About</Span>
         </CustomNavLinkSmall>
         <CustomNavLinkSmall onClick={() => scrollTo('mission')}>
-          <Span>{t('Mission')}</Span>
+          <Span>Mission</Span>
         </CustomNavLinkSmall>
         <CustomNavLinkSmall onClick={() => scrollTo('product')}>
-          <Span>{t('Product')}</Span>
+          <Span>Product</Span>
         </CustomNavLinkSmall>
-        <CustomNavLinkSmall style={{ width: '180px' }} onClick={() => scrollTo('contact')}>
+        <CustomNavLinkSmall style={{ width: '180px' }} onClick={() => navigate('/login')}>
           <Span>
-            <Button>{t('Contact')}</Button>
+            <Button>Log In</Button>
           </Span>
         </CustomNavLinkSmall>
       </>
@@ -55,9 +57,7 @@ const Header = ({ t }) => {
     <HeaderSection>
       <Container>
         <Row justify='space-between'>
-          <LogoContainer to='/' aria-label='homepage'>
-            <SvgIcon src='logo.svg' width='101px' height='64px' />
-          </LogoContainer>
+          <Logo />
           <NotHidden>
             <MenuItem />
           </NotHidden>
@@ -83,4 +83,4 @@ const Header = ({ t }) => {
   );
 };
 
-export default withTranslation()(Header);
+export default Header;

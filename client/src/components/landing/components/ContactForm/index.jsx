@@ -1,5 +1,4 @@
 import { Row, Col } from 'antd';
-import { withTranslation } from 'react-i18next';
 import { Slide, Zoom } from 'react-awesome-reveal';
 import { useForm } from '../../common/utils/useForm';
 import validate from '../../common/utils/validationRules';
@@ -9,7 +8,7 @@ import Input from '../../common/Input';
 import TextArea from '../../common/TextArea';
 import { ContactContainer, FormGroup, Span, ButtonContainer } from './styles';
 
-const Contact = ({ title, content, id, t }) => {
+const Contact = ({ title, content, id }) => {
   const { values, errors, handleChange, handleSubmit } = useForm(validate);
 
   const ValidationType = ({ type }) => {
@@ -62,7 +61,7 @@ const Contact = ({ title, content, id, t }) => {
                 <ValidationType type='message' />
               </Col>
               <ButtonContainer>
-                <Button name='submit'>{t('Submit')}</Button>
+                <Button name='submit'>{'Submit'}</Button>
               </ButtonContainer>
             </FormGroup>
           </Slide>
@@ -72,4 +71,4 @@ const Contact = ({ title, content, id, t }) => {
   );
 };
 
-export default withTranslation()(Contact);
+export default Contact;

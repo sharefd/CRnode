@@ -1,31 +1,11 @@
 import { Row, Col } from 'antd';
-import { withTranslation } from 'react-i18next';
 import { SvgIcon } from '../../common/SvgIcon';
 import Container from '../../common/Container';
 
-import i18n from 'i18next';
-import {
-  FooterSection,
-  Title,
-  NavLink,
-  Extra,
-  LogoContainer,
-  Para,
-  Large,
-  Chat,
-  Empty,
-  FooterContainer,
-  Language,
-  Label,
-  LanguageSwitch,
-  LanguageSwitchContainer
-} from './styles';
+import { FooterSection, Title, NavLink, Extra, LogoContainer, Para, Large, Chat, FooterContainer } from './styles';
+import Logo from '../Logo';
 
-const Footer = ({ t }) => {
-  const handleChange = language => {
-    i18n.changeLanguage(language);
-  };
-
+const Footer = () => {
   const SocialLink = ({ href, src }) => {
     return (
       <a href={href} target='_blank' rel='noopener noreferrer' key={src} aria-label={src}>
@@ -39,68 +19,48 @@ const Footer = ({ t }) => {
       <FooterSection>
         <Container>
           <Row justify='space-between'>
-            <Col lg={10} md={10} sm={12} xs={12}>
-              <Language>{t('Contact')}</Language>
-              <Large to='/'>{t('Tell us everything')}</Large>
-              <Para>{t(`Do you have any question? Feel free to reach out.`)}</Para>
-              <a href='mailto:l.qqbadze@gmail.com'>
-                <Chat>{t(`Let's Chat`)}</Chat>
-              </a>
-            </Col>
             <Col lg={8} md={8} sm={12} xs={12}>
-              <Title>{t('Policy')}</Title>
-              <Large to='/'>{t('Application Security')}</Large>
-              <Large to='/'>{t('Software Principles')}</Large>
+              <Title>Policy</Title>
+              <Large to='/'>Application Security</Large>
+              <Large to='/'>Software Principles</Large>
             </Col>
-            <Col lg={6} md={6} sm={12} xs={12}>
-              <Empty />
-              <Large to='/'>{t('Support Center')}</Large>
-              <Large to='/'>{t('Customer Support')}</Large>
+            <Col lg={10} md={10} sm={12} xs={12}>
+              <Title>Support</Title>
+              <Large to='/'>Support Center</Large>
+              <Large to='/'>Customer Support</Large>
             </Col>
           </Row>
           <Row justify='space-between'>
-            <Col lg={10} md={10} sm={12} xs={12}>
-              <Empty />
-              <Language>{t('Address')}</Language>
-              <Para>Rancho Santa Margarita</Para>
-              <Para>2131 Elk Street</Para>
-              <Para>California</Para>
-            </Col>
             <Col lg={8} md={8} sm={12} xs={12}>
-              <Title>{t('Company')}</Title>
-              <Large to='/'>{t('About')}</Large>
-              <Large to='/'>{t('Blog')}</Large>
-              <Large to='/'>{t('Press')}</Large>
-              <Large to='/'>{t('Careers & Culture')}</Large>
+              <Title>Company</Title>
+              <Large to='/'>About</Large>
+              <Large to='/'>Blog</Large>
+              <Large to='/'>Press</Large>
+              <Large to='/'>Careers & Culture</Large>
             </Col>
-            <Col lg={6} md={6} sm={12} xs={12}>
-              <Label htmlFor='select-lang'>{t('Language')}</Label>
-              <LanguageSwitchContainer>
-                <LanguageSwitch onClick={() => handleChange('en')}>
-                  <SvgIcon src='united-states.svg' aria-label='homepage' width='30px' height='30px' />
-                </LanguageSwitch>
-                <LanguageSwitch onClick={() => handleChange('es')}>
-                  <SvgIcon src='spain.svg' aria-label='homepage' width='30px' height='30px' />
-                </LanguageSwitch>
-              </LanguageSwitchContainer>
+            <Col lg={10} md={10} sm={12} xs={12}>
+              <Title>Contact</Title>
+              <Large to='/'>Tell us everything</Large>
+              <Para>Do you have any question? Feel free to reach out.</Para>
+              <a href='mailto:l.qqbadze@gmail.com'>
+                <Chat>Let's Chat</Chat>
+              </a>
             </Col>
           </Row>
         </Container>
       </FooterSection>
+      <hr style={{ width: '100%', border: '0', borderTop: '1px solid #CDD1D4' }} />
       <Extra>
         <Container border={true}>
           <Row justify='space-between' align='middle' style={{ paddingTop: '3rem' }}>
             <NavLink to='/'>
-              <LogoContainer>
-                <SvgIcon src='logo.svg' aria-label='homepage' width='101px' height='64px' />
-              </LogoContainer>
+              <Logo />
             </NavLink>
             <FooterContainer>
-              <SocialLink href='https://github.com/Adrinlol/create-react-app-adrinlol' src='github.svg' />
-              <SocialLink href='https://twitter.com/Adrinlolx' src='twitter.svg' />
-              <SocialLink href='https://www.linkedin.com/in/lasha-kakabadze/' src='linkedin.svg' />
-              <SocialLink href='https://medium.com/@lashakakabadze/' src='medium.svg' />
-              <a href='https://ko-fi.com/Y8Y7H8BNJ' target='_blank' rel='noopener noreferrer'>
+              <SocialLink href='https://github.com/sharefd/CRnode' src='github.svg' />
+              {/* <SocialLink href='https://twitter.com/' src='twitter.svg' /> */}
+              <SocialLink href='https://www.linkedin.com/in/sharefdanho/' src='linkedin.svg' />
+              <a href='https://ko-fi.com' target='_blank' rel='noopener noreferrer'>
                 <img
                   height='36'
                   style={{ border: 0, height: 36 }}
@@ -116,4 +76,4 @@ const Footer = ({ t }) => {
   );
 };
 
-export default withTranslation()(Footer);
+export default Footer;

@@ -1,15 +1,14 @@
-import { withTranslation } from 'react-i18next';
 import { Container, TextWrapper, Content } from './styles';
 
-const Block = ({ title, content, t }) => {
+const Block = ({ title, content }) => {
   return (
     <Container>
-      <h6>{t(title)}</h6>
+      <h6>{title}</h6>
       <TextWrapper>
-        <Content>{t(content)}</Content>
+        <Content>{content}</Content>
       </TextWrapper>
     </Container>
   );
 };
 
-export default withTranslation()(Block);
+export default Block;

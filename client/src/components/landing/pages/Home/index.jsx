@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import IntroContent from '../../content/IntroContent.json';
 import MiddleBlockContent from '../../content/MiddleBlockContent.json';
 import AboutContent from '../../content/AboutContent.json';
@@ -8,6 +8,7 @@ import ContactContent from '../../content/ContactContent.json';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { Styles } from '../../styles/styles';
+import { useLocation, useNavigate } from 'react-router';
 
 const Contact = lazy(() => import('../../components/ContactForm'));
 const MiddleBlock = lazy(() => import('../../components/MiddleBlock'));
@@ -16,6 +17,16 @@ const ScrollToTop = lazy(() => import('../../common/ScrollToTop'));
 const ContentBlock = lazy(() => import('../../components/ContentBlock'));
 
 const Home = () => {
+  const token = localStorage.getItem('CloudRoundsToken');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token && location.pathname === '/') {
+      navigate('/calendar');
+    }
+  }, [token, navigate]);
+
   return (
     <>
       <Styles />
@@ -57,7 +68,7 @@ const Home = () => {
           icon='waving.svg'
           id='product'
         />
-        <Contact title={ContactContent.title} content={ContactContent.text} id='contact' />
+        {/* <Contact title={ContactContent.title} content={ContactContent.text} id='contact' /> */}
       </Container>
       <Footer />
     </>

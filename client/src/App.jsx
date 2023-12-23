@@ -61,7 +61,8 @@ const App = observer(() => {
     if (!token || !localUser) {
       localStorage.removeItem('CloudRoundsUser');
       localStorage.removeItem('CloudRoundsToken');
-      if (!isNonAuthPath()) {
+      // if (!isNonAuthPath()) {
+      if (/^\/(login)?$/.test(window.location.href)) {
         window.location.href = '/login';
       }
     }
@@ -92,7 +93,6 @@ const App = observer(() => {
     <>
       <Router>
         <NavbarWithLocation />
-
         <Suspense fallback={<Spin />}>
           <Routes>
             <Route path='/' element={<Home />} />
