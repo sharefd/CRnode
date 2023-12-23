@@ -15,6 +15,15 @@ const AuthPage = () => {
     setIsSignUp(location.pathname === '/register');
   }, [location.pathname]);
 
+  const token = localStorage.getItem('CloudRoundsToken');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate('/calendar');
+    }
+  }, [token]);
+
   return (
     <div className='auth-container'>
       <LogoContainer />
