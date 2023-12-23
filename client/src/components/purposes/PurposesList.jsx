@@ -31,12 +31,17 @@ const PurposesList = observer(() => {
   useEffect(() => {
     if (!isLoading) {
       setPurposes(canWritePurposes);
-      const canRead = canReadPurposes?.filter(purpose => purpose.creator._id !== user._id) || [];
+      const canRead = canReadPurposes?.filter(purpose => purpose.creator && purpose.creator._id !== user._id) || [];
       setMemberPurposes(canRead);
     }
   }, [isLoading, canWritePurposes, canReadPurposes]);
 
   const handleSave = async () => {
+    if (!selectedPurpose) {
+      console.error('No selected purpose');
+      return;
+    }
+
     try {
       const data = await updatePurpose(selectedPurpose._id, newPurpose);
       console.log(data.updatedPurpose);
@@ -131,11 +136,9 @@ const PurposesList = observer(() => {
   if (isLoading) {
     return <Spin />;
   }
-  const createdPurposes = purposes?.filter(purpose => purpose.creator._id === user._id) || [];
+  const createdPurposes = purposes?.filter(purpose => purpose.creator && purpose.creator._id === user._id) || [];
   const memberColumns = getMemberColums(handleLeave);
   const columns = getColumns(handleOpen, handleOpenMemberList, handleDelete);
-
-
 
   return (
     <div className='px-0 md:px-10'>
@@ -143,7 +146,7 @@ const PurposesList = observer(() => {
       <Button type='primary' ghost onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
         + New Calendar
       </Button>
-      <Table 
+      <Table
         dataSource={createdPurposes}
         columns={columns}
         rowKey='_id'
