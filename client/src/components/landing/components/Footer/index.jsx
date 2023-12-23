@@ -53,9 +53,7 @@ const Footer = () => {
       <Extra>
         <Container border={true}>
           <Row justify='space-between' align='middle' style={{ paddingTop: '3rem' }}>
-            <NavLink to='/'>
-              <Logo />
-            </NavLink>
+            <Logo />
             <FooterContainer>
               <SocialLink href='https://github.com/sharefd/CRnode' src='github.svg' />
               {/* <SocialLink href='https://twitter.com/' src='twitter.svg' /> */}

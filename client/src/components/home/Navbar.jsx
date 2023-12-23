@@ -140,7 +140,7 @@ const Navbar = observer(() => {
   return (
     <nav ref={navbarRef} className='navbar-mainbg flex justify-between items-center h-[64px]'>
       <div className={`navbar-logo min-w-[200px]`}>
-        <Link to='/' className='flex items-center space-x-2 text-white text-lg pl-2'>
+        <Link className='flex items-center space-x-2 text-white text-lg pl-2'>
           <img src={CloudLogo} width='40px' alt='CloudRounds Logo' />
           <span className='text-white text-lg ml-2'>CloudRounds</span>
         </Link>
