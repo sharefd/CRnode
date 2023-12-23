@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Spin } from 'antd';
 import { fetchCurrentUser } from './services/users';
 import AuthPage from './components/auth/AuthPage';
 import { useQuery } from 'react-query';
-import Home from './components/home/Home';
+import Home from './components/landing/pages/Home';
 import Navbar from './components/home/Navbar';
 import 'react-toastify/dist/ReactToastify.css';
 import ResetPassword from './components/auth/form/ResetPassword';
@@ -80,10 +80,19 @@ const App = observer(() => {
     }
   );
 
+  const NavbarWithLocation = () => {
+    const location = useLocation();
+    if (location.pathname !== '/') {
+      return <Navbar />;
+    }
+    return null;
+  };
+
   return (
     <>
       <Router>
-        <Navbar />
+        <NavbarWithLocation />
+
         <Suspense fallback={<Spin />}>
           <Routes>
             <Route path='/' element={<Home />} />
