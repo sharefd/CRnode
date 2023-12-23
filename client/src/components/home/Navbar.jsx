@@ -14,7 +14,6 @@ const Navbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
 
-  const [activeIndex, setActiveIndex] = useState(0);
   const navbarRef = useRef(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
@@ -24,6 +23,9 @@ const Navbar = observer(() => {
   const findActiveIndex = () => {
     return links.findIndex(link => location.pathname === link.endpoint);
   };
+
+  const initialActiveIndex = findActiveIndex();
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
   useEffect(() => {
     const currentActiveIndex = findActiveIndex();
@@ -140,7 +142,7 @@ const Navbar = observer(() => {
   return (
     <nav ref={navbarRef} className='navbar-mainbg flex justify-between items-center h-[64px]'>
       <div className={`navbar-logo min-w-[200px]`}>
-        <Link className='flex items-center space-x-2 text-white text-lg pl-2'>
+        <Link to='/' className='flex items-center space-x-2 text-white text-lg pl-2'>
           <img src={CloudLogo} width='40px' alt='CloudRounds Logo' />
           <span className='text-white text-lg ml-2'>CloudRounds</span>
         </Link>

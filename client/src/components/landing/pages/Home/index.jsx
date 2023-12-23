@@ -4,7 +4,6 @@ import MiddleBlockContent from '../../content/MiddleBlockContent.json';
 import AboutContent from '../../content/AboutContent.json';
 import MissionContent from '../../content/MissionContent.json';
 import ProductContent from '../../content/ProductContent.json';
-import ContactContent from '../../content/ContactContent.json';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { Styles } from '../../styles/styles';
@@ -21,14 +20,14 @@ const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token && location.pathname === '/') {
-      navigate('/calendar');
-    }
-  }, [token, navigate]);
+  // useEffect(() => {
+  //   if (token && location.pathname === '/') {
+  //     navigate('/calendar');
+  //   }
+  // }, [token, navigate]);
 
   return (
-    <>
+    <div className='landing-page'>
       <Styles />
       <Header />
       <Container>
@@ -71,7 +70,7 @@ const Home = () => {
         {/* <Contact title={ContactContent.title} content={ContactContent.text} id='contact' /> */}
       </Container>
       <Footer />
-    </>
+    </div>
   );
 };
 

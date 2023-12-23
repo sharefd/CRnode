@@ -2,9 +2,9 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { createArticle, updateArticle } from '@/services/articles';
 import { createPurpose, fetchPurposes } from '@/services/purposes';
 import { initialArticleData } from '@/utils/constants';
-import { extractTimesFromDuration, formatDate } from '@/utils/dates';
+import { extractTimesFromDuration } from '@/utils/dates';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, message } from 'antd';
 
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -89,6 +89,16 @@ const NewArticleForm = ({
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
 
+    if (!timeRange[0] || !timeRange[1]) {
+      message.error('Both start and end times are required');
+      return;
+    }
+
+    if (!articlePurpose || !articlePurpose._id) {
+      message.error('Purpose is required');
+      return;
+    }
+
     const payload = {
       ...article,
       date: date ? date : article.date,
@@ -97,6 +107,11 @@ const NewArticleForm = ({
       purpose: articlePurpose._id,
       event_link: article.event_link
     };
+
+    if (!payload.title || payload.title.trim() === '') {
+      message.error('Title cannot be empty');
+      return;
+    }
 
     try {
       const updatedArticle = await updateArticle(payload);
@@ -110,8 +125,19 @@ const NewArticleForm = ({
 
   const handleSubmit = async e => {
     const [start, end] = timeRange;
+
+    if (!timeRange[0] || !timeRange[1]) {
+      message.error('Both start and end times are required');
+      return;
+    }
+
     const startTimeFormatted = start.format('h:mm A');
     const endTimeFormatted = end.format('h:mm A');
+
+    if (!articlePurpose || !articlePurpose._id) {
+      message.error('Purpose is required');
+      return;
+    }
 
     const payload = {
       ...article,
@@ -122,8 +148,8 @@ const NewArticleForm = ({
       event_link: article.event_link
     };
 
-    if (!payload.title) {
-      console.error('Title is required');
+    if (!payload.title || payload.title.trim() === '') {
+      message.error('Title cannot be empty');
       return;
     }
 
@@ -166,7 +192,12 @@ const NewArticleForm = ({
   return (
     <Modal open={open} onCancel={onModalClose} footer={null} className='new-article-form'>
       <Form onFinish={selectedArticle ? handleSave : handleSubmit} className='compact-form'>
-        <Form.Item label='Title*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+        <Form.Item
+          label='Title*'
+          labelCol={{ span: 24 }}
+          colon={false}
+          className='newArticleForm'
+          rules={[{ required: true, message: 'Please input the title!' }]}>
           <Input
             placeholder='Title'
             value={article.title}
@@ -176,7 +207,12 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label='Calendar*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+            <Form.Item
+              label='Calendar*'
+              labelCol={{ span: 24 }}
+              colon={false}
+              className='newArticleForm'
+              rules={[{ required: true, message: 'Please select a calendar!' }]}>
               <Select
                 value={(articlePurpose && articlePurpose._id) || ''}
                 onChange={value => setArticlePurpose({ ...articlePurpose, _id: value })}>
@@ -204,22 +240,30 @@ const NewArticleForm = ({
 
         <Row gutter={24}>
           <Col span={12}>
-<Form.Item label='Date*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
-  <DatePicker
-    className='w-full'
-    value={date ? dayjs(date) : null}
-    onChange={dateValue => {
-      setDate(dateValue ? dayjs(dateValue) : null);
-      setArticle({ ...article, date: dayjs(dateValue) });
-    }}
-    disabledDate={current => current && current.isBefore(dayjs(), 'day')}
-  />
-</Form.Item>
-
-
+            <Form.Item
+              label='Date*'
+              labelCol={{ span: 24 }}
+              colon={false}
+              className='newArticleForm'
+              rules={[{ required: true, message: 'Please select a date!' }]}>
+              <DatePicker
+                className='w-full'
+                value={date ? dayjs(date) : null}
+                onChange={dateValue => {
+                  setDate(dateValue ? dayjs(dateValue) : null);
+                  setArticle({ ...article, date: dayjs(dateValue) });
+                }}
+                disabledDate={current => current && current.isBefore(dayjs(), 'day')}
+              />
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label='Time*' labelCol={{ span: 24 }} colon={false} className='newArticleForm'>
+            <Form.Item
+              label='Time*'
+              labelCol={{ span: 24 }}
+              colon={false}
+              className='newArticleForm'
+              rules={[{ required: true, message: 'Please select a start/end time!' }]}>
               <TimeRangePicker
                 value={timeRange}
                 onChange={newRange => setTimeRange(newRange)}

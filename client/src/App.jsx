@@ -62,9 +62,8 @@ const App = observer(() => {
       localStorage.removeItem('CloudRoundsUser');
       localStorage.removeItem('CloudRoundsToken');
       // if (!isNonAuthPath()) {
-      if (!/^\/(login)?$/.test(window.location.href)) {
-        // window.location.href = '/login';
-      }
+      // window.location.href = '/login';
+      // }
     }
   }, [localUser, token]);
 
