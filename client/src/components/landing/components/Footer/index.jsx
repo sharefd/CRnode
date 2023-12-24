@@ -19,30 +19,16 @@ const Footer = () => {
       <FooterSection>
         <Container>
           <Row justify='space-between'>
-            <Col lg={8} md={8} sm={12} xs={12}>
-              <Title>Policy</Title>
-              <Large to='/'>Application Security</Large>
-              <Large to='/'>Software Principles</Large>
-            </Col>
-            <Col lg={10} md={10} sm={12} xs={12}>
-              <Title>Support</Title>
-              <Large to='/'>Support Center</Large>
-              <Large to='/'>Customer Support</Large>
-            </Col>
           </Row>
           <Row justify='space-between'>
             <Col lg={8} md={8} sm={12} xs={12}>
               <Title>Company</Title>
               <Large to='/'>About</Large>
               <Large to='/'>Blog</Large>
-              <Large to='/'>Press</Large>
-              <Large to='/'>Careers & Culture</Large>
             </Col>
             <Col lg={10} md={10} sm={12} xs={12}>
               <Title>Contact</Title>
-              <Large to='/'>Tell us everything</Large>
-              <Para>Do you have any question? Feel free to reach out.</Para>
-              <a href='mailto:l.qqbadze@gmail.com'>
+              <a href='mailto:mycloudrounds@gmail.com'>
                 <Chat>Let's Chat</Chat>
               </a>
             </Col>
@@ -56,16 +42,16 @@ const Footer = () => {
             <Logo />
             <FooterContainer>
               <SocialLink href='https://github.com/sharefd/CRnode' src='github.svg' />
-              {/* <SocialLink href='https://twitter.com/' src='twitter.svg' /> */}
-              <SocialLink href='https://www.linkedin.com/in/sharefdanho/' src='linkedin.svg' />
-              <a href='https://ko-fi.com' target='_blank' rel='noopener noreferrer'>
+             <SocialLink href='https://instagram.com/' src='twitter.svg' />
+               {/*  <SocialLink href='https://www.linkedin.com/in/sharefdanho/' src='linkedin.svg' /> */}
+                {/*   <a href='https://ko-fi.com' target='_blank' rel='noopener noreferrer'>
                 <img
                   height='36'
                   style={{ border: 0, height: 36 }}
                   src='https://storage.ko-fi.com/cdn/kofi3.png?v=3'
                   alt='Buy Me a Coffee at ko-fi.com'
-                />
-              </a>
+                /> 
+              </a> */}
             </FooterContainer>
           </Row>
         </Container>
