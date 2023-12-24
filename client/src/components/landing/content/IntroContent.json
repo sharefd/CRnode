@@ -1,10 +1,8 @@
 {
   "title": "Bringing medical education to the cloud.",
-  "text": "Access and manage all your educational events: medical rounds, research meetings, webinars, seminars, and more in an intuitive manner.",
+  "text": "CloudRounds allows you to access and manage all your educational events: medical rounds, research meetings, webinars, seminars, and more in an intuitive manner.",
   "button": [
-    {
-      "title": "Explore"
-    },
+    
     {
       "title": "Learn more",
       "color": "#fff"
