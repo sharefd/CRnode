@@ -124,7 +124,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   Join Meeting
                 </a>
               ) : (
-                <p className='italic'>Meeting information not yet available.</p>
+                <p className='italic'>Link not yet provided.</p>
               )}
             </Col>
           )}
@@ -145,19 +145,19 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                       Join Meeting
                     </a>
                   ) : (
-                    <p className='italic'>Meeting information not yet available.</p>
+                    <p className='italic'>Link not yet provided.</p>
                   )}
                 </div>
               )}
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-                Location: <span>{article.location || 'Not yet available.'}</span>
+               <span>{article.location || 'Location not provided yet.'}</span>
               </p>
             </Col>
           )}
 
           <Col span={24}>
             <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-              Speaker: <span>{article.speaker || 'Not yet disclosed.'}</span>
+              Speaker: <span>{article.speaker || 'Not yet provided.'}</span>
             </p>
           </Col>
               
