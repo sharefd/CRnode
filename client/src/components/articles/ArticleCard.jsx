@@ -150,22 +150,25 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                 </div>
               )}
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-               <span>{article.location || 'Location not provided yet.'}</span>
+               <span>{article.location || 'Location not yet provided.'}</span>
               </p>
             </Col>
           )}
 
-          <Col span={24}>
-            <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-              Speaker: <span>{article.speaker || 'Not yet provided.'}</span>
-            </p>
-          </Col>
-              
-               <Col span={24}>
-           <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-              Calendar: <span>{article.purpose.name}</span>
-            </p>
-          </Col>
+          {article.speaker && (
+  <Col span={24}>
+    <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+      Speaker: <span>{article.speaker}</span>
+    </p>
+  </Col>
+)}
+
+<Col span={24}>
+  <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+    Calendar: <span>{article.purpose.name}</span>
+  </p>
+</Col>
+
               
                
               
