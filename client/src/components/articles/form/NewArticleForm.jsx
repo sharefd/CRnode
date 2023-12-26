@@ -191,6 +191,10 @@ const NewArticleForm = ({
 
   return (
     <Modal open={open} onCancel={onModalClose} footer={null} className='new-article-form'>
+          
+{allowedPurposes.length > 0 ? (
+
+          
       <Form onFinish={selectedArticle ? handleSave : handleSubmit} className='compact-form'>
         <Form.Item
           label='Title*'
@@ -356,6 +360,10 @@ const NewArticleForm = ({
           </Row>
         </Form.Item>
       </Form>
+        ) : (
+        <div className='disabled-option'>No calendars yet. Click the Manage tab to create a calendar.</div>
+      )}
+          
 
       <NewPurposeDialog
         showAddPurposeModal={showAddPurposeModal}
