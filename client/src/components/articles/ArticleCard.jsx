@@ -149,9 +149,16 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   )}
                 </div>
               )}
-              <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-               <span>{article.location || 'Location not yet provided.'}</span>
+                      
+              <p style={{ fontFamily: '', fontWeight: '' }}>
+                  
+                   {article.location || <p className='italic'>Location not yet provided.</p>} 
+                  
+          
               </p>
+               <div className='absolute top-[-2px] right-0 mr-2'>
+            <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
+          </div>
             </Col>
           )}
 

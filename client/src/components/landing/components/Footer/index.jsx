@@ -42,7 +42,7 @@ const Footer = () => {
             <Logo />
             <FooterContainer>
               <SocialLink href='https://github.com/sharefd/CRnode' src='github.svg' />
-             <SocialLink href='https://instagram.com/' src='twitter.svg' />
+             <SocialLink href='https://instagram.com/cloudrounds' src='twitter.svg' />
                {/*  <SocialLink href='https://www.linkedin.com/in/sharefdanho/' src='linkedin.svg' /> */}
                 {/*   <a href='https://ko-fi.com' target='_blank' rel='noopener noreferrer'>
                 <img
