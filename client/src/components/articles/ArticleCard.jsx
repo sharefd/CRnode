@@ -1,13 +1,15 @@
+import { useState, useEffect } from 'react';
 import { StarFilled, StarOutlined } from '@ant-design/icons';
 import { Col, Collapse, Row, Avatar, Typography } from 'antd';
 import { formatDate } from '@/utils/dates';
-import { hashStringToColor, createAcronym } from '@/utils/cardHelpers';
 import { FaRegEdit } from 'react-icons/fa';
 import ExportToIcalButton from './calendar/ExportToIcalButton';
-
 import purposeIcons from '../ui/PurposeIcons';
+import openai from 'openai';
+import axios from 'axios'; // Import the axios library
 
 
+const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY 
 
 const { Panel } = Collapse;
 const { Text, Title } = Typography;
@@ -17,6 +19,34 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
   const formattedTime = article.duration;
   const isVirtual = article.meetingType === 'Virtual';
   const isHybrid = article.meetingType === 'Hybrid';
+
+  const [suggestedReadings, setSuggestedReadings] = useState([]);
+
+  useEffect(() => {
+    const fetchSuggestedReadings = async () => {
+      try {
+        const response = await axios.post(
+          'https://api.openai.com/v1/engines/davinci-codex/completions',
+          {
+            prompt: `Suggest relevant readings for "${article.title}"`,
+            max_tokens: 100
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${OPENAI_API_KEY}`
+            }
+          }
+        );
+
+        const readings = response.data.choices.map(choice => choice.text.trim());
+        setSuggestedReadings(readings);
+      } catch (error) {
+        console.error('Error fetching suggested readings:', error);
+      }
+    };
+
+    fetchSuggestedReadings();
+  }, [article.title]);
 
   const isMeetingInfoPresent = () => {
     if (article.meetingType === 'Hybrid' || article.meetingType === 'Virtual') {
@@ -32,23 +62,19 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
     const eventEndDate = new Date(`${formattedDate} ${endTime}`);
     const currentTime = new Date();
 
-    // Adjust start time to be 15 minutes earlier
     const startTimeMinus15Minutes = new Date(eventStartDate - 15 * 60 * 1000);
-
-    // Adjust end time to be exactly at the end of the event
     const endTimeExact = new Date(eventEndDate);
 
-    // Check if the current time is within the adjusted time range
     return currentTime >= startTimeMinus15Minutes && currentTime <= endTimeExact;
   };
 
   const today = new Date();
-  const isToday = formattedDate === formatDate(today); // Check if the date is today
+  const isToday = formattedDate === formatDate(today);
 
-  const isEventLive = isToday && isWithin15MinutesOfEvent(); // Check if the event is live within 15 minutes
+  const isEventLive = isToday && isWithin15MinutesOfEvent();
 
   const cardContainerStyle = {
-    border: isEventLive ? '2px solid #f87171' : '0px solid #1e3a8a', // Use different colors for today and other days
+    border: isEventLive ? '2px solid #f87171' : '0px solid #1e3a8a',
     borderRadius: '10px',
     animation: isEventLive ? 'flashBorder 1.5s infinite alternate' : 'none'
   };
@@ -61,22 +87,18 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       label: (
         <div className='relative rounded-md'>
           <div className='flex items-center rounded-md'>
-<Avatar style={{ backgroundColor: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '0px solid #5161ce' }}>
-  {purposeIcons[article.purpose.name]|| purposeIcons.DEFAULT}
-</Avatar>
-
-
-  <div style={{ flex: 1, marginLeft: '10px' }}>
-    <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
-      {article.title}
-    </Title>
-    <Text type='secondary'>
-      {formattedDate} | {formattedTime}
-    </Text>
-  </div>
-</div>
-
-
+            <Avatar style={{ backgroundColor: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '0px solid #5161ce' }}>
+              {purposeIcons[article.purpose.name] || purposeIcons.DEFAULT}
+            </Avatar>
+            <div style={{ flex: 1, marginLeft: '10px' }}>
+              <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
+                {article.title}
+              </Title>
+              <Text type='secondary'>
+                {formattedDate} | {formattedTime}
+              </Text>
+            </div>
+          </div>
           <div className='absolute top-[-2px] right-[5px]'>
             {isFavorite ? (
               <StarFilled
@@ -111,8 +133,6 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       ),
       children: (
         <Row gutter={[16, 16]} className='relative'>
-              
-              
           {isVirtual && (
             <Col span={24}>
               {isMeetingJoinable ? (
@@ -131,7 +151,6 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
           <div className='absolute top-[-2px] right-0 mr-2'>
             <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
           </div>
-
           {!isVirtual && (
             <Col span={24}>
               {isHybrid && (
@@ -149,37 +168,26 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   )}
                 </div>
               )}
-                      
               <p style={{ fontFamily: '', fontWeight: '' }}>
-                  
-                   {article.location || <p className='italic'>Location not yet provided.</p>} 
-                  
-          
+                {article.location || <p className='italic'>Location not yet provided.</p>}
               </p>
-               <div className='absolute top-[-2px] right-0 mr-2'>
-            <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
-          </div>
+              <div className='absolute top-[-2px] right-0 mr-2'>
+                <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
+              </div>
             </Col>
           )}
-
           {article.speaker && (
-  <Col span={24}>
-    <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-      Speaker: <span>{article.speaker}</span>
-    </p>
-  </Col>
-)}
-
-<Col span={24}>
-  <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-    Calendar: <span>{article.purpose.name}</span>
-  </p>
-</Col>
-
-              
-               
-              
-
+            <Col span={24}>
+              <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+                Speaker: <span>{article.speaker}</span>
+              </p>
+            </Col>
+          )}
+          <Col span={24}>
+            <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+              Calendar: <span>{article.purpose.name}</span>
+            </p>
+          </Col>
           {article.additional_details && (
             <Col span={24}>
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
@@ -187,7 +195,6 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
               </p>
             </Col>
           )}
-
           {!isOrganizer && (
             <Col span={24}>
               <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
@@ -196,6 +203,20 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
             </Col>
           )}
         </Row>
+      ),
+      showArrow: false
+    },
+    {
+      key: '2',
+      label: <Title level={5}>Suggested Readings</Title>,
+      children: (
+        <Col span={24}>
+          <ul>
+            {suggestedReadings.map((reading, index) => (
+              <li key={index}>{reading}</li>
+            ))}
+          </ul>
+        </Col>
       ),
       showArrow: false
     }
