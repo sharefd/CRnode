@@ -8,6 +8,7 @@ import { MdToday } from 'react-icons/md';
 const ArticleCalendar = ({ articles }) => {
   const [date, setDate] = useState(new Date());
   const [selected, setSelected] = useState(false);
+  const [scrolling, setScrolling] = useState(false); // Add scrolling state
 
   const changeMonth = offset => {
     const newDate = new Date(date);
@@ -23,6 +24,32 @@ const ArticleCalendar = ({ articles }) => {
     setDate(newDate);
     setSelected(false);
   };
+
+  const handleWheel = event => {
+    if (scrolling) {
+      return; // Do nothing if already scrolling
+    }
+
+    // Add a delay of 500 milliseconds (0.5 second) after changing the month
+    const offset = event.deltaY > 0 ? 1 : -1;
+    setScrolling(true); // Set scrolling to true
+
+    // Change the month with delay
+    changeMonthWithDelay(offset);
+  };
+
+  const changeMonthWithDelay = offset => {
+    // Change the month
+    changeMonth(offset);
+
+    // Set a timeout for 0.5 seconds
+    setTimeout(() => {
+      // Update the selected state after the delay
+      setSelected(false);
+      setScrolling(false); // Set scrolling back to false after the delay
+    }, 1500);
+  };
+
 
   const month = date.getMonth();
   const year = date.getFullYear();
@@ -80,8 +107,12 @@ const ArticleCalendar = ({ articles }) => {
 
   const calendarData = generateCalendarCells();
 
-  return (
-    <div id='calendar-container' className='flex flex-col'>
+ return (
+  <div
+    id='calendar-container'
+    className='flex flex-col'
+    onWheel={handleWheel} // Make sure to use the correct event handler here
+  >
       <div id='calendar-head' className='flex items-center justify-between bg-[#5161ce]  text-white rounded-t-xl p-2'>
         <Button
           id='prev-month'
