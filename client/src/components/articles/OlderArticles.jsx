@@ -9,6 +9,8 @@ import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import PurposeAvatar from '../ui/PurposeAvatar';
+import purposeIcons from '../ui/PurposeIcons';
+
 
 const { TextArea } = Input;
 
@@ -156,36 +158,53 @@ const OlderArticles = observer(() => {
           dataSource={filteredArticles.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
           pagination={false}
           rowKey={record => record._id}
-          scroll={{ x: 'max-content' }}>
-          <Table.Column
+          scroll={{ x: 'max-content' }}
+          style={{ overflowX: 'auto' }}> 
+    
+         <Table.Column
             title='Purpose'
             dataIndex='purpose'
             key='purpose'
-            render={purpose => <PurposeAvatar purpose={purpose && purpose.name} />}
+            render={purpose => (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {purposeIcons[purpose?.name] || purposeIcons.DEFAULT}
+                {purpose && purpose.name && <span style={{ marginLeft: '8px' }}>{purpose.name}</span>}
+              </div>
+            )}
+            width='20%' // Initial width for larger screens
           />
           <Table.Column
             title='Article Title'
             dataIndex='title'
             key='title'
             render={title => <div style={titleStyle}>{title}</div>}
+            width='30%' // Initial width for larger screens
           />
-          <Table.Column title='Date' dataIndex='date' key='date' render={date => formatDate(date)} />
+          <Table.Column
+            title='Date'
+            dataIndex='date'
+            key='date'
+            render={date => formatDate(date)}
+            width='15%' // Initial width for larger screens
+          />
           <Table.Column
             title='Attended'
-            key='attended'
             dataIndex='attended'
+            key='attended'
             render={(text, article) => (
               <Checkbox
                 checked={attended.map(a => a._id).includes(article._id)}
                 onChange={e => handleToggleAttending(article._id, e.target.checked)}
               />
             )}
+            width='15%' // Initial width for larger screens
           />
           <Table.Column
             title='Feedback'
             dataIndex='feedback'
             key='feedback'
             render={(text, article) => renderFeedback(article)}
+            width='20%' // Initial width for larger screens
           />
         </Table>
         <Pagination
