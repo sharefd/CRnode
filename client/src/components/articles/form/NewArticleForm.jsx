@@ -361,7 +361,12 @@ const NewArticleForm = ({
         </Form.Item>
       </Form>
         ) : (
-        <div className='disabled-option'>No calendars yet. Click the Manage tab to create a calendar.</div>
+     <div className='disabled-option'>
+  No calendars yet. Click the <a href="https://cloudrounds.com/manage" style={{ color: '#333', textDecoration: 'underline' }}>Manage tab</a> to create a calendar.
+</div>
+
+
+
       )}
           
 

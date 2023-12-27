@@ -192,7 +192,7 @@ const ArticleList = observer(() => {
             style={{ background: '#e0e7ff', borderRadius: '10px' }}>
             <Badge
               status='warning'
-              text='Upcoming Events'
+              text={filteredArticles.length > 0 ? 'Upcoming Events' : 'You have no upcoming events.'}
               style={{
                 marginBottom: '10px',
                 border: '0px solid #0a0a0a',
@@ -216,12 +216,16 @@ const ArticleList = observer(() => {
                 isFavorite={favorites && favorites.includes(article._id)}
               />
             ))}
+                    {filteredArticles.length > 4 && (
+
             <Pagination
               current={currentPage}
               total={filteredArticles.length}
               pageSize={articlesPerPage}
               onChange={handlePageChange}
             />
+                    )}
+              
           </Col>
         </Row>
       </div>

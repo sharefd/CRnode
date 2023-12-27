@@ -132,6 +132,13 @@ const RequestsList = observer(() => {
       key: 'purpose',
       render: purpose => <strong>{purpose && purpose.name}</strong>
     },
+//{
+//  title: 'Calendar Owner',
+//  dataIndex: 'purpose',
+//  key: 'purpose.creator',
+//  render: purpose => <span>{[purpose.creator].username}</span>
+//},
+
     {
       title: 'User',
       dataIndex: 'user',
@@ -249,11 +256,11 @@ const RequestsList = observer(() => {
     <Layout className='w-full mx-auto h-screen'>
       <div className='w-full bg-white p-6 min-h-[280px] text-center full-width-mobile'>
         <Button onClick={toggleView} className='mb-5'>
-          {!showUserRequests ? 'View Invitations' : 'View Access Requests'}
+          {!showUserRequests ? 'Incoming Requests' : 'Outgoing Requests'}
         </Button>
         <hr className='my-5' />
         <Typography.Title level={2} className='mb-5'>
-          {!showUserRequests ? 'Access Requests' : 'Invitations'}
+          {!showUserRequests ? 'Outgoing Requests' : 'Incoming Requests'}
         </Typography.Title>
         <Table
           dataSource={
