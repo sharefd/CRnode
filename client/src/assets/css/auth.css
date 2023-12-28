@@ -168,7 +168,7 @@ hr.divider:after {
     padding: 20px;
     background: #5161ce;
     color: white;
-    border-radius: 10px 0 0 10px;
+    /* border-radius: 10px 0 0 10px; */
     box-sizing: border-box;
   }
 
@@ -179,7 +179,7 @@ hr.divider:after {
     justify-content: flex-start;
     align-items: center;
     padding: 40px;
-    border-radius: 0 10px 10px 0;
+    /* border-radius: 0 10px 10px 0; */
     box-sizing: border-box;
     overflow-y: auto;
     max-height: 100vh;

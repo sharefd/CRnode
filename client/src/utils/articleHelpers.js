@@ -46,12 +46,22 @@ export const getPurposesAfterDelete = (articles, deletedArticle, selectedPurpose
   return selectedPurposes;
 };
 
+//export const isArticleAfterCurrentDate = article => {
+//  const currentDate = new Date();
+//  const eightHoursAgo = new Date(currentDate);
+//  eightHoursAgo.setHours(eightHoursAgo.getHours() - 24);
+//  const articleDate = new Date(article ? article.date : '');
+//  return articleDate >= eightHoursAgo;
+//};
+
 export const isArticleAfterCurrentDate = article => {
-  const currentDate = new Date();
-  const eightHoursAgo = new Date(currentDate);
-  eightHoursAgo.setHours(eightHoursAgo.getHours() - 1);
+ const currentDate = new Date();
+  const startOfCurrentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
   const articleDate = new Date(article ? article.date : '');
-  return articleDate >= eightHoursAgo;
+
+  // Check if the article date is on or after the start of the current day
+  return articleDate >= startOfCurrentDay;
 };
 
 export const filterArticlesForList = (localArticles, organizerFilter, selectedPurposes) => {

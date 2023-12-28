@@ -1,0 +1,16 @@
+{
+  "title": "Light, fast & responsive",
+  "text": "A robust permission-based system allows users to reach the right audience in a simple and timely manner.",
+  "section": [
+    {
+      "title": "Seamless integration",
+      "content": "Our unique calendar ensures all users have the most up to date meeting information, across all devices. ",
+      "icon": "notes.svg"
+    },
+    {
+      "title": "Admin Dashboard",
+      "content": "Provides any organizer with the ability to manage user permissions and oversee platform activities.",
+      "icon": "notes.svg"
+    }
+  ]
+}

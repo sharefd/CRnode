@@ -5,6 +5,10 @@ import { hashStringToColor, createAcronym } from '@/utils/cardHelpers';
 import { FaRegEdit } from 'react-icons/fa';
 import ExportToIcalButton from './calendar/ExportToIcalButton';
 
+import purposeIcons from '../ui/PurposeIcons';
+
+
+
 const { Panel } = Collapse;
 const { Text, Title } = Typography;
 
@@ -57,19 +61,21 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       label: (
         <div className='relative rounded-md'>
           <div className='flex items-center rounded-md'>
-            <Avatar style={{ backgroundColor: hashStringToColor(article.purpose.description) }}>
-              {createAcronym(article.purpose.description)}
-            </Avatar>
+<Avatar style={{ backgroundColor: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '0px solid #5161ce' }}>
+  {purposeIcons[article.purpose.name]|| purposeIcons.DEFAULT}
+</Avatar>
 
-            <div style={{ flex: 1, marginLeft: '10px' }}>
-              <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
-                {article.title}
-              </Title>
-              <Text type='secondary'>
-                {formattedDate} | {formattedTime}
-              </Text>
-            </div>
-          </div>
+
+  <div style={{ flex: 1, marginLeft: '10px' }}>
+    <Title level={5} style={{ margin: 0, padding: 0, maxWidth: '90%' }}>
+      {article.title}
+    </Title>
+    <Text type='secondary'>
+      {formattedDate} | {formattedTime}
+    </Text>
+  </div>
+</div>
+
 
           <div className='absolute top-[-2px] right-[5px]'>
             {isFavorite ? (
@@ -105,6 +111,8 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
       ),
       children: (
         <Row gutter={[16, 16]} className='relative'>
+              
+              
           {isVirtual && (
             <Col span={24}>
               {isMeetingJoinable ? (
@@ -116,7 +124,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   Join Meeting
                 </a>
               ) : (
-                <p className='italic'>Meeting information not yet available.</p>
+                <p className='italic'>Link not yet provided.</p>
               )}
             </Col>
           )}
@@ -137,21 +145,40 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                       Join Meeting
                     </a>
                   ) : (
-                    <p className='italic'>Meeting information not yet available.</p>
+                    <p className='italic'>Link not yet provided.</p>
                   )}
                 </div>
               )}
-              <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-                Location: <span>{article.location || 'Not yet available.'}</span>
+                      
+              <p style={{ fontFamily: '', fontWeight: '' }}>
+                  
+                   {article.location || <p className='italic'>Location not yet provided.</p>} 
+                  
+          
               </p>
+               <div className='absolute top-[-2px] right-0 mr-2'>
+            <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
+          </div>
             </Col>
           )}
 
-          <Col span={24}>
-            <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
-              Speaker: <span>{article.speaker || 'Not yet disclosed.'}</span>
-            </p>
-          </Col>
+          {article.speaker && (
+  <Col span={24}>
+    <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+      Speaker: <span>{article.speaker}</span>
+    </p>
+  </Col>
+)}
+
+<Col span={24}>
+  <p style={{ fontFamily: 'sans-serif', fontWeight: '700' }}>
+    Calendar: <span>{article.purpose.name}</span>
+  </p>
+</Col>
+
+              
+               
+              
 
           {article.additional_details && (
             <Col span={24}>

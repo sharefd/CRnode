@@ -14,7 +14,6 @@ const Navbar = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
 
-  const [activeIndex, setActiveIndex] = useState(0);
   const navbarRef = useRef(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
@@ -24,6 +23,9 @@ const Navbar = observer(() => {
   const findActiveIndex = () => {
     return links.findIndex(link => location.pathname === link.endpoint);
   };
+
+  const initialActiveIndex = findActiveIndex();
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
   useEffect(() => {
     const currentActiveIndex = findActiveIndex();
