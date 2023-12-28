@@ -11,9 +11,11 @@ import {
   RightOutlined,
   UsergroupAddOutlined
 } from '@ant-design/icons';
-import { Badge, Button, Modal, Typography } from 'antd';
+import { Popover, Badge, Button, Modal, Typography, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import ExportToIcalButton from './ExportToIcalButton';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 const CalendarCell = ({ day, month, year, events, setSelected }) => {
   const [open, setOpen] = useState(false);
@@ -66,13 +68,18 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
       }
     );
   };
+    
+      const isSmallScreen = useMediaQuery('(max-width: 700px)');
 
+ if (isSmallScreen) {
   return (
-    <div key={`${day}-${month}-${year}`} onClick={handleCellClick} id='calendar-cell'>
+    <div key={`${day}-${month}-${year}`} id='calendar-cell'>
       <div
         className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
           isToday ? 'border border-[#5161ce]' : ''
-        }`}>
+        }`}
+        onClick={handleCellClick}
+      >
         <Badge
             
           count={events.length}
@@ -82,12 +89,71 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
         <Typography.Text
           strong
           style={{
-            color: isToday ? '#000' : 'inherit'
-          }}>
+            color: isToday ? '#000' : 'inherit',
+          }}
+        >
           {day}
         </Typography.Text>
       </div>
+    </div>
+  );
+}
 
+// Render the original version with Popover for larger screens
+return (
+  <div key={`${day}-${month}-${year}`} id='calendar-cell'>
+    <Popover
+      title={<strong>{`Events on ${formatDate(new Date(year, month, day))}`}</strong>}
+      content={
+        <div>
+          {events.length > 0 ? (
+            events.map((event, index) => (
+              <div
+                className='flex justify-start items-center mb-5 purpose-badge ml-0 mr-auto'
+                key={event.title}
+                style={{ marginBottom: '8px' }}
+              >
+                <strong style={{ color: 'blue' }}>{`${event.duration}: `}</strong>&nbsp;
+                <span style={{ color: '' }}>{event.title}</span>
+              </div>
+            ))
+          ) : (
+            <Typography.Text>No events. Create one! </Typography.Text>
+          )}
+          {events.length > 0 && (
+            <p style={{ marginTop: '10px', textAlign: 'left', fontStyle: '' }}>
+              Click to expand.
+            </p>
+          )}
+        </div>
+      }
+      trigger='hover'
+    >
+      <div
+        className={`relative w-8 h-8 flex rounded-md items-center justify-center ${
+          isToday ? 'border border-[#5161ce]' : ''
+        }`}
+        onClick={handleCellClick}
+      >
+        <Badge
+          count={events.length}
+          className='absolute calendar-badge'
+          style={{ fontSize: '10px', border: 'none', left: day >= 10 ? 16 : 12 }}
+        />
+        <Typography.Text
+          strong
+          style={{
+            color: isToday ? '#000' : 'inherit',
+          }}
+        >
+          {day}
+        </Typography.Text>
+      </div>
+    </Popover>
+  </div>
+);
+
+         
       <Modal open={open} onCancel={handleClose} footer={null} width={420}>
         <div onClick={stopPropagation}>
           <Typography.Title level={4} className='mb-5'>
@@ -182,8 +248,6 @@ const CalendarCell = ({ day, month, year, events, setSelected }) => {
           </div>
         </div>
       </Modal>
-    </div>
-  );
 };
 
 export default CalendarCell;
