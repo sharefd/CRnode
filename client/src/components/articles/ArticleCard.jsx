@@ -6,6 +6,7 @@ import { FaRegEdit } from 'react-icons/fa';
 import ExportToIcalButton from './calendar/ExportToIcalButton';
 
 import purposeIcons from '../ui/PurposeIcons';
+import {EnvironmentOutlined, LinkOutlined} from '@ant-design/icons';
 
 
 
@@ -121,7 +122,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                   target='_blank'
                   rel='noopener noreferrer'
                   className='basic-btn purple-full-link'>
-                  Join Meeting
+                 <LinkOutlined />  Join Virtual Meeting
                 </a>
               ) : (
                 <p className='italic'>Link not yet provided.</p>
@@ -150,12 +151,16 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
                 </div>
               )}
                       
-              <p style={{ fontFamily: '', fontWeight: '' }}>
-                  
-                   {article.location || <p className='italic'>Location not yet provided.</p>} 
-                  
-          
-              </p>
+             <p style={{ fontFamily: '', fontWeight: '' }}>
+  {article.location ? (
+    <span>
+      <EnvironmentOutlined /> {article.location}
+    </span>
+  ) : (
+    <span className='italic'>Location not yet provided.</span>
+  )}
+</p>
+
                <div className='absolute top-[-2px] right-0 mr-2'>
             <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
           </div>
