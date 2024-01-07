@@ -54,7 +54,7 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
 
       setTimeout(() => {
         setIsLoading(false);
-        navigate('/');
+        navigate('/calendar');
       }, 1000);
     } catch (error) {
       console.error('Login error:', error);
@@ -147,7 +147,8 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
                           <p className='requiredLabel'>{field.label}</p>
                           <Typography.Text
                             className='text-gray-500 underline hover:text-blue-500 cursor-pointer'
-                            onClick={() => setIsForgotPassword(true)}>
+                            onClick={() => setIsForgotPassword(true)}
+                          >
                             Forgot?
                           </Typography.Text>
                         </div>
@@ -155,7 +156,8 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
                           name={field.name}
                           rules={[{ required: field.required, message: fieldErrors[field.name] }]}
                           labelCol={{ span: 24 }}
-                          wrapperCol={{ span: 24 }}>
+                          wrapperCol={{ span: 24 }}
+                        >
                           <Input
                             disabled={isLoading}
                             type={field.type}
@@ -171,7 +173,8 @@ const LoginForm = observer(({ fields, appName, isForgotPassword, setIsForgotPass
                           name={field.name}
                           rules={[{ required: field.required, message: fieldErrors[field.name] }]}
                           labelCol={{ span: 24 }}
-                          wrapperCol={{ span: 24 }}>
+                          wrapperCol={{ span: 24 }}
+                        >
                           <Input
                             disabled={isLoading}
                             type={field.type}

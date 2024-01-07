@@ -11,7 +11,6 @@ import { removeUserFromPurpose } from '../../services/purposes';
 import { toast } from 'react-toastify';
 import { FcCalendar } from 'react-icons/fc';
 
-
 const PurposesList = observer(() => {
   const localUser = localStorage.getItem('CloudRoundsUser');
   const user = JSON.parse(localUser);
@@ -145,11 +144,14 @@ const PurposesList = observer(() => {
   return (
     <div className='px-0 md:px-10'>
       <h1 className='my-4 text-xl'>Your Calendars</h1>
-      <Button className='flex items-center basic-btn purple-light-full' onClick={() => setOpenNewPurpose(true)} className='new-calendar-button'>
-       <span style={{ marginRight: '8px' }}>
-            <FcCalendar />
-          </span>
-          <span style={{ fontWeight: 'bold' }}>New Calendar </span>{' '}
+      <Button
+        className='flex items-center basic-btn purple-light-full new-calendar-button'
+        onClick={() => setOpenNewPurpose(true)}
+      >
+        <span style={{ marginRight: '8px' }}>
+          <FcCalendar />
+        </span>
+        <span style={{ fontWeight: 'bold' }}>New Calendar </span>{' '}
       </Button>
       <Table
         dataSource={createdPurposes}
