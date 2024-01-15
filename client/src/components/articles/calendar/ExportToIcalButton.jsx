@@ -132,6 +132,11 @@ const createGmailLink = (event) => {
   const endDate = dayjs(date).hour(endTime.hour()).minute(endTime.minute());
 
   let description = '';
+    
+    if (event_link) {
+    description += `${event_link}\n`;
+  }
+    
 
   if (additional_details) {
     description += `Details: ${additional_details}\n`;
@@ -153,15 +158,16 @@ const createGmailLink = (event) => {
     description += `Passcode: ${passcode}\n`;
   }
 
-  let gmailLink = `https://mail.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+    
+    let gmailLink = `https://mail.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
     title || 'Untitled Event'
   )}&dates=${startDate.format('YYYYMMDDTHHmmss')}%2F${endDate.format('YYYYMMDDTHHmmss')}&details=${encodeURIComponent(
     description
   )}&location=${encodeURIComponent(location)}`;
 
-  // Include url property only if event_link is not empty
-  if (event_link) {
-    gmailLink += `&url=${isValidUrl(event_link) ? encodeURIComponent(event_link) : ''}`;
+// Include url property only if event_link is not empty and is a valid URL
+  if (event_link && isValidUrl(event_link)) {
+    gmailLink += `&url=${encodeURIComponent(event_link)}`;
   }
 
   return gmailLink;
