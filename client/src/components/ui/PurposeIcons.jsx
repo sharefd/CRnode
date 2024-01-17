@@ -1,4 +1,4 @@
-import { PeopleAlt, RocketLaunch, Engineering, Vaccines, } from '@mui/icons-material';
+import { MonitorHeart, PeopleAlt, RocketLaunch, Engineering, Vaccines, } from '@mui/icons-material';
 import MACIMAHD1Icon from '@/assets/images/mcm.png';
 import MACIMAHD2Icon from '@/assets/images/mcm2.png';
 import MACIMAHD3Icon from '@/assets/images/mcm3.png';
@@ -17,6 +17,8 @@ const purposeIcons = {
   'SMH Occ Med Rounds': <Engineering sx={{ width: '18px', marginRight: '0px', height: '18px', color: '#5161ce' }} />,
   'UofT Aerospace': <RocketLaunch sx={{ width: '18px', marginRight: '0px', height: '18px', color: '#5161ce' }} />,
   'UofT Tox Rounds': <Vaccines sx={{ width: '18px', marginRight: '0px', height: '18px', color: '#5161ce' }} />,
+  'PHRI Cardiology Rounds': <MonitorHeart sx={{ width: '18px', marginRight: '0px', height: '18px', color: '#5161ce' }} />,
+    
     
 
 };
