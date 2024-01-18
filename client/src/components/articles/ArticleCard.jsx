@@ -162,7 +162,7 @@ const ArticleCard = ({ article, isOrganizer, onFavorite, onEdit, isFavorite }) =
 </p>
 
                <div className='absolute top-[-2px] right-0 mr-2'>
-            <ExportToIcalButton article={article} text='Export to iCal' fontSize='12px' />
+            <ExportToIcalButton article={article} text='Export' fontSize='12px' />
           </div>
             </Col>
           )}

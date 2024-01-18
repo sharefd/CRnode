@@ -23,12 +23,11 @@ const Footer = () => {
           <Row justify='space-between'>
             <Col lg={8} md={8} sm={12} xs={12}>
               <Title>Company</Title>
-              <Large to='/'>About</Large>
-              <Large to='/'>Blog</Large>
+              <Large to=''>About</Large>
             </Col>
             <Col lg={10} md={10} sm={12} xs={12}>
               <Title>Contact</Title>
-              <a href='mailto:mycloudrounds@gmail.com'>
+              <a href='mailto:outreach@cloudrounds.com'>
                 <Chat>Let's Chat</Chat>
               </a>
             </Col>
